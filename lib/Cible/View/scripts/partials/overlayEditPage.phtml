@@ -1,0 +1,258 @@
+<?php $this->headScript()->appendFile($this->baseUrl().'/js/csa/overlay.js'); ?>
+<?php $this->headScript()->appendFile($this->baseUrl() .'/js/tinymce/tinymce.min.js') ?>
+<?php $this->headScript()->appendFile($this->baseUrl() .'/js/loadTinyMce.js') ?>
+<style>
+
+    #page_edit { position: fixed; display: none; z-index: 100001; background-color: #fff; border: solid 1px #666 }
+    #page_edit #page_action { background-color: #666; color: #fff; font-weight: bold; text-align: right; line-height: 25px;}
+    #page_edit #page_action a { color: #fff }
+    #new_page #page_content { overflow: auto; width: 700px }
+
+</style>
+
+<script>
+    //$(document).ready(function() {
+        function dump(arr,level) {
+            var dumped_text = "";
+            if(!level) level = 0;
+
+            if(level == 1)
+                return;
+            //The padding given at the beginning of the line.
+            var level_padding = "";
+            for(var j=0;j<level+1;j++) level_padding += "    ";
+
+            if(typeof(arr) == "object") { //Array/Hashes/Objects
+             for(var item in arr) {
+              var value = arr[item];
+
+              if(typeof(value) == "object") { //If it is an array,
+               dumped_text += level_padding + "\'" + item + "\' ...\n";
+               dumped_text += dump(value,level+1);
+              } else {
+               dumped_text += level_padding + "\'" + item + "\' => \"" + value + "\"\n";
+              }
+             }
+            } else { //Stings/Chars/Numbers etc.
+             dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+            }
+            return dumped_text;
+        }
+
+        function pretty_header_format(){
+            var actions_panel = $('#page_edit #fieldset-actions');
+            var language_switcher = $('#page_edit #language-switcher');
+            var header_height = $('#page_edit #header').height() + 10;
+
+            actions_panel.css('top', header_height);
+            language_switcher.css('top', header_height);
+
+            return header_height;
+        }
+
+        function ajustPopUp(fieldId){
+
+            var window_height = $(window).height();
+            var window_width = $(window).width();
+
+            var page_edit = $('#page_edit');
+            var page_content = $('#page_content');
+
+            // Popup has been loaded, we grab the height
+            var page_height = page_edit.height();
+
+            // We define the acceptable height for our popup
+            var acceptable_popup_height = window_height - (window_height / 10);
+
+            // if page_height is greater than acceptable_height, we use acceptable height instead
+            if( page_height > acceptable_popup_height ){
+                page_height = acceptable_popup_height;
+            }
+
+            // we set the css top attribute for our popup
+            var page_edit_top = Math.round((window_height - page_height ) / 2);
+
+            // we set our popup size and position
+            page_edit.css({
+                'top': page_edit_top + 'px',
+                'left': Math.round((window_width - 700) / 2) + 'px',
+                'width': '700px'
+            }).slideDown('slow');
+            //'height': page_height + 'px'
+
+            // we find out the space the header is using since some components are position absolutely
+            header_height = pretty_header_format();
+
+            // we substract the header height from the popup height so that our scrollable content doesn't oversize the popup
+            editpanel_height = page_height - header_height;
+            page_content.css('height', editpanel_height + 'px');
+
+            // web grab the actions panel positioned absolute height so that we can move down the content panel
+            var actions_panel = $('#page_edit #fieldset-actions');
+            if(actions_panel.height() > 0){
+                page_content.css('margin-top', actions_panel.height() + 'px');
+            }
+
+            var cssPath = '<?php echo $this->view->locateFile('integration.css', null, 'front', $this->view->currentSite) ?>'
+            if (typeof(loadTinyMce) == "object")
+            {
+                if (fieldId == undefined)
+                    fieldId = 'GI_Description';
+                loadTinyMce.load(fieldId, 'modern', cssPath);
+            }
+
+        }
+
+        function getEditPage(url, fieldId){
+            $.get(url, function(data){
+                overlay.show();
+                if ($('#overlay').is(':hidden'))
+                    $('#overlay').show();
+                loadContent(data, url, fieldId);
+            });
+        }
+
+        function loadContent(data, url, fieldId){
+            var page_content = $('#page_content');
+            var page_edit = $('#page_edit');
+            page_content.css('height', '');
+            page_edit.css('height', '');
+
+            $("#page_edit #header .topInfo table tbody tr .title_column h1").html($("#page_edit #header #titleHidden").val());
+            $("#page_edit #header .topInfo table tbody tr .description_column div").html($("#page_edit #header #descriptionHidden").val());
+            //$("#page_edit #header #breadcrumb").html($("#page_edit #header #breadcrumbHidden").val());
+
+            page_content.html(data);
+
+            ajustPopUp(fieldId);
+
+            catchSubmit(page_content, url);
+        }
+
+        function catchSubmit(parent, url){
+            var resultPane = $('#result');
+            var action = $('span#action').text();
+            var currentAction = $('span#buttonAction').text();
+            var galleryDel = $('span#galleryDel').text();
+
+            if(resultPane.size() > 0)
+            {
+                if (currentAction == 'submitSaveClose' || action == 'addGallery'
+                    || action == 'deleteGallery' || galleryDel
+                    || action == 'addImage' || action == 'deleteImage' )
+                {
+                    resultPane.click();
+                    $('#page_edit').slideUp('slow');
+                    $('#page_content').empty();
+                    $('#overlay').hide();
+                    if (typeof(textEditor) == "object")
+                    {
+                        var tmpVar = url.split('textID/');
+                        var textZone = 'textzone_' + tmpVar[1];
+                        var object = $('div#' + textZone).find('div.previewText');
+                        textEditor.loadText(object);
+                    }
+                }
+                else
+                {
+                    getEditPage(url);
+                }
+
+            }
+            else{
+                $('ul#language-switcher a', parent).each(function(){
+                    var currentLink = $(this);
+
+                    currentLink.click(function(){
+                        var preconfigured_action = '';
+
+                        if( currentLink.attr('href') != 'javascript:void(0);' ){
+                            preconfigured_action = currentLink.attr('href');
+                            currentLink.data('link', preconfigured_action);
+                            currentLink.attr('href','javascript:void(0);');
+                        } else {
+                            preconfigured_action = currentLink.data('link');
+                        }
+
+                        //getEditPage(preconfigured_action);
+
+                        $.get(preconfigured_action, function(data){
+                            loadContent(data, preconfigured_action);
+                            ajustPopUp();
+                        });
+                    });
+
+                });
+
+               // Catch cancel
+                $('form button#cancel', parent).click(function(event){
+                    event.preventDefault();
+                    $('#page_edit').slideUp('slow');
+                    $('#page_content').empty();
+                    overlay.hide();
+                    if (!$('#overlay').is(':hidden'))
+                        $('#overlay').hide();
+                    var cancel = $('#pageCancel');
+                    if (tinyMCE)
+                        tinyMCE.execCommand('mceRemoveControl', false, 'GI_Description');
+
+                    if(cancel.size() > 0){
+                        cancel.click();
+                    }
+
+                });
+                var button = '';
+                $('form input[type=submit][id^=submit]', parent).click(function(){
+                    button = $(this).attr('id');
+
+                });
+                // Catch submit
+                $('form', parent).submit(function(){
+                    try {
+                        if (tinyMCE) {
+                            tinyMCE.triggerSave();
+                            tinyMCE.execCommand('mceRemoveControl', false, 'GI_Description');
+                        }
+                    }
+                    catch (err) {
+                        console.log(err);
+                    }
+                    var submitData = 'buttonAction=' + button + '&' + $(this).serialize();
+
+                    $.post(url, submitData, function(data){
+                        var success = false;
+                        loadContent(data, url);
+                    });
+                    return false;
+                });
+            }
+        }
+
+        overlay = new CSAOverlay(overlay,{zIndex : 4990});
+    //});
+
+
+</script>
+
+
+<?php echo $this->partial('partials/loading.phtml'); ?>
+
+<div id="page_edit">
+    <div id="header">
+         <input id="titleHidden" name="titleHidden" type="hidden" value="old value"/>
+         <input id="descriptionHidden" name="descriptionHidden" type="hidden" value="old value"/>
+         <input id="breadcrumbHidden" name="breadcrumbHidden" type="hidden" value="old value"/>
+         <?php
+            echo $this->partial('partials/header.pageDetails.phtml', array(
+                //'pageTitle' => $this->getCibleText('page_website_sitemap_title'),
+                //'pageDescription' => $this->getCibleText('page_website_sitemap_description'),
+                'pageTitle' => '&nbsp;',
+                'pageDescription' => '&nbsp;',
+                'breadcrumb' => '&nbsp;'
+            ));
+            ?>
+    </div>
+    <div id="page_content">
+
+    </div>
+</div>

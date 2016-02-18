@@ -1,0 +1,137 @@
+<?php
+    $cartTotalCount = $this->cartTotal;
+    $session = Zend_Session::namespaceGet('order');
+
+?>
+<div id="cart" class="block">
+    <div id="headerProductList">
+        <p class="left greenText"><?php echo $this->getClientText('product_label'); ?></p>
+        <p class="center greenText"><?php echo $this->getCibleText('form_item_qty_label'); ?></p>
+        <p class="middle greenText"><?php echo $this->getClientText('unit_price_label'); ?></p>
+        <p class="right greenText"><?php echo $this->getClientText('cart_item_total_label'); ?></p>
+    </div>
+    <?php if(!empty($this->productData)): ?>
+        <div id="product-list">&nbsp;
+        <?php foreach ($this->productData as $cartId => $product):?>
+        <?php
+            $currProd  = $product['data'];
+            $currItem  = $product['items'];
+            $productId = $currProd['P_ID'];
+            $itemId    = $currItem['I_ID'];
+            $disable   = $product['cart']['disable'];
+            $promo     = $product['cart']['promoId'];
+            $labelPromo = "";
+
+
+            if (!$disable):
+
+                if($promo > 0)
+                    $labelPromo = $this->getClientText('alert_special_offer_item');
+        ?>
+            <div class="product">
+                <div id="dataLeftCol">
+                    <div id="image">
+                        <?php
+                        echo $this->moduleImage(
+                            'catalog',
+                            'products/' . $productId,
+                            $currProd['P_Photo'],
+                            'thumb',
+                            array(
+                                'class'   => 'smallThumb',
+                                'alt'     => '',
+                                'useSize' => false,
+                                'prettyPhoto'=>array(
+                                    'size'  => 'original',
+                                    'image' => $currProd['P_Photo']
+                                    )
+                                )
+                            );
+                        ?>
+                    </div>
+                    <div class="product-description">
+                        <p class="">
+                        <?php echo $currProd['PI_Name'] . ' | ' . $currItem['II_Name'] ?>
+                            <br /><span class="alertSpecial"><?php echo $labelPromo ; ?></span>
+                        </p>
+                    </div>
+                </div>
+                <div id="dataRightCol">
+                    <?php echo $currItem['render']; ?>
+                </div>
+                <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+            </div>
+        <?php endif; ?>
+            <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+        <?php endforeach;?>
+        </div>
+        <div id="totalSummary">
+            <div id="pointBoni">
+            <?php if(isset($session['order']['nbPoint'])): ?>
+                <?php echo str_replace('XX', $session['order']['nbPoint'], $this->getClientText('cart_label_bonus_points')); ?>
+            <?php endif; ?>
+            </div>
+            <div id="summaryContent">
+                <p id="zoneTitle" class="blueTxt">
+                    <span>
+                    <?php echo $this->getClientText('cart_summary_title'); ?>
+                    </span>
+                </p>
+                <p id="subTotalLbl" class="leftCol">
+                    <?php echo $this->getClientText('cart_summary_subtotal'); ?>
+                </p>
+                <p id="subTotalValue" class="rightCol number">
+                    <span><?php echo sprintf('%.2f', $session['order']['subTotal']); ?></span> $
+                </p>
+                <p id="transportLbl" class="leftCol">
+                    <?php echo $this->getClientText('cart_transport_label'); ?>
+                </p>
+                <p id="transportValue" class="rightCol number">
+                    <?php if(Cible_FunctionsGeneral::compareFloats(
+                        $session['order']['subTotal'], '<', $session['order']['limitShip'], 2)
+                        ): ?>
+                    <span><?php echo sprintf('%.2f', $session['order']['shipFee']) ?></span> $
+                    <?php else: ?>
+                    <span>0.00</span> $
+                    <?php endif; ?>
+                </p>
+                <?php if(isset($session['order']['cod'])): ?>
+                <p id="CodLbl" class="leftCol">
+                    <?php echo $this->getClientText('cart_cod_label'); ?>
+                </p>
+                <p id="transportValue" class="rightCol number">
+                    <span><?php echo sprintf('%.2f', $session['order']['CODFees']) ?></span> $
+                </p>
+                <?php endif; ?>
+                <p id="tvqLbl" class="leftCol">
+                    <?php if ($session['order']['taxFed'] > 0): ?>
+                        <?php echo $this->getClientText('cart_tvq_label'); ?>
+                    <?php else: ?>
+                        <?php echo $session['order']['rateProv']['TP_Code'];?>
+                    <?php endif; ?>
+                </p>
+                <p id="tvqValue"class="rightCol number">
+                    <span><?php echo sprintf('%.2f', $session['order']['taxProv']); ?></span> $
+                </p>
+                <?php if ($session['order']['taxFed'] > 0): ?>
+                <p id="tpsLbl" class="leftCol">
+                    <?php echo $this->getClientText('cart_tps_label'); ?>
+                </p>
+                <p id="tpsValue" class="rightCol number">
+                    <span><?php echo sprintf('%.2f', $session['order']['taxFed']); ?></span> $
+                </p>
+                <?php endif; ?>
+                <p id="totalLbl" class="leftCol blueTxt">
+                    <?php echo $this->getClientText('cart_total_label'); ?>
+                </p>
+                <p id="totalValue" class="rightCol blueTxt">
+                    <?php echo sprintf('%.2f', $session['order']['charge_total']) ?> $
+                </p>
+            </div>
+        </div>
+        <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+
+    <?php else : ?>
+        <div id="no-item"><?php echo $this->getClientText('cart_no_item') ?></div>
+    <?php endif; ?>
+</div>

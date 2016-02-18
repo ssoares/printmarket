@@ -1,0 +1,13 @@
+form button, input[type=button], input[type=submit], .btn-primary {
+    -webkit-appearance:none;
+    appearance:none;
+    border:0;
+    &.grayish-button {  
+        background:none;
+        text-decoration:underline;
+        padding:0; 
+        color:@text-color;   
+        height:auto;
+        .responsive-font((@font-size-base - 2) * @mobile-divider-text);
+    }
+}

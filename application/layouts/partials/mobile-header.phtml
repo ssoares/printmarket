@@ -1,0 +1,86 @@
+<?php
+$config = Zend_Registry::get("config");
+$lang = $this->view->languageId;
+$replace = array('<p>' => '', '<P>' => '', '</p>' => '', '</P>' => ''
+    , '%%%SITE_NAME%%%' => $config->site->title->$lang);
+$imgAlt = $this->getClientText('home_page_link_title', null, $replace);
+$imageFirstALT = "";
+if (Zend_Registry::isRegistered('altImageFirst')) {
+    $imageFirstALT = Zend_Registry::get('altImageFirst');
+}
+if ($imageFirstALT == "") {
+    if (Zend_Registry::isRegistered('pageTitle')) {
+        $imageFirstALT = Zend_Registry::get('pageTitle');
+    } else if ($imgAlt != "") {
+        $imageFirstALT = $imgAlt;
+    } else {
+        $imageFirstALT = $config->site->title->$lang;
+    }
+}
+?>
+<div class="site-header-side">
+    <div class="site-header-side-container container">
+        <p class="site-header-title"><?php echo $config->site->title->$lang ?></p>
+        <nav class="site-menu-principal site-menu navbar navbar-default">
+            <?php
+            echo $this->menu(
+                    'principal', array(
+                'class' => 'nav navbar-nav',
+                'id' => 'menu-principal',
+                'maxLevel' => 3,
+                'dropdownMenuClass' => '',
+                'dropdownClass' => '',
+                'parentAltId' => 'parentIdTop-')
+            );
+            ?>
+            <?php
+            echo $this->menu(
+                    'header', array(
+                'class' => 'nav navbar-nav',
+                'id' => 'menu-principal',
+                'maxLevel' => 3,
+                'dropdownMenuClass' => '',
+                'dropdownClass' => '',
+                'parentAltId' => 'parentIdTop-')
+            );
+            ?>
+
+            <!--    <ul class="navbar-form navbar-left" role="search" id="search-box">
+                    <li><input type="hidden" id="search-url" value="<? echo ($this->baseUrl()."/".Cible_FunctionsCategories::getPagePerCategoryView(0,'index',10)."/words");?>"/><input type="text" id="search-box-terme" name="search-box-terme" value="" /><a id="searchLink" href="#"><?php echo $this->clientImage('btn-search-' . Zend_Registry::get("languageSuffix") . '.png') ?></a></li>
+                </ul>-->
+        </nav>
+
+    </div>
+</div>
+<div class="site-header-top">
+    <button class="site-header-menu-button site-menu-principal-open" data-toggle-open=".site-wrap"></button>
+    <button class="site-header-menu-button site-menu-secondaire-open" data-toggle-collapse=".site-menu-secondaire"></button>
+    <div class="site-header-banner">
+        <?php
+        $homeDetails = Cible_FunctionsPages::getHomePageDetails();
+        $logo = $config->clientLogo->src;
+        echo $this->link(
+                $this->baseUrl() . '/' . $homeDetails['PI_PageIndex'], $this->clientImage($logo, array('alt' => $imageFirstALT, 'title' => $imageFirstALT))
+        );
+        ?>
+        <div class="site-baseline"><?php echo $this->getClientText('site_baseline') ?></div>
+    </div>
+    <nav class="site-menu-secondaire collapse" role="navigation">
+        <div class="site-menu-secondaire-wrapper">
+            <?php
+            echo $this->menu('footer', array(
+                'class' => 'site-menu nav nav-pills',
+                'id' => 'menu-secondaire',
+                'isDropdownMenu' => true,
+                //'addSeparator' => '/',
+                'parentAltId' => 'parentIdTop-')
+            );
+            echo $this->languageSwitcher();
+            echo $this->menu('reseaux', array(
+                'class' => 'site-menu-reseaux',
+                'id' => 'menu-reseaux'
+            ));
+            ?>
+        </div>
+    </nav>
+</div>

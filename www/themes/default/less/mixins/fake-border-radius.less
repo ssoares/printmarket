@@ -1,0 +1,59 @@
+//ajoute des faux coins ronds
+//load une image selon la convention suivante : fakebr-[rouge]-[vert]-[bleu]-[rayonsanspixel].png
+.fake-border-radius(@color,@radius,@child,@orientation:'left-right') when (default()) { 
+    z-index:1;
+    position:relative;
+    &:after, &:before, @{child}:after, @{child}:before {
+        .fake-border-radius-background(@color,@radius);
+        content:"";
+        position:absolute;
+        z-index:10;
+        height:@radius;
+        width:@radius;
+    }
+    & when (@orientation = 'left-right') {
+        &:after {  .fake-border-radius-top-right(@color,@radius);  }
+        &:before {  .fake-border-radius-bottom-right(@color,@radius);  }
+        @{child}:after {    .fake-border-radius-top-left(@color,@radius);    }
+        @{child}:before {    .fake-border-radius-bottom-left(@color,@radius);    }
+    }
+    & when (@orientation = 'right-left') {
+        @{child}:after {  .fake-border-radius-top-right(@color,@radius);  }
+        @{child}:before {  .fake-border-radius-bottom-right(@color,@radius);  }
+        &:after {    .fake-border-radius-top-left(@color,@radius);    }
+        &:before {    .fake-border-radius-bottom-left(@color,@radius);    }
+    }
+    & when (@orientation = 'down-up') {
+        @{child}:after {  .fake-border-radius-bottom-left(@color,@radius);  }
+        @{child}:before {  .fake-border-radius-bottom-right(@color,@radius);  }
+        &:after {    .fake-border-radius-top-left(@color,@radius);    }
+        &:before {    .fake-border-radius-top-right(@color,@radius);    }
+    }
+}
+.fake-border-radius-background(@color,@radius) {    
+    @red:red(@color);
+    @green:green(@color);
+    @blue:blue(@color);
+    background-image:data-uri('../../images/backgrounds/fakebr-@{red}-@{green}-@{blue}-@{radius}.png');
+    //background:green;
+}
+.fake-border-radius-top-left(@color,@radius) {
+    background-position:left top;
+    top:0;
+    left:0;
+}
+.fake-border-radius-top-right(@color,@radius) {
+    background-position:right top;
+    top:0;
+    right:0;
+}
+.fake-border-radius-bottom-left(@color,@radius) {  
+    background-position:bottom left;
+    bottom:0;
+    left:0;
+}
+.fake-border-radius-bottom-right(@color,@radius) { 
+    background-position:right bottom;
+    bottom:0;
+    right:0;
+}

@@ -1,0 +1,24 @@
+<?php  echo $this->link( $this->url(array(
+    'controller' => 'cache',
+    'action' => 'clear',
+    'ID' =>'cible'
+    )), $this->getCibleText('extranet_cache_clear_cible_texts'));
+    
+?>
+<br />
+<?php  echo $this->link( $this->url(array(
+    'controller' => 'cache',
+    'action' => 'clear',
+    'ID' =>'client'
+    )), $this->getCibleText('extranet_cache_clear_client_texts'));
+
+?>
+<br />
+<br />
+
+<?php  echo $this->link( $this->url(array(
+    'controller' => 'index',
+    )), $this->getCibleText('button_return'));
+
+?>
+

@@ -1,0 +1,30 @@
+<?php
+    
+    $page       = $this->page;
+    $pageIndex  = $this->pageIndex;
+    $blockIndex = $this->blockIndex;
+    $returnPage = $this->baseUrl(). "/page/index/ID/{$page["P_ID"]}";
+?>
+<div id="container_middle_left"><?php echo($this->TreeView); ?></div>
+<div id="container_middle_center">&nbsp;</div>
+<div id="container_middle_right">    
+<?php
+    if ($blockIndex):
+?>      <h3><?php echo($pageIndex->PI_PageTitle) ?></h3>
+        <?php echo str_replace('%BLOCK_TITLE%', $blockIndex->BI_BlockTitle, $this->getCibleText('block_delete_message_confirmation')) ?>
+        <form action="" method="post">
+            <div>
+                <input type="hidden" name="blockID" value="<?php echo $blockIndex->BI_BlockID; ?>" />
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+<?php
+    else:
+?>      <p><?php echo $this->getCibleText('block_delete_message_cant_find_block') ?></p>
+        <a href="<?php echo $returnPage;?>"><?php echo $this->getCibleText('button_return') ?></a>
+    
+<?php
+    endif;
+?>
+</div>

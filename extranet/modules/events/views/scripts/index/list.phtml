@@ -1,0 +1,16 @@
+<?php
+    
+?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => str_replace("%CATEGORY_EVENTS_NAME%", $this->categoryName, $this->getCibleText('header_list_events_text')),
+    'pageDescription' => str_replace("%CATEGORY_EVENTS_NAME%", $this->categoryName, $this->getCibleText('header_list_events_description')),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->mylist->render()); ?>        
+    </div>                    
+</div>

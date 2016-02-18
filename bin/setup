@@ -1,0 +1,1 @@
+chmod -Rf 777 cache/ application/tmp/ extranet/tmp/ log/ tmp/ www/captcha/ www/data

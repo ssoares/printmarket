@@ -1,0 +1,55 @@
+///** 
+//* style général et gimmicks, visible partout dans le front-end
+//**/ 
+
+h1 { 
+    .font-weight('light', "sans-serif");      
+    color: @brand-primary;
+    line-height: 1.15em; 
+    margin:0 0 20px 0;
+    .home .module > & {
+        .h2-style();
+    }
+    .home .inverted .module > & {
+        color:@brand-secondary;
+    }
+    @media @mq-phone {
+        & {
+            .responsive-font(@font-size-h1 * 0.8);
+        }
+    }
+     & when (@device-type = 'desktop') {
+        .responsive-font(@font-size-h1);
+    }
+     & when (@device-type = 'mobile') {
+        .responsive-font(@font-size-h1 * @mobile-divider-text);
+    }
+    @media @print {
+        .print-font(@font-size-h1);
+    }
+} 
+.thumbnail {
+    display:inline-block;
+    width:200px;
+    height:150px;
+    overflow:hidden;
+    position:relative;
+    img, .content & img {
+        .absolute-center-center();
+        min-width:100%;
+        max-width:none;
+    }
+}
+.image-placeholder { 
+    background:@brand-white url(../../images/common/logo.png) no-repeat center;
+    @media @mq-phone{
+        background-size: contain;
+}
+}
+.unscroll { 
+    overflow:hidden;
+}
+a {  
+    .transition(color, 0.2s);
+}
+.selection(@text-color-inverted, @brand-primary);

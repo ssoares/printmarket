@@ -1,0 +1,94 @@
+<!--<div id="dialogForm" title="" style="display:none"></div>-->
+<div id="dialogConfirm" title="" style="display:none"></div>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        $('.shortcut').valuesList({
+            baseUrl: '<?php echo $this->baseUrl(); ?>',
+            refresh: false,
+            msgAlert: "<?php echo $this->getCibleText('references_delete_inuse_alert'); ?>"
+        });
+
+        $('#selectAll').live('click', function() {
+            if ($(this).is(':checked'))
+                $('.selectVal').attr('checked', 'checked');
+            else
+                $('.selectVal').removeAttr('checked');
+        });
+        $('#selectAllLevel').live('click', function() {
+            var parentId = $(this).parents('tr:first').next().attr('itemid');
+            var chkBox = $('tr[itemid=' + parentId + ']').find('.selectVal');
+            if ($(this).is(':checked'))
+                chkBox.attr('checked', 'checked');
+            else
+                chkBox.removeAttr('checked');
+        });
+        $('#Param999').change(function()
+        {
+            if ($(this).val() == 'slidelist')
+            {
+                $('#Param1').show();
+                $('label[for=Param1]').show();
+                $('#Param2').show();
+                $('label[for=Param2]').show();
+                $('#Param3').show();
+                $('label[for=Param3]').show();
+                $('#Param4').show();
+                $('label[for=Param4]').show();
+                $('#Param5').show();
+                $('label[for=Param5]').show();
+                $('#IFC_Param6-collections').show();
+                $('#Param6_Labels').show();
+                $('#IFK_Param7-keywords').show();
+                $('#Param7_Labels').show();
+                $('#Param8').hide();
+                $('label[for=Param8]').hide();
+                $('#Param9').show();
+                $('label[for=Param9]').show();
+            }
+            else if ($(this).val() == 'carrousel')
+            {
+                $('#Param1').show();
+                $('label[for=Param1]').show();
+                $('#Param2').show();
+                $('label[for=Param2]').show();
+                $('#Param3').show();
+                $('label[for=Param3]').show();
+                $('#Param4').show();
+                $('label[for=Param4]').show();
+                $('#Param5').hide();
+                $('label[for=Param5]').hide();
+                $('#IFC_Param6-collections').show();
+                $('#Param6_Labels').show();
+                $('#IFK_Param7-keywords').show();
+                $('#Param7_Labels').show();
+                $('#Param8').show();
+                $('label[for=Param8]').show();
+                $('#Param9').show();
+                $('label[for=Param9]').show();
+            }
+            else
+            {
+                $('#Param1').hide();
+                $('label[for=Param1]').hide();
+                $('#Param2').hide();
+                $('label[for=Param2]').hide();
+                $('#Param3').hide();
+                $('label[for=Param3]').hide();
+                $('#Param4').hide();
+                $('label[for=Param4]').hide();
+                $('#Param5').hide();
+                $('label[for=Param5]').hide();
+                $('#IFC_Param6-collections').hide();
+                $('#Param6_Labels').hide();
+                $('#IFK_Param7-keywords').hide();
+                $('#Param7_Labels').hide();
+                $('#Param8').hide();
+                $('label[for=Param8]').hide();
+                $('#Param9').hide();
+                $('label[for=Param9]').hide();
+            }
+        }).change();
+    });
+//]]>
+</script>

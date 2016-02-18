@@ -1,0 +1,36 @@
+<style>
+    #container{
+    }
+    #currentRecipient-container{
+        float: left;
+        width:49%;
+    }
+    
+    #newRecipient-container{
+        float: right;
+        width:49%;
+    }
+    
+    #verticalSeparator{
+    }
+    
+    .container-title{
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        padding-bottom: 15px;    
+    }
+</style>
+<div id="container_middle_full">
+    <div id="container">
+        <div id="currentRecipient-container">
+            <div class="container-title">Liste des membres <br/>(qui existe dans le système mais qui ne font pas partie de l'envoi de cette infolettre) </div>
+            <div><?php echo($this->htmltable); ?></div>
+        </div>    
+        <div id="newRecipient-container">
+            <div class="container-title">Nouveau membre <br/>(qui n'existe pas dans le système)</div>
+            <div><?php echo($this->form); ?></div>
+        </div>    
+        <div id="verticalSeparator"> | </div>
+    </div>
+</div>

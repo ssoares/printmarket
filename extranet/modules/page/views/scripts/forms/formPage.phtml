@@ -1,0 +1,47 @@
+
+<!--<div id="container_middle_right">-->
+<div>
+
+    <h3><?php echo $this->pageTitle ?></h3>
+    
+    <div class="FormContainer">
+        <div class="FormTitle"><?php echo $this->getCibleText('page_form_edit_title') ?></div>
+        
+            <form>
+            <table cellpadding="0" cellspacing="10" width="100%" border="1">
+            <tr>
+                <td valign="top">
+                    <div>
+                        <label for="<?php echo $this->element->PI_PageTitle->getId() ?>"><?php echo $this->element->PI_PageTitle->getLabel() ?></label>
+                        <?php echo $this->element->PI_PageTitle->render() ?>        
+                    </div>
+                           
+                    <div>                           
+                        <label for="<?php echo $this->element->PI_PageIndex->getId() ?>"><?php echo $this->element->PI_PageIndex->getLabel() ?></label>
+                        <?php echo $this->element->PI_PageIndex->render() ?>        
+                    </div>                    
+                
+                    <div>
+                        <label for="<?php echo $this->element->PI_MetaDescription->getId() ?>"><?php echo $this->element->PI_MetaDescription->getLabel() ?></label>
+                        <?php echo $this->element->PI_MetaDescription ?>
+                    </div>
+            
+                    <div>
+                        <label for="<?php echo $this->element->PI_MetaKeywords->getId() ?>"><?php echo $this->element->PI_MetaKeywords->getLabel() ?></label>
+                        <?php echo $this->element->PI_MetaKeywords->render() ?>
+                    </div>
+                    <div>
+                        <label for="<?php echo $this->element->PI_MetaOther->getId() ?>"><?php echo $this->element->PI_MetaOther->getLabel() ?></label>
+                        <?php echo $this->element->PI_MetaOther->render() ?>
+                    </div>
+                </td>
+            </tr>
+            </table>            
+                        
+            <?php echo $this->element->langSelector ?>                        
+            <?php echo $this->element->actions ?>            
+            
+            </form>
+                  
+    </div>
+</div>    

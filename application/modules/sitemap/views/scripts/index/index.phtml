@@ -1,0 +1,11 @@
+<div class="content sitemap index module">
+    <?php echo $this->showBlockTitle('h2', array('class' => 'sitemap-title'));?>
+    <?php if (!empty($this->menus)): ?>
+        <?php echo $this->menu($this->menus,
+            array('class' => 'sitemap-list',
+                'isSiteMap' => true,
+                'id' => 'siteMapID',
+                'parentIdAlt' => 'siteMapParent')
+            );?>
+<?php endif; ?>
+</div>

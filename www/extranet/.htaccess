@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^fondationOne.ciblesolutions.com [NC]
+RewriteRule ^(.*)$ http://www.fondationOne.ciblesolutions.com/$1 [L,R=301]
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
+
+AddDefaultCharset utf-8

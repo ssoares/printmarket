@@ -1,0 +1,31 @@
+.make-inline-lg-column(@columns; @gutter: @grid-gutter-width) when (default()) { 
+    .make-inline-column(@columns; @gutter);
+    @media @mq-desktop-below {
+        display:block;
+        width:auto;
+    }
+}
+.make-inline-md-column(@columns; @gutter: @grid-gutter-width) when (default()) { 
+    .make-inline-column(@columns; @gutter);
+    @media @mq-tablet-below {
+        display:block;
+        width:auto;
+    }
+}
+.make-inline-sm-column(@columns; @gutter: @grid-gutter-width) when (default()) { 
+    .make-inline-column(@columns; @gutter);
+    @media @mq-phone {
+        display:block;
+        width:auto;
+    }
+}
+.make-inline-xs-column(@columns; @gutter: @grid-gutter-width) when (default()) { 
+    .make-inline-column(@columns; @gutter);
+}
+.make-inline-column(@columns; @gutter: @grid-gutter-width) when (default()) {     
+    width:@columns / 12 * 100%;
+    display:inline-block;
+    vertical-align:top;
+    padding-left:@gutter / 2;
+    padding-right:@gutter / 2;
+}

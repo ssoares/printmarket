@@ -1,0 +1,188 @@
+<script>
+    $(document).ready(function() {
+        /************************************************************/
+        $(".editLink").click(function(event){
+            event.preventDefault();
+        });
+        
+        $("#addNewsletterLink").click(function(event){
+            event.preventDefault(); 
+            
+            baseUrl = $("#baseUrl").val();
+            url = baseUrl+"/profile/index/ajax";
+            
+            memberID = $('#memberID').val();
+            
+            newsletterCategoryID = $("#newsletterForm-categoryID option:selected").val();
+            
+            memberNewslettersCat = $('#memberNewslettersCat').val();
+            if(memberNewslettersCat == "")
+                memberNewslettersCat = newsletterCategoryID;
+            else
+                memberNewslettersCat +=  "," + newsletterCategoryID;
+            
+            
+            $.getJSON(url,{actionAjax : 'associateMemberNewsletter', memberID : memberID, newsletterCategoryID : newsletterCategoryID, memberNewslettersCat : memberNewslettersCat},
+                function(data){
+                    $("#newsletterForm-categoryID option:selected").remove();
+                    if($("#newsletterForm-categoryID").val() == null){
+                        $("#divNewslettersAdd").hide('slow');        
+                    }
+                    $("#tbodyNewsletter").children().remove();
+                    //alert(dump(data));
+                    
+                    toInsert = "";
+                    for(var item in data){
+                        toInsert += "<tr id='trNewsletter-"+data[item]['CI_CategoryID']+"'>"; 
+                        toInsert += "   <td>"+data[item]['CI_Title']+"</td>"
+                        toInsert += "   <td>";
+                        toInsert += "       <a id='newsletterCategory-"+data[item]['CI_CategoryID']+"' class='deleteNewsletterLink' href='#'>"
+                        toInsert += "           <img class='action_icon' src='"+baseUrl+"/icons/del_icon_16x16.png' style='padding-right:10px;'/></a>";
+                        toInsert += "       </a>";
+                        toInsert += "   </td>";
+                        toInsert += "</tr>";
+                    }
+                    $("#tbodyNewsletter").append(toInsert);
+                    
+                    $('#memberNewslettersCat').val(memberNewslettersCat);
+                }
+            ); 
+            
+        });
+        
+        $(".deleteNewsletterLink").live('click',function(event){
+            event.preventDefault(); 
+            
+            memberID = $('#memberID').val();
+            newsletterCategoryID = ($(this).attr('ID')).replace('newsletterCategory-', '');
+            
+            // ask delete confirmation
+            if(confirm("Êtes-vous certain de vouloir dissocier cet individu de cette newsletter?")){
+                baseUrl = $("#baseUrl").val();
+                url = baseUrl+"/profile/index/ajax";
+                
+                memberNewslettersCat = $('#memberNewslettersCat').val();
+                memberNewslettersCat = memberNewslettersCat.split(",");
+                
+                $i=0;
+                for(var item in memberNewslettersCat){
+                    if(memberNewslettersCat[item] == newsletterCategoryID)
+                        memberNewslettersCat.splice($i,1);
+                    $i++;
+                }
+                memberNewslettersCat = memberNewslettersCat.join(",");
+                $('#memberNewslettersCat').val(memberNewslettersCat);
+                
+                $.getJSON(url,{actionAjax : 'dissociateMemberNewsletter', memberID : memberID, newsletterCategoryID : newsletterCategoryID, memberNewslettersCat : memberNewslettersCat},
+                    function(data){
+                        $("#newsletterForm-categoryID").children().remove();
+                        
+                        toInsert = "";
+                        for(var item in data){
+                            toInsert += "<option value='"+data[item]['C_ID']+"'>"+data[item]['CI_Title']+"</option>"; 
+                        }
+                        $("#newsletterForm-categoryID").append(toInsert);
+                        $("#divNewslettersAdd").show('slow');    
+                        $("#trNewsletter-"+newsletterCategoryID).slideUp('slow');       
+                    }
+                );
+            }
+            
+        });
+    });
+    
+    function dump(arr,level) {
+        var dumped_text = "";
+        if(!level) level = 0;
+
+        //The padding given at the beginning of the line.
+        var level_padding = "";
+        for(var j=0;j<level+1;j++) level_padding += "    ";
+
+        if(typeof(arr) == "object") { //Array/Hashes/Objects
+         for(var item in arr) {
+          var value = arr[item];
+         
+          if(typeof(value) == "object") { //If it is an array,
+           dumped_text += level_padding + "\'" + item + "\' ...\n";
+           dumped_text += dump(value,level+1);
+          } else {
+           dumped_text += level_padding + "\'" + item + "\' => \"" + value + "\"\n";
+          }
+         }
+        } else { //Stings/Chars/Numbers etc.
+         dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+        }
+        return dumped_text;
+    }
+</script>
+<?php 
+    $genericMemberDetails = $this->genericMemberDetails;
+    $newsletterMemberDetails = $this->newsletterMemberDetails;
+    $membersDetails = $this->membersDetails;
+    
+    
+    $form = $this->form;
+?>
+<style>
+    fieldset{
+        padding: 0px;
+        margin:0px;
+    }
+</style>
+
+<?php 
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_profile_text'),
+    'pageDescription' => $this->getCibleText('header_add_profile_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <form enctype="application/x-www-form-urlencoded" method="post" action="">
+            <input id="memberID" name="memberID" type="hidden" value="<?php echo($this->memberID); ?>"/>
+            <input id="baseUrl" name="baseUrl" type="hidden" value="<?php echo($this->baseUrl()); ?>"/>
+            <dl style="margin: 0px; padding: 0px;">
+                <?php echo($form->actions); ?>
+             </dl>
+            <div style="float:left; width:50%; padding-right:10px;">
+                <div id="generalInformation">
+                    <h2><?php echo($this->getCibleText('profile_title_general_information'))?></h2>
+                    <div class="divContent">
+                        <dl>
+                            <?php echo($form->getSubForm('genericForm')); ?>            
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="float:left; width:45%; padding-left:22px;">
+                <div id="newsletterInformation">
+                    <h2><?php echo($this->getCibleText('profile_title_newsletter'))?></h2>
+                    <div class="divContent">
+                        <dl>
+                            <?php echo($form->getSubForm('newsletterForm')); ?>
+                        </dl>
+                    </div>
+                </div>
+                
+                <div id="membersInformation">
+                    <h2>
+                            <?php
+                            //echo($this->getCibleText('profile_title_Members'));
+                            ?>
+                    </h2>
+                    <div class="divContent">
+                        <dl>
+                            <?php
+                            //echo($form->getSubForm('membersForm'));
+                            ?>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

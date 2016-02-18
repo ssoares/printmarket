@@ -1,0 +1,63 @@
+/*
+    Document   : log
+    Created on : 2011-09-27, 15:01:46
+    Author     : soaser
+    Description:
+        Style for the statistics of the newsletter
+    $Id: log.css 835 2012-02-07 15:23:22Z ssoares $
+*/
+@import url("dataTable.css");
+.filterSetContent{
+    /*background-color: #E3E3E3;*/
+    width: 100%;
+    float: left;
+    margin-top:0px;
+    margin-bottom:40px;
+}
+
+#form_panel form .filterSetContent input{
+    vertical-align: initial;
+}
+.filterSetContent_action{
+    padding-right: 20px;
+    padding-left: 20px;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#C0000000,endColorstr=#C0000000);
+    background-color: rgba(0, 0, 0, 0.73);
+    height: 40px;
+}
+
+.filterSetContent_action .action{
+    float:right;
+
+}
+.filterSetContent_action .title{
+    padding-top: 15px;
+    color : #fff;
+}
+
+.filterContent {
+    border: 1px solid #b6b7b8;
+    border-top: 0;
+}
+.filterContent table{
+    width:100%;
+    border:0px;
+}
+
+.filterContent table tr td{
+    padding-left: 20px;
+    width: 20%;
+}
+
+.filterSelect{
+    width:200px;
+}
+
+.filterContent table tr .tdFilterValue{
+    width: 60%;
+}
+
+.tdFilterAction{
+    text-align: right;
+    padding-right: 20px;
+}

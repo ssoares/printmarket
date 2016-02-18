@@ -1,0 +1,67 @@
+<div class="block">
+    <?php
+    $flag = 1;
+    if($this->paginator) {
+        foreach($this->paginator as $news){
+            $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));           
+            $date = new Zend_Date($news['ND_Date'],null, $langSuffix);
+            $date_string_url = Cible_FunctionsGeneral::dateToString($date,Cible_FunctionsGeneral::DATE_SQL,'-');
+            ?>
+             <div class="news news_2columns news_position_2columns_<?php echo ($flag%2); ?>">
+                <div class="news_text_container">
+                 <?php
+                    $date_string = Cible_FunctionsGeneral::dateToString($date,Cible_FunctionsGeneral::DATE_NUM,'.');
+                    ?>
+                    <div class="news_title">
+                        <?php echo $news['NI_Title'] ?>
+                    </div>
+                    <div class="news_date">
+                    <?php echo $date_string ?>
+                    </div>
+                    <div class="news_brief">
+                        <a href="<?php echo $this->baseUrl() . '/' . $this->details_page . "/"  . $date_string_url . "/" . $news['NI_ValUrl'] ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+                    <?php
+                        $text = $news['NI_Brief'];
+                        $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                        echo $text;
+                    ?>
+                        <img src="<?php echo Zend_Registry::get('www_root') ?>/themes/default/images/common/fleche_suivant.png" alt="" border="0"/>
+                        </a>
+                    </div>
+                </div>
+               <?php
+                if(!empty($news['NI_ImageSrc']) && $this->params[6] > 0){
+                    ?>
+                    <div class="news_photo_container">
+                        <?php
+                            $_config = Zend_Registry::get('config');
+                            $_image = "{$_config->news->image->thumb->maxWidth}x{$_config->news->image->thumb->maxHeight}_{$news['NI_ImageSrc']}";
+                            Zend_Registry::set('addThis', "{$this->absolute_web_root}/data/images/news/{$news['ND_ID']}/{$_image}");
+                            echo $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'thumb', array('class'=>'news_photo_list', 'border'=>'0', 'prettyPhoto'=>array('size'=>'original','alt'=>$news['NI_Title'],'title'=>$news['NI_Text'])));
+                        ?>
+                  </div>
+            <?php
+            }
+            ?>
+       </div>
+        <?php
+            if($this->paginator->getItemCountPerPage()!=$flag){
+                $flag++;
+
+                if($flag%2==1){?>
+                    <div class="news_separator">
+                        <!-- Any line separator if needed  -->
+                    </div>
+                <?php
+                }
+            }
+        }
+        ?>
+        <div class="clear_both"></div>
+    <?php
+        echo $this->paginationControl($this->paginator,'sliding', 'partials/products.paginator.phtml');
+    }else{
+        ?><div><p><?php echo $this->getCibleText('news_no_news') ?></p></div><?php
+    }
+    ?>
+</div>

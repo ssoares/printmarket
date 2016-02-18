@@ -1,0 +1,48 @@
+INSERT INTO  `democible`.`ModuleViews` (
+`MV_ID` ,
+`MV_Name` ,
+`MV_ModuleID`
+)
+VALUES (
+'2005',  'detailswithpreviousnext',  '2'
+);
+
+--------------------------------------------------------------
+
+
+INSERT INTO  `democible`.`ModuleViewsIndex` (
+`MVI_ModuleViewsID` ,
+`MVI_LanguageID` ,
+`MVI_ActionName`
+)
+VALUES (
+'2005',  '1',  'detail-avec-precendent-suivant'
+), (
+'2005',  '2',  'details-with-previous-next'
+);
+
+--------------------------------------------------------------
+
+
+INSERT INTO  `democible`.`Static_Texts` (
+`ST_Identifier` ,
+`ST_LangID` ,
+`ST_Value` ,
+`ST_Type` ,
+`ST_Desc_backend` ,
+`ST_Editable` ,
+`ST_ModuleID` ,
+`ST_ModifDate` ,
+`ST_RichText`
+)
+VALUES (
+'form_select_option_view_news_detailswithpreviousnext',  '1',  'Détails d''une nouvelle avec précédent - suivant',  'cible',  '',  '0',  '0', 
+CURRENT_TIMESTAMP ,  '1'
+), (
+'form_select_option_view_news_detailswithpreviousnext',  '2',  'Détails d''une nouvelle avec précédent - suivant',  'cible',  '',  '0',  '0', 
+CURRENT_TIMESTAMP ,  '1'
+);
+
+--------------------------------------------------------------
+
+

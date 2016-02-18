@@ -1,0 +1,85 @@
+<?php $this->headScript()->captureStart() ?>
+    function toggleLostPassword(){
+        var lostPasswordPanel = $('#lostPasswordPanel');
+        if( lostPasswordPanel.css('display') == 'none' )
+        {
+            $('div#lostPasswordPanel .errors').css('display','none');
+            lostPasswordPanel.slideDown();
+        }
+        else
+        {
+            $('#lostPasswordEmail').val('');
+            lostPasswordPanel.slideUp();
+        }
+    }
+
+    function retrievePassword(){
+        var email = $('#lostPasswordEmail');
+        var emailRegEx = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+        $('div#lostPasswordPanel .errors').css('display','none');
+
+        if( email.val() == ''){
+            $('#emailValidatorEmpty').css('display','block');
+            email.focus();
+        } else if(!email.val().match(emailRegEx)) {
+            $('#emailValidatorError').css('display','block');
+            email.focus();
+        } else {
+            $.getJSON('<?php echo $this->baseUrl() ?>/order/index/ajax/actionAjax/lostPassword/email/' +email.val(), function(data){
+                if(data.result == 'fail')
+                    $('#systemError').text(data.message).css('display','block');
+                else
+                    $('#request-form').text(data.message).css('display','block');
+            });
+        }
+    }
+<?php $this->headScript()->captureEnd() ?>
+<div class="block">
+    <table width="800px" >
+        <tr>
+            <td width="280px" valign="top">
+                 <table class="loginForm" width="280px">
+                    <tr>
+                        <td class="login">
+                            <?php echo $this->partial('partials/login.phtml', array('form' => $this->form, 'error' => $this->error, )); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right">
+                            <?php echo $this->partial('partials/lostPasswordPanel.phtml', array('form' => $this->form, 'error' => $this->error, )); ?>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="80px">
+                &nbsp;
+            </td>
+            <td width="440px" height="100%" valign="top">
+                <table width="440px" >
+                    <tr>
+                        <td >
+                            <?php
+                            echo $this->getCibleText('inscription_authentification_long_texte');
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="<?php echo Cible_FunctionsPages::getPageLinkByID(17002); ?>">
+                                <?php
+                                echo $this->getCibleText('inscription_authentification_inscrivez_vous');
+                                ?>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+   </table>
+</div>

@@ -1,0 +1,16 @@
+<div id="div-retailers">
+    <div id="retailers-title">
+        <h2 class="h2Title">
+        <?php echo $this->getClientText('locate_retailer_label'); ?>
+        </h2>
+    </div>
+    <div id="retailers-form">
+        <?php  echo $this->form; ?>
+        
+        <input id="selectedState" name="selectedState" type="hidden" value="<?php echo($this->selectedState); ?>"/>
+        <input id="selectedCity" name="selectedCity" type="hidden" value="<?php echo($this->selectedCity); ?>"/>
+    </div>
+    <div id="retailers-list">
+        
+    </div>
+</div>

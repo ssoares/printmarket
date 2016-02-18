@@ -1,0 +1,152 @@
+<div id="topInfo" class="topInfo full-large dashboard">
+    <div class="zone-block half-left">
+        <h1 id="title"><?php echo $this->getCibleText('dashboard_page_title'); ?></h1>
+        <p><?php echo $this->getCibleText('dashboard_page_description'); ?></p>
+        <?php if (!empty($this->report)): ?>
+        <br />
+        <ul class="zone_panel icon validate">
+            <li class=""><?php echo Cible_Translation::getCibleText('dashboard_summary_teams_tovalidate',
+            null,
+            array('replace' => array('##TOTAL##' => $this->report['validateTeams'])));
+        ?></li>
+        </ul>
+<?php endif; ?>
+    </div>
+    <div class="zone-block half-right">
+        <?php if (!empty($this->report)): ?>
+        <ul class="zone_panel icon rejections">
+            <li class=""><?php echo Cible_Translation::getCibleText('dashboard_summary_rejections',
+                null,
+            array('replace' => array('##TOTAL##' => $this->report['rejections'])));
+            ?></li>
+        </ul>
+        <ul class="zone_panel icon totalDonation">
+            <li class=""><?php echo Cible_Translation::getCibleText('dashboard_summary_totalDonation',
+                null,
+            array('replace' => array('##TOTAL##' => $this->report['totalDonation'])));
+            ?></li>
+        </ul>
+        <ul class="zone_panel icon ccExpiration">
+            <li class=""><?php echo Cible_Translation::getCibleText('dashboard_summary_ccExpiration',
+                null,
+            array('replace' => array('##TOTAL##' => $this->report['ccExpiration'])));
+            ?></li>
+        </ul>
+        <ul class="zone_panel icon newDonors">
+            <li class=""><?php echo Cible_Translation::getCibleText('dashboard_summary_newDonors',
+                null,             array('replace' => $this->report['newDonors']));
+            ?></li>
+        </ul>
+<?php endif; ?>
+    </div>
+</div>
+<?php if( !empty($this->breadcrumb) ): ?>
+    <div id="breadcrumb" class="topInfo-breadcrumb"><?php echo $this->breadcrumb; ?></div>
+<?php else: ?>
+<?php endif; ?>
+
+<div id="dashboardMain">
+    <?php $withoutAdminCol = $this->isAdministrator() == 0? 'norightCol' : ''; ?>
+    <div id="dashboardMain_left" class="<?php echo $withoutAdminCol ?>">
+        <h1><?php echo $this->getCibleText('dashboard_data_management') ?></h1>
+
+        <?php $modules = Cible_FunctionsModules::getModulesList(); //$this->modules ?>
+        <ul class="list_without_style dashboard_module_list">
+            <?php // loops through the modules ?>
+            <?php foreach ($modules as $module): ?>
+            <?php
+                $action_links = '';
+                $access = false;
+                foreach($module['actions'] as $action){
+
+                    if( $this->aclIsAllowed($module['M_MVCModuleTitle'], $action['permission'])){
+                        $access = true;
+                        $pos = strpos($action['action'],"/");
+                        $actionLink = $action['action'];
+                        $paramsName = '';
+                        if($pos){
+                            $params = substr($actionLink,$pos+1,strlen($actionLink));
+                            $actionLink = substr($actionLink,0,$pos);
+                            $paramsName = '_'.str_replace('/','_',$params);
+                        }
+                        $action_links .= '<li class="bullet-standard">';
+                        $action_links .= $this->link(
+                            "{$this->baseUrl()}/{$module['M_MVCModuleTitle']}/{$action['controller']}/{$action['action']}/",
+                            $this->getCibleText('management_module_' . $module['M_MVCModuleTitle'] . '_' . str_replace('-', '_', $actionLink) . $paramsName) . (($module['M_MVCModuleTitle'] == 'text' && $action['action'] == 'list-approbation-request') ? Cible_FunctionsGeneral::getApprobationRequest('text') : '')
+                        );
+                        $action_links .= '</li>';
+                    }
+                }
+                if( !$access)
+                    continue;
+            ?>
+                <li class="list_icons"><img width="48" height="48" class="imgIcon_floatLeft" src="<?php echo $this->baseUrl() ?>/<?php echo($module['M_MVCModuleTitle'])?>/index/get-icon/format/48x48" />
+                    <div><span class="module-title"><?php echo $this->getCibleText($module['M_MVCModuleTitle'] . '_module_name') ?></span>
+                        <ul class="list_without_style dashboard_module_list_link">
+                            <?php echo $action_links ?>
+                        </ul>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+
+    <div id="dashboardMain_right">
+        <!--<div id="dashboardMain_right_inside">
+            <h1><?php echo $this->getCibleText('dashboard_reminder_title') ?></h1>
+            <ul class="list_without_style dashboard_new_activities">
+                <li><a href="#">Nouvelles réponses au sondage</a> (3)</li>
+                <li><a href="#">Nouveaux billets sur le blogue</a> (5)</li>
+                <li><a href="#">Nouveaux événements ajoutés</a> (2)</li>
+            </ul>
+        </div>-->
+
+        <div id="dashboardMain_right_bottom">
+            <?php if($this->isAdministrator()==1
+                || $this->isAdministrator()==2): ?>
+
+                <h1><?php echo $this->getCibleText('dashboard_administration_title') ?></h1>
+                <?php
+                if($this->mobileManagement){?>
+                    <h2><?php echo $this->getCibleText('dashboard_administration_website_mobile_title') ?></h2>
+                    <ul class="list_without_style dashboard_administration_section">
+                        <li><a href="<?php echo $this->baseUrl() ?>/page/manage/structure/site/m"><?php echo $this->getCibleText('dashboard_administration_website_sitemap_management') ?></a></li>
+                        <li><a href="<?php echo $this->baseUrl() ?>/page/manage/menu/site/m"><?php echo $this->getCibleText('dashboard_administration_website_menu_structure') ?></a></li>
+                        <li><a href="<?php echo $this->baseUrl() ?>/text/index/list/site/m"><?php echo $this->getCibleText('treeview_contents_management_title') ?></a></li>
+                    </ul>
+                <?php
+                }
+                ?>
+                <h2><?php echo $this->getCibleText('dashboard_administration_administrators_title') ?></h2>
+                <ul class="list_without_style dashboard_administration_section">
+                    <li><a href="<?php echo $this->baseUrl() ?>/administrator-group/index/order/EGI_Name/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_administrators_groups_management') ?></a></li>
+                    <li><a href="<?php echo $this->baseUrl() ?>/administrator/index/order/EU_FName/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_administrators_administrator_management') ?></a></li>
+                </ul>
+
+                <h2><?php echo $this->getCibleText('dashboard_administration_static_text_title') ?></h2>
+                <ul class="list_without_style dashboard_administration_section">
+                    <li><a href="<?php echo $this->baseUrl() ?>/static-texts/index/order/ST_Desc_backend/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_static_text_description') ?></a></li>
+                        <?php if ($this->isAdministrator() == 1): ?>
+                        <li><a href="<?php echo $this->baseUrl() ?>/utilities/references/references/"><?php echo $this->getCibleText('dashboard_administration_references_description') ?></a></li>
+                    <?php endif; ?>
+                </ul>
+
+                    <?php if ($this->hasProfile): ?>
+                    <h2><?php echo $this->getCibleText('dashboard_administration_profil_list') ?></h2>
+                    <ul class="list_without_style dashboard_administration_section">
+                        <li><a href="<?php echo $this->baseUrl() ?>/users/index/general/order/lastName/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_profil_list_description') ?></a></li>
+                    </ul>
+                <?php endif;?>
+                <h2><?php echo $this->getCibleText('dashboard_administration_website_title') ?></h2>
+                <ul class="list_without_style dashboard_administration_section">
+                     <?php if ($this->hasReindexation){ ?>
+                    <li><a href="<?php echo $this->baseUrl() ?>/search/index/reindexing/"><?php echo $this->getCibleText('dashboard_administration_website_reindexing') ?></a></li>
+                     <?php } ?>
+                    <li><a href="<?php echo $this->baseUrl() ?>/utilities/index/google-analytics/"><?php echo $this->getCibleText('dashboard_administration_utilities_googleAnalytics') ?></a></li>
+                </ul>
+
+            <?php endif; ?>
+        </div>
+    </div>
+    <hr class="clear_both" />
+</div>

@@ -1,0 +1,457 @@
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/jquery/jquery.json-1.3.min.js") ?>
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/csa/overlay.js") ?>
+<script type="text/javascript">
+    current_module = '';
+
+    function pretty_header_format(){
+        var actions_panel = $('#page_edit #fieldset-actions');
+        var language_switcher = $('#page_edit #language-switcher');
+        var header_height = $('#page_edit #header').height() + 10;
+
+        actions_panel.css('top', header_height);
+        language_switcher.css('top', header_height);
+
+        return header_height;
+    }
+
+    function getEditPage(url){
+
+        $.get(url, function(data){
+
+            var window_height = $(window).height();
+            var window_width = $(window).width();
+
+            overlay.show();
+
+            var page_edit = $('#page_edit');
+            var page_content = $('#page_content');
+
+            loadContent(page_content, data, url);
+
+            // Popup has been loaded, we grab the height
+            var page_height = page_edit.height();
+
+            // We define the acceptable height for our popup
+            var acceptable_popup_height = window_height - (window_height / 10);
+
+            // if page_height is greater than acceptable_height, we use acceptable height instead
+            if( page_height > acceptable_popup_height ){
+                page_height = acceptable_popup_height;
+            }
+
+            // we set the css top attribute for our popup
+            var page_edit_top = Math.round((window_height - page_height ) / 2);
+
+            // we set our popup size and position
+            page_edit.css({
+                'top': page_edit_top + 'px',
+                'left': Math.round((window_width - 700) / 2) + 'px',
+                'width': '700px'
+
+            }).slideDown('slow');
+
+            // we find out the space the header is using since some components are position absolutely
+            header_height = pretty_header_format();
+
+            // we substract the header height from the popup height so that our scrollable content doesn't oversize the popup
+            editpanel_height = page_height - header_height;
+            page_content.css('height', editpanel_height + 'px');
+
+            // web grab the actions panel positioned absolute height so that we can move down the content panel
+            var actions_panel = $('#page_edit #fieldset-actions');
+            page_content.css('margin-top', actions_panel.height() + 'px');
+        });
+        $.get('<?php echo $this->baseUrl() ?>/page/manage/page-breadcrumb/ID/<?php echo $this->pageID ?>', function(data){
+             $('#page_edit .topInfo-breadcrumb').text(data);
+        });
+        $.get('<?php echo $this->baseUrl() ?>/page/manage/module-name/name/' + current_module , function(data){
+             $('#page_edit .topInfo-breadcrumb').append(data);
+        });
+    }
+
+    /*
+        loads data content into destination html element, after, catches the submission of the form added to destination
+    */
+    function loadContent(dest, data, url){
+        if(dest){
+            dest.html(data);
+            catchSubmit(dest, url);
+        }
+    }
+    /*
+        catchSubmit is responsible for trapping the submission of the ajax retrieved form and reloading them on error
+    */
+    function catchSubmit(parent, url){
+
+        // check if we've successfully added our page
+        var resultPane = $('#result');
+
+        // if not empty resultPane, we've got a result, else, we need to fill in the form
+        if(resultPane.size() > 0){
+
+             var _blockID = resultPane.find('#block_id').text();
+             var _blockTitle = resultPane.find('#blockTitle').text();
+             var _blockLangID = resultPane.find('#blockLangID').text();
+             var _blockDescription = resultPane.find('#blockDescription').html();
+             var _action = resultPane.find('#action').text();
+
+             if( _blockLangID == currentEditLanguage ){
+                $("li[blockid='" + _blockID + "']").find('div.block_title').text( _blockTitle );
+                $("li[blockid='" + _blockID + "']").find('div.block_parameters').html( _blockDescription );
+             }
+
+             $('#page_edit').slideUp('slow', function(){
+                 if(_action == 'add')
+                    window.location = "<?php echo $this->baseUrl() ?>/page/manage/index/ID/<?php echo $this->pageID ?>";
+             });
+             overlay.hide();
+
+        } else {
+
+            $('ul#language-switcher a', parent).each(function(){
+                var currentLink = $(this);
+
+                currentLink.click(function(){
+
+                    var preconfigured_action = '';
+
+                    if( currentLink.attr('href') != 'javascript:void(0);' ){
+                        preconfigured_action = currentLink.attr('href');
+                        currentLink.data('link', preconfigured_action);
+                        currentLink.attr('href','javascript:void(0);');
+                    } else {
+                        preconfigured_action = currentLink.data('link');
+                    }
+
+                    $.get(preconfigured_action, function(data){
+                        loadContent($('#page_content'), data, preconfigured_action);
+                        pretty_header_format();
+                    });
+                });
+
+            });
+
+            $('form button#cancel', parent).click(function(){
+                 $('#page_edit').slideUp('slow', function(){
+                     $('#page_content').empty();
+                 });
+
+            });
+
+            // Catch submit
+            $('form', parent).submit(function(){
+                $.post(url, $(this).serialize(), function(data){
+
+                    var success = false;
+                    var pageID = '';
+                    var pageTitle = '';
+
+                    loadContent(parent, data, url);
+                    pretty_header_format();
+                });
+                return false;
+            });
+        }
+    }
+
+    function trapAction(){
+        $('.zone').each(function(){
+            var action_link = $(this).find('.block_action_icon a');
+            action_link.click(function(){
+                var currentLink = $(this);
+                var preconfigured_action = '';
+
+                if( currentLink.attr('href') != 'javascript:void(0);' ){
+                    preconfigured_action = currentLink.attr('href');
+                    currentLink.data('link', preconfigured_action);
+                    currentLink.attr('href','javascript:void(0);');
+                } else {
+                    preconfigured_action = currentLink.data('link');
+                }
+
+                currentButton = currentLink;//.find('img:first');
+
+                if(currentButton.hasClass('online-status')){
+                    if( currentButton.hasClass('online') ){
+                        $.post(preconfigured_action, 'state=offline', function(data){
+                            if(data.result == true)
+                                currentButton.addClass('offline').removeClass('online');
+                        }, 'json');
+                    } else {
+                        $.post(preconfigured_action, 'state=online', function(data){
+                            if(data.result == true)
+                                currentButton.addClass('online').removeClass('offline');
+                        }, 'json');
+                    }
+                }else if(currentButton.hasClass('secured-status')){
+                    if( currentButton.hasClass('deny') ){
+                        $.post(preconfigured_action, 'state=allow', function(data){
+                            if(data.result == true)
+                                currentButton.addClass('allow').removeClass('deny');
+                        }, 'json');
+                    } else {
+                        $.post(preconfigured_action, 'state=deny', function(data){
+                            if(data.result == true)
+                                currentButton.addClass('deny').removeClass('allow');
+                        }, 'json');
+                    }
+                } else if( currentButton.hasClass('delete') ){
+                    if( confirm('Êtes vous sûr de vouloir supprimer ce bloc?') ){
+                        var currentItem = currentLink.parents('li:first');
+
+                        $.post(preconfigured_action, 'delete=true', function(data){
+                           if(data.result == true){
+                               currentItem.slideUp('slow', function(){
+                                   $(this).remove();
+                               });
+                           }
+                        }, 'json');
+                    }
+                // Else its an edit
+                } else {
+                    current_module = currentLink.parents('li:first').attr('module');
+                    getEditPage( preconfigured_action );
+                }
+            });
+        });
+    }
+
+    /*
+        Retrieves all the blocks' ID for a zone
+    */
+    function retrieveBlockIDs(zone){
+        var ids = [];
+
+        $('#zone_' + zone + ' li').each(function(i){
+            ids.push( $(this).attr('blockid') );
+        });
+
+        return ids;
+    }
+
+    $(function() {
+        trapAction();
+
+        $('#modules a').each(function(){
+            var action_link = $(this);
+            action_link.click(function(){
+                var currentLink = $(this);
+                var preconfigured_action = '';
+
+                if( currentLink.attr('href') != 'javascript:void(0);' ){
+                    preconfigured_action = currentLink.attr('href');
+                    currentLink.data('link', preconfigured_action);
+                    currentLink.attr('href','javascript:void(0);');
+                } else {
+                    preconfigured_action = currentLink.data('link');
+                }
+
+                getEditPage(preconfigured_action);
+            });
+
+        });
+
+        $(".zone").sortable({
+            items: 'li',
+            handle: '.module_icon',
+            placeholder: 'place-holder',
+            connectWith: '.connectedSortable',
+            receive: function(event, ui){
+
+                var mode = $(ui.item).parent().attr('id') == 'garbage' ? 'delete' : 'update';
+
+                if(mode == 'garbage')
+                    $(ui.helper).sortable('cancel');
+
+            },
+            stop: function(event, ui) {
+                var dragged_el = $(ui.item);
+                var baseUrl = '<?php echo $this->baseUrl() ?>';
+                var pageID = dragged_el.attr('pageid');
+                var module = dragged_el.attr('module');
+                var blockID = dragged_el.attr('blockid');
+                var previousZoneID = dragged_el.attr('zoneid');
+                var currentZoneID = $(ui.item).parent().attr('id').replace('zone_', '');
+                dragged_el.attr('zoneid', currentZoneID);
+
+                dragged_el.removeClass('ui-draggable module');
+
+                var mode = 'update';
+                var action = '';
+
+
+                // if we come from garbage, lets reactivate it
+                if( previousZoneID == 'garbage'){
+                    mode = 'activate';
+                    action = baseUrl + '/' + module + '/index/activate-block/pageID/' + pageID + '/blockID/' +  blockID;
+                }
+                // if we drop on garbage, lets deactivate it
+                else if( currentZoneID == 'garbage' ){
+                    mode = 'deactivate';
+                    action = baseUrl + '/' + module + '/index/deactivate-block/pageID/' + pageID + '/blockID/' +  blockID;
+                }
+
+                // If a block is dropped onto the garbage list, we deactivate it, meaning we set its zoneID to -1
+                switch(mode){
+                    case 'deactivate':
+                        $.post( action , function(data){
+
+                        },'json');
+
+                        // update the order of the previous zone
+                        previousZoneOrderedIDs = retrieveBlockIDs(previousZoneID);
+                        action = baseUrl + '/' + module + '/index/update-zone-block/pageID/' + pageID + '/blockID/' +  blockID;
+                        _post = 'currentZoneID=' + previousZoneID + '&currentIds=' + $.toJSON( previousZoneOrderedIDs );
+
+                        $.post( action, _post, function(data){
+
+                        },'json');
+                    break;
+
+                    // If a block has been dropped onto a zone and that its previous zone was garbage, then we reactivate it by setting its zoneID to the new zoneID
+                    case 'activate':
+                        $.post( action, 'zoneID=' + currentZoneID, function(data){
+                              if(data.result != true){
+                                // should reload the page or moved back the object to the garbage
+                              }
+                        },'json');
+                    case 'update':
+
+                        // update the current zone
+                        action = baseUrl + '/' + module + '/index/update-zone-block/pageID/' + pageID + '/blockID/' +  blockID;
+                        currentZoneOrderedIDs = retrieveBlockIDs(currentZoneID);
+                        _post = 'currentZoneID=' + currentZoneID + '&currentIds=' + $.toJSON( currentZoneOrderedIDs );
+
+                        // update the order of the previous and current zone
+                        if( previousZoneID != currentZoneID && previousZoneID != 'garbage' ){
+                            previousZoneOrderedIDs = retrieveBlockIDs(previousZoneID);
+                            _post += '&previousZoneID=' + previousZoneID + '&previousIds=' + $.toJSON( previousZoneOrderedIDs );
+                        }
+
+                        $.post( action, _post, function(data){
+
+                        },'json');
+                    break;
+                }
+
+                $("ul.zone").sortable('refresh');
+            }
+        });
+
+        overlay = new CSAOverlay('overlay');
+
+        var loading_el = $("#loading");
+
+        loading_el.ajaxStart(function(){
+            $(this).show();
+            overlay.show();
+        });
+
+        loading_el.ajaxStop(function(){
+            $(this).hide();
+            overlay.hide();
+        });
+
+        var loading_top = ($(window).height() / 2) - 50;
+        var loading_left = ($(window).width() / 2) - 100;
+        loading_el.css({'position' : 'absolute',
+            'top' :  loading_top,
+            'left' : loading_left
+        });
+
+    });
+
+</script>
+<div>
+    <!--<div id="page-title"><?php echo($this->pageTitle) ?></div>-->
+
+    <?php
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+        'pageTitle' => $this->getCibleText('page_structure_management_title'),
+        'pageDescription' => $this->getCibleText('page_structure_management_description'),
+        'breadcrumb' => Cible_FunctionsPages::buildBreadcrumb($this->pageID)
+    ));
+    ?>
+
+<?php
+    if ($this->template_file == ""){
+?>      <div id="page-block-zones" align="center">
+            <div style="width:75%;background-color:white";><strong><?php echo($this->error_message_permission) ?></strong></div>
+        </div>
+<?php
+    }
+    else{
+?>
+        <!-- Start : Top Menu Icons -->
+        <div id="topMenuIcons">
+
+            <!--<ul id="modules" class="connectedSortable">-->
+            <ul id="modules" class="connectedSortable">
+
+                <?php $modules = $this->modules; ?>
+                <?php foreach($modules as $module): ?>
+                    <li id="module-<?php echo $module['M_MVCModuleTitle'] ?>" zoneid="" class="module" module="<?php echo $module['M_MVCModuleTitle'] ?>" pageid="<?php echo $this->pageID ?>" blockid="-1">
+                        <a href='<?php echo $this->baseUrl() ?>/<?php echo($module['M_MVCModuleTitle'])?>/index/add-block/ID/<?php echo($this->pageID)?>'><img class="action_icon" alt="Module <?php echo $this->getCibleText( "module_{$module['M_MVCModuleTitle']}")?>" width="48" height="48" src="<?php echo $this->baseUrl() ?>/<?php echo($module['M_MVCModuleTitle'])?>/index/get-icon/format/48x48" /></a>
+                        <?php echo $this->getCibleText($module['M_MVCModuleTitle'] . '_module_name') ?>
+                    </li>
+                <?php endforeach; ?>
+
+            </ul>
+            <hr class="clear_both" />
+
+        </div>
+        <!-- End : Top Menu Icons -->
+       <?php if($this->hasAccessToContent): ?>
+        <div id="switchPanel"><?php echo $this->link($this->url(array('controller' => 'index')), $this->getCibleText('manage_content'), array(
+            'class' => 'switchButton',
+            'onmouseover' => "this.className = 'switchButtonOver';",
+            'onmouseout' => "this.className = 'switchButton';"
+        )) ?></div>
+        <?php endif; ?>
+        <div id="page-block-zones">
+
+            <?php echo $this->render($this->template_file) ?>
+            <div>
+
+                <?php
+                    // One place_holder template, so grab only the first place_holder elements
+                    $blocks = isset($this->blocks[-1]) ? $this->blocks[-1] : array();
+                ?>
+
+                <ul id="garbage" class="zone connectedSortable">
+                    <?php
+                    $rows = $blocks;
+                    $totalRow = count($rows);
+                    $i = 1;
+
+                    foreach ($rows as $block):
+                        $module = $block['M_MVCModuleTitle'];
+                        $param = array('ID' => $block['B_ID'], 'pageID' => $block['B_PageID'], 'position' => $i, 'totalBlock' => $totalRow, 'blockTitle' => $block['BI_BlockTitle'], 'status' => $block['B_Online']);
+                        ?>
+                        <li id="module-<?php echo $module ?>" class="" module="<?php echo $module ?>" pageid="<?php echo $param['pageID'] ?>" blockid="<?php echo $param['ID'] ?>" zoneid="garbage"><?php echo $this->action('manage-block','index',$module, $param); ?></li>
+                    <?php
+                    $i++;
+                    endforeach;
+                    ?>
+                </ul>
+            </div>
+        </div>
+<?php } ?>
+</div>
+
+<?php echo $this->partial('partials/loading.phtml'); ?>
+
+<div id="page_edit">
+    <div id="header">
+         <?php
+            echo $this->partial('partials/header.pageDetails.phtml', array(
+                'pageTitle' => $this->getCibleText('block_edit_parameters_title'),
+                'pageDescription' => $this->getCibleText('block_edit_parameters_description'),
+                'breadcrumb' => '&nbsp;'
+            ));
+            ?>
+    </div>
+    <div id="page_content">
+
+    </div>
+</div>

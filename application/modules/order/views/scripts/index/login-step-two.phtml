@@ -1,0 +1,54 @@
+<?php $this->headScript()->captureStart() ?>
+    function toggleLostPassword(){
+        var lostPasswordPanel = $('#lostPasswordPanel');
+        if( lostPasswordPanel.css('display') == 'none' )
+        {
+            $('div#lostPasswordPanel .errors').css('display','none');
+            lostPasswordPanel.slideDown();
+        }
+        else
+        {
+            $('#lostPasswordEmail').val('');
+            lostPasswordPanel.slideUp();
+        }
+    }
+
+    function retrievePassword(){
+        var email = $('#lostPasswordEmail');
+        var emailRegEx = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+        $('div#lostPasswordPanel .errors').css('display','none');
+
+        if( email.val() == ''){
+            $('#emailValidatorEmpty').css('display','block');
+            email.focus();
+        } else if(!email.val().match(emailRegEx)) { 
+            $('#emailValidatorError').css('display','block');
+            email.focus();
+        } else {        
+            $.getJSON('<?php echo $this->baseUrl() ?>/quoteRequest/index/ajax/actionAjax/lostPassword/email/' +email.val(), function(data){
+                if(data.result == 'fail')
+                    $('#systemError').text(data.message).css('display','block');
+                else
+                    $('#request-form').text(data.message).css('display','block');
+            });
+        }
+    }
+<?php $this->headScript()->captureEnd() ?>
+
+<div class="block">
+    <div id="qr-login">
+        <table cellspacing="0" cellpadding="0" border="0">
+            <tr valign="top">
+                <td class="login">
+                    <?php echo $this->partial('partials/login.phtml', array('form' => $this->form, 'error' => $this->error, )); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <?php echo $this->partial('partials/lostPasswordPanel.phtml', array('form' => $this->form, 'error' => $this->error, )); ?>
+                </td>
+            </tr>
+        </table>        
+    </div>
+</div>

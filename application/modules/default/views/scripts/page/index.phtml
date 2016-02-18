@@ -1,0 +1,4 @@
+<?php $this->placeholder('content')->captureStart('SET', 'content'); ?>
+<?php echo $this->render($this->view_template); ?>
+<?php $this->placeholder('content')->captureEnd() ?>
+<?php echo $this->placeholder('content')->content; ?>

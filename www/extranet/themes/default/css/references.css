@@ -1,0 +1,178 @@
+/*
+    Document   : references
+    Created on : 2012-07-17, 14:16:32
+    Author     : soaser
+    Description:
+        Purpose of the stylesheet follows.
+*/
+@import url("dataTable.css");
+.ui-dialog{
+    box-shadow: 0 3px 10px -2px #000;
+}
+#form_panel form dd.hasShortcut label{
+    width: 140px;
+}
+.ui-widget-header .ui-icon{
+    background: none;
+}
+.shortcutT,
+.shortcutD,
+.shortcutC,
+.shortcut{
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    height: 25px;
+    line-height: 22px;
+    margin: 0;
+    padding-left: 30px;
+    position: relative;
+    width: 25px;
+    z-index: 1;
+}
+.multiselect + .shortcutT,
+.multiselect + .shortcutD,
+.multiselect + .shortcutC,
+.multiselect + .shortcut{
+    height: 18px;
+}
+.shortcutC{
+    background: url("../../../icons/icon-edit-16x16.png") no-repeat scroll 50% 50% transparent;
+}
+.shortcutD{
+    background: url("../../../icons/icon-close-16x16.png") no-repeat scroll 50% 50% transparent;
+}
+.shortcutT,
+.shortcut {
+    background: url("../../../icons/icon-add-16x16.png") no-repeat scroll 50% 50% transparent;
+}
+.hasShortcut {
+    display: inline-block;
+}
+.shortcutC:hover,
+.shortcut:hover{
+    color: #82B8CE;
+}
+#repertoire .shortcut{
+    margin: -32px 77% 0 0;
+}
+
+#form_panel form#repertoire dd.hasShortcut label{
+    width: 140px;
+}
+.ui-dialog-title{
+    text-transform: capitalize;
+}
+.hidden{
+    display: none;
+}
+#valuesList{
+    width: 100%
+}
+.allowChange{
+    width: 190px;
+}
+#valuesList td, th {
+    padding-left: 5px;
+    text-align: left;
+}
+#valuesList td.center, th.center {
+    text-align: center;
+}
+#valuesList td.indent {
+  padding-left: 20px;
+}
+#valuesList td.right {
+  text-align: right;
+}
+#valuesList td.last{
+    height: 30px;
+    width: 80px;
+    text-align: center;
+}
+/*#valuesList input.stdInput{
+    width: 110px;
+}*/
+th.allSel{
+    width: 145px;
+}
+.deleteBtn, .removeBtn{
+    background: transparent url('../../../icons/icon-delete-24x24.png') no-repeat 0 5px;
+    cursor: pointer;
+    padding: 7px 10px;
+}
+.removeBtn{
+    background: transparent url('../../../icons/icon-close-16x16.png') no-repeat 0 5px;
+}
+.addValueDisplayLine{
+    background: url("../../../icons/icon-add-16x16.png") no-repeat scroll 0 5px transparent;
+    float: right;
+    line-height: 23px;
+    padding-left: 20px;
+    text-align: left;
+    width: 155px;
+}
+.addValueDisplayLine:hover{
+    background-color: #ccc;
+    /*padding: 2px;*/
+}
+.addBtn{
+    background: transparent url('../../../icons/icon-valid-16x16.png') no-repeat 0 5px;
+    cursor: pointer;
+    padding: 7px 10px;
+}
+.ui-dialog .ui-dialog-title{
+    text-transform: none;
+}
+.ui-state-highlight{
+    border: 2px solid #ABC6DD;
+    height: 23px;
+    line-height: 23px;
+}
+
+#valuesList th.white {
+    color: #fff;
+}
+.ui-dialog{
+    z-index: 100002 !important;
+}
+
+#ILK_RefId-album{
+    float: none;
+    margin-bottom: -40px;
+}
+
+#RefId_Labels{
+    float: none;
+    padding-top: 20px;
+}
+
+label.firstExt,
+input#address-AI_FirstExt,
+label.secondExt,
+input#address-AI_SecondExt{
+    margin-left: 160px;
+/*    margin-top: -30px;
+    position: absolute;*/
+    width: 50px;
+}
+label.firstExt,
+label.secondExt{
+    margin-top: -50px;
+
+}
+
+input#address-AI_SecondTel,
+input#address-AI_FirstTel{
+    width: 120px;
+}
+.ui-dialog .ui-dialog-buttonpane button{
+    border : 0;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#C0000000,endColorstr=#C0000000);
+    background-color: rgba(0, 0, 0, 0.73);
+    color: #fff;
+}
+
+.ui-dialog .ui-dialog-buttonpane button:hover{
+     background-color: #ccc !important;
+    color: #3c3d3f; }

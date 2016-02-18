@@ -1,0 +1,10 @@
+//crée un pseudo-élément avec 100% de hauteur pour permettre un alignement vertical
+.vertical-aligner() when (default()) {
+    white-space:nowrap;
+    &:before { 
+        content:"";
+        display:inline-block;
+        height:100%;
+        vertical-align:middle;
+    }
+}

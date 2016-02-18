@@ -1,0 +1,68 @@
+<?php
+    $styleToAdd = "";
+?>
+<div class="block" style="<?php echo $styleToAdd;?>">
+    <?php
+    $flag = 1;
+    if($this->paginator) {
+        foreach($this->paginator as $gallery){
+            //var_dump($gallery);
+            ?>            
+             <div class="gallery gallery_4columns gallery_position_4columns_<?php echo ($flag%$this->numberItemPerColumn); ?>">                            
+                <div class="gallery_text_container">                    
+                    <?php echo $gallery['II_Title'] ?>
+                </div>
+                <?php
+                if(!empty($gallery['thumbName'])){               
+                ?>
+                <div class="gallery_photo_container">
+                <?php    
+                    //echo $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'original', array('noGroup'=>'true','class'=>'news_photo_list', 'border'=>'0', 'prettyPhoto' => array('size'=>'original')));
+                    echo $this->moduleImage('gallery',$gallery['GI_GalleryID'] . "/" . $gallery['GI_ImageID'], $gallery['I_OriginalLink'], 'thumb', array('noGroup'=>'true','class'=>'news_photo_list', 'border'=>'0', 'prettyPhoto' => array('size'=>'original','theme' => 'facebook','alt'=>htmlentities($gallery['II_Title']),'title'=>htmlentities($gallery['II_Description']))));
+                ?>     
+                </div>                 
+                <?php            
+                }
+                ?>   
+                <div class="gallery_brief">
+                <?php
+                    $text = $gallery['II_Description'];
+                    $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                    echo $text;
+                ?>                        
+                </div>
+            </div>
+        <?php
+            $flag++;               
+            if($flag%4==1){?>
+                <div class="gallery_separator">
+                    &nbsp;
+                </div> 
+            <?php   
+            }
+        }
+    }
+    else{
+    ?><div>
+        <p><?php echo $this->getCibleText('gallery_no_gallery'); ?>
+        </p>
+    </div><?php
+    }    
+    $pagin = $this->paginationControl($this->paginator,'sliding', 'partials/products.paginator.phtml');    
+    $pagin = str_replace("//","/",$pagin);
+    echo Cible_FunctionsGeneral::getUrlWithoutExtraPage($pagin);    
+    ?>    
+</div>
+<div class="gallery_view_all">
+    <?php 
+    if(isset($this->pagePrecedente)){
+        $backLink = $this->pagePrecedente;           
+    }
+    else{
+        $backLink = $this->baseUrl() . '/' . $this->listall_page_gallery;
+    }
+    ?>
+    <a href="<?php echo $backLink ?>" title="<?php echo $this->getCibleText('see_all_gallery_text') ?>" class="view-all-image">
+        <?php echo $this->getCibleText('see_all_gallery_text') ?>&nbsp;&nbsp;&nbsp;
+    </a>
+</div>

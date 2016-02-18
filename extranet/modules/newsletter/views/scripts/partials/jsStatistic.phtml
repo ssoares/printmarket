@@ -1,0 +1,122 @@
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        var lang    = '<?php echo $this->view->language ?>';
+        var loadImg = '<?php echo $this->image($this->locateFile('loading.gif')) ?>';
+        var baseUrl = "<?php echo $this->baseUrl() ?>";
+        var moduleAction  = "/<?php echo $this->view->params['module']?>";
+        moduleAction += "/<?php echo $this->view->params['controller']?>";
+        moduleAction += "/ajax";
+
+        defaultProperties.init(baseUrl, moduleAction, loadImg, lang);
+        dataTableReport.init(loadImg);
+        /* Add event listener for opening and closing details
+         * Note that the indicator for showing which row is open is not controlled by DataTables,
+         * rather it is done here
+         */
+        $('tr[id^=nl-] td.last').live('click', function () {
+            var elem = $(this).prevAll('td:last').find('img');
+            elem.click();
+        } );
+        /* Add event listener for opening and closing details
+         * Note that the indicator for showing which row is open is not controlled by DataTables,
+         * rather it is done here
+         */
+        $('#consultations tbody td img').live('click', function () {
+            dataTableReport.toggleDetails(this, '#opened');
+        } );
+
+        /* Activate the filter by newsletter id
+         * On change it diplays only data of the selected release.
+         */
+        $('#releases').live('change', function () {
+            window.location = $('#url').val() + '/index' + '/releaseId/' + $(this).val();
+//            defaultProperties.resetParams();
+//            defaultProperties.setParams('/report/opened');
+//            defaultProperties.setParams('/releaseId/' + $(this).val());
+//            defaultProperties.setReleaseId($(this).val());
+//
+//            var myTab = $("#tabContainer").tabs();
+//            var selected = myTab.tabs('option', 'selected');
+//            dataTableReport.init(loadImg, $(this).val());
+//            myTab.tabs('load', selected);
+        });
+
+        /* Activate the filter by sub-groups (courrielleur filters)
+         * On change it diplays only data of the selected release.
+         */
+        $('select[id$=Filters]').live('change', function () {
+            var el = $(this);
+            if (el.val().length > 1){
+                dataTableReport.elem = $(this);
+            }else{
+                dataTableReport.elem = null;
+            }
+            dataTableReport.tabFilter(el.val());
+        });
+
+
+        /*
+         * Filters data according to the dates.
+         */
+        $('a[id^=dateFilter]').live('click', function(e){
+            e.preventDefault();
+            dataTableReport.dateFilter($('#startDate').val(), $('#endDate').val());
+        });
+        /*
+         * Cancel filter by date
+         */
+        $('a[id^=clearDate]').live('click', function(e){
+            e.preventDefault();
+            dataTableReport.dateFilter(0, 0);
+            $('#startDate').val('');
+            $('#endDate').val('');
+        });
+
+        $(".modalDetails").live('click', function(e) {
+            e.preventDefault();
+            var releaseId = 0;
+            var articleId = 0;
+            var diagTitle = '<?php echo $this->getCibleText('newsletter_statistic_diagtitle_title'); ?> : ';
+            var type = $(this).attr('class').split(' ')[0];
+            var trId = $(this).parents('tr').attr('id');
+
+            defaultProperties.resetParams();
+            defaultProperties.setParams('/report/users');
+            defaultProperties.setParams('/viewType/' + type);
+
+            if (type == 'details')
+            {
+                releaseId = trId.split('-')[2];
+                articleId = trId.split('-')[1];
+                defaultProperties.setParams('/articleId/' + articleId);
+            }
+            else if (type == 'subscribe')
+            {
+                var categoryId = trId.split('-')[1];
+                defaultProperties.setParams('/categoryId/' + categoryId);
+
+            }
+            else
+                releaseId = trId.split('-')[1];
+
+            diagTitle += $(this).attr('title');
+            defaultProperties.setParams('/releaseId/' + releaseId);
+            defaultProperties.setReleaseId(releaseId);
+
+            dataTableReport.usersReport(diagTitle);
+        });
+        $( document ).ajaxStart(function() {
+            var docHeight = $(document).height();
+            $( "#fadebg" ).height(docHeight + 'px').show();
+            var loading = $( "#loading" );
+            var top = ($(window).height() / 2) + $(document).scrollTop();
+            var left = ($(window).width() / 2) - (loading.width() / 2) ;
+            loading.css({top: top, left: left}).show();
+        }).ajaxStop(function() {
+            $( "#loading" ).hide();
+            $( "#fadebg" ).hide();
+        });
+    });
+    //]]>
+    </script>

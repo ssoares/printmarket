@@ -1,0 +1,33 @@
+.sticky-placeholder-wrapper {
+    display:block;
+}
+.sticky-placeholder-field {
+
+}
+.sticky-placeholder-label {
+    -webkit-transition: opacity .2s ease-out;
+    -moz-transition: opacity .2s ease-out;
+    -ms-transition: opacity .2s ease-out;
+    transition: opacity .2s ease-out;
+    color:@brand-grey-light;
+    white-space:nowrap;
+    .font-weight('light', 'sans-serif');
+    & when (@device-type = 'desktop') {
+        .responsive-font(@font-size-base + 1);
+        padding-right:12px;
+        opacity:.5; // to prevent initial dimming in FF, set to the same value as placeholderOpacity (default: .5)
+        font-style:italic;
+    }
+    & when (@device-type = 'mobile') {
+        .responsive-font((@font-size-base + 8) * @mobile-divider-text);
+        padding-right:12px * @mobile-divider-text;
+        opacity:1 !important;
+        font-style:normal;
+    }
+}
+input+.sticky-placeholder-label {     
+    line-height:@input-height-base - @input-padding  !important;
+}
+textarea+.sticky-placeholder-label {     
+
+}

@@ -1,0 +1,30 @@
+<?php
+    
+?>
+<div id="container_middle_left"><?php echo($this->TreeView); ?></div>
+<div id="container_middle_center">&nbsp;</div>
+<div id="container_middle_right">
+
+    <?php if ($this->page && $this->pageindex) : 
+        $pageIndex = $this->pageindex;
+    ?>
+    
+        <h3><?php echo($pageIndex->PI_PageTitle) ?></h3>
+        <p><?php echo str_replace('%PAGE_TITLE%', $pageIndex->PI_PageTitle, $this->getCibleText('page_delete_message_confirmation')) ?></p>
+        
+
+        <form action="<?php echo $this->url(array('action'=>'delete')); ?>" method="post">
+            <div>
+                <input type="hidden" name="PageID" value="<?php echo $this->page->P_ID; ?>" />
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+        
+    <?php else: ?>
+
+        <p><?php echo $this->getCibleText('page_delete_message_cant_find_page') ?></p>
+
+    <?php endif; ?>
+    
+</div>

@@ -1,0 +1,35 @@
+<?php $myProfileLink = Cible_FunctionsPages::getPageLinkByID(5);?>
+<div id="cart" class="block">
+    <?php echo $this->partial('partials/stepTopLine.phtml', array('step' => $this->step)); ?>
+    <span class="subtitles">
+    <?php echo $this->getClientText('order_summary_products_title'); ?>
+    </span>
+    <?php echo $this->action('cartdetails', 'index', 'cart'); ?>
+    <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+    <span class="subtitles newAccount">
+    <?php echo $this->getClientText('order_resume_account_data_title'); ?>
+    </span>
+    <hr />
+    <?php $userData = $this->memberInfos;?>
+    <div class="block">
+        <?php echo $this->formOrder; ?>
+    </div>
+    <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+    <?php
+    $class = 'stepBottom';
+//    if($userData['isRetailer']):
+//        $class = 'stepBottomOnly';?>
+    
+    <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+    
+    <?php echo $this->partial(
+                'partials/cartNavigationLinks.phtml',
+                array(
+                    'urlBack'  => $this->urlBack,
+                    'nextStep' => $this->nextStep,
+                    'step'     => $this->step,
+                    'moreClass'=> $class
+                    )
+                );
+    ?>
+</div>

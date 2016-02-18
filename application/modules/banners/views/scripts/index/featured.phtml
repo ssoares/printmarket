@@ -1,0 +1,105 @@
+<section class="featured banners module">
+    <?php echo $this->showBlockTitle('h2', array('class' => 'banners-title'));?>
+    <div class="featured-container">
+        <?php
+        $x = 0;
+        foreach ($this->imgFeat as $image):
+            $pID = "image_" . $x;
+            $link_anchor = ($image['IFI_TextA'] != '') ? $image['IFI_TextA'] : $this->getClientText('featured_more');
+            $link_url = $image['IFI_Url'];
+            ?>
+            <?php if (!empty($image['IF_Img'])) { ?>
+                <div class="featured-block <?php echo $image['IF_Effect']; ?>" >
+                    <div class="featured-block-title">
+                        <?php
+                        if ($image['IFI_UrlVideo'] == 1) {
+                            echo $this->link(
+                                    $image['IFI_Url'], $image['IFI_Label'], array()
+                            );
+                        }
+                        ?>
+                    </div>
+                    <div class="featured-block-text1">
+                        <?php
+                        $text = str_replace(';', '<br />', $image['IFI_TextA']);
+                        echo $this->link(
+                                $image['IFI_Url'], $text, array()
+                        );
+                        ?>
+                    </div>
+                        <?php
+                        $prefix = $this->imgCfg['thumb']['maxWidth'] . 'x';
+                        $prefix .= $this->imgCfg['thumb']['maxHeight'] . '_';
+                        $path = $this->imgPath . $prefix . $image['IF_Img'];
+                        ?>
+                    <div id="<?php echo $pID; ?>" class="featured-block-image" style="background-image:url(<?php echo $path; ?>); background-repeat:no-repeat; background-position:center">
+                    <?php
+                    if ($image['IFI_UrlVideo'] == 0) {
+                        echo $this->link($image['IFI_Url'], $this->image($this->baseUrl() . "/themes/default/images/common/pix.gif"), array('class' => 'imageFeatured'));
+                    } else {
+                        $videos = new VideoObject();
+                        $video = $videos->getVideoWithID($image['IFI_Video']);
+                        $imageReplace = $this->baseUrl() . "/" . $path;
+                        $dataVideo = array('imageReplace' => $imageReplace, 'IFI_Video' => $image['IFI_Video'], 'V_Width' => $image['V_Width'], 'V_Height' => $image['V_Height'], 'VI_MP4' => $image['VI_MP4'], 'VI_WEBM' => $image['VI_WEBM'], 'VI_OGG' => $image['VI_OGG'], 'V_Autoplay' => $image['V_Autoplay'], 'VI_Poster' => $image['VI_Poster']);
+
+                        echo $this->videoFeature($pID, $this->videoPath, $dataVideo);
+                    }
+                    ?>
+                    </div>
+                    <div class="featured-block-text2">
+                        <?php
+                        $text = str_replace(';', '<br />', $image['IFI_TextB']);
+                        echo $this->link(
+                                $image['IFI_Url'], $text, array()
+                        );
+                        ?>
+                    </div>
+                </div>
+                    <?php } ?>
+                    <?php
+                    $x++;
+                endforeach;
+                ?>
+    </div>
+</section>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        /* $('div.sec0').live('mouseenter', function(){
+         $(this).find('.featured-block-text2').show(0);
+         //$('.featured-block-text2').fadeIn(2000);
+
+         });
+         $('div.sec0').live('mouseout', function(){
+         $(this).find('.featured-block-text2').hide(0);
+         //$('.featured-block-text2').fadeIn(2000);
+
+         });
+
+         $('div.sec1').live('mouseenter', function(){
+         $(this).find('.featured-block-text2').fadeIn(1000);
+         //$('.featured-block-text2').fadeIn(2000);
+
+         });
+         $('div.sec1').live('mouseout', function(){
+         $(this).find('.featured-block-text2').fadeOut(1000).stop();
+         //$('.featured-block-text2').fadeIn(2000);
+
+         });
+
+         $('div.secUp1').live('mouseenter', function(){
+         $(this).find('.featured-block-text2').fadeIn(1000);
+         $(this).find('.featured-block-text2').animate({"top": "-=150px"}, "slow");
+         //$('.featured-block-text2').fadeIn(2000);
+
+         });
+         $('div.secUp1').live('mouseout', function(){
+
+         $(this).find('.featured-block-text2').animate({"top": "+=150px"}, "slow");
+         $(this).find('.featured-block-text2').fadeOut(1000);
+         //$('.featured-block-text2').fadeIn(2000);
+
+         });*/
+    });
+//]]>
+</script>

@@ -1,0 +1,43 @@
+<?php
+    
+    $params     = $this->params;
+    //$blockParameters = $this->blockparameters;
+    $pageID     = $params['pageID'];
+    $blockID    = $params['ID'];
+    $position   = $params['position'];
+    $totalBlock = $params['totalBlock'];
+    $blockTitle = $params['blockTitle'];
+    $status     = $params['status'];
+    $secured    = $params['secured'];
+    $isActive = isset($params['isActive']) ? $params['isActive'] : true;
+?>
+<div class="block">
+    <div class="block_header">
+        <div class="block_module_icon">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td width="55">
+                    <?php $classAction = ($isActive)? 'module_icon action_icon' : ''; ?>
+                    <img class="<?php echo $classAction; ?>" width="48" height="48" alt="Module <?php echo($this->moduleName); ?>" src="<?php echo($this->baseUrl()) . '/' . $this->moduleName.'/index/get-icon/format/48x48' ?>"/>
+                </td>
+                <td class="block_title"><?php echo strtoupper($blockTitle) ?></td>
+            </tr>
+            </table>
+            <div style="clear:both; height:0px;">&nbsp;</div>
+        </div>
+        <div style="clear:both; height:0px;">&nbsp;</div>
+    </div>
+    <div class="block_container">
+        <div class="block_action_icon">
+            <a href="<?php echo($this->baseUrl()) . '/' . $this->moduleName.'/index/set-online-block/ID/' . $pageID . '/blockID/' . $blockID ?>" class="online-status <?php echo ($status)? 'online' : 'offline' ?>"><?php echo $this->getCibleText('manage_block_online_status') ?></a>
+<!--            <a href="<?php echo($this->baseUrl()) . '/' . $this->moduleName.'/index/set-secure-block/ID/' . $pageID . '/blockID/' . $blockID ?>" class="secured-status <?php echo ($secured)? 'deny' : 'allow' ?>"><?php echo $this->getCibleText('manage_block_secured_status') ?></a>-->
+            <a href="<?php echo($this->baseUrl()) . '/' . $this->moduleName.'/index/edit-block/ID/' . $pageID . '/blockID/' . $blockID ?>" class="edit"><?php echo $this->getCibleText('manage_block_settings') ?></a>
+            <?php if ($isActive): ?>
+            <a href="<?php echo($this->baseUrl()) . '/' . $this->moduleName . '/index/delete-block/ID/' . $pageID . '/blockID/' . $blockID ?>" class="delete last"><?php echo $this->getCibleText('manage_block_delete') ?></a>
+            <?php endif; ?>
+        </div>
+        <div class="block_parameters">
+            <?php echo $this->action('get-manage-description', 'index', $this->moduleName, array('ID' => $blockID)) ?>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div id="box-black">
+    <p class="title"><?php echo htmlspecialchars_decode($this->headTitle()->toString(null,null,true)) ?></p>
+</div>
+<div class="searchZone">
+
+    <div class="clear_both"><?php echo $this->clientImage('pix.gif', array('alt'=>'')); ?></div>
+
+    <?php echo $this->form; ?>
+</div>
+<div class="imagegrid">
+    <?php
+    if (isset($this->mylist))
+        echo($this->mylist->render());
+    ?>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        var path = '<?php echo $this->url; ?>';
+        var values = '';
+        $('#collection option').each(function(){
+            if ($(this).val() > 0)
+                $(this).addClass('padding');
+        });
+        $('#collection').selectmenu();
+        $('#collection').change(function(){
+
+            checkBox.setListPage(path);
+            checkBox.addFirstFilter($(this).val());
+            checkBox.setValues(values);
+            checkBox.formatUrl();
+            checkBox.post();
+        });
+        $('#fieldset-groupRight input').click(function(){
+            var pattern = 'spec';
+            checkBox.setListPage(path);
+            checkBox.addFirstFilter($('#collection').val());
+            checkBox.setPattern(pattern);
+            checkBox.setValues(values);
+            checkBox.formatUrl();
+            checkBox.post();
+        });
+        $(window).load(function(){
+            var linkback = $('.linkback')
+            if (linkback.length)
+                $('#bread-crumb-logiflex').remove();
+            else
+                $('#bread-crumb-logiflex').show();
+        });
+
+    });
+    //]]>
+</script>

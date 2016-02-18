@@ -1,0 +1,63 @@
+<?php
+    $releaseData = $this->releaseData;
+    $rsDataMembers = $this->rsDataMembers;
+    $listTitle = $this->getCibleText('newsletter_full_list_title', null,
+            array('replace' => array('##COUNT##' => $this->count)));
+    if ( $this->count > 1000){
+        $listTitle = $this->getCibleText('newsletter_preview_list_title', null,
+            array('replace' => array('##COUNT##' => $this->count, '##MAX##' => 1000)));
+    }
+?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_manage_send_newsletter_text'),
+    'pageDescription' => $this->getCibleText('header_manage_send_newsletter_description'),
+    'breadcrumb' => ''
+));
+
+// Reconstruction de l'url
+$newUrl = $this->url(array('listeID' => null));
+?>
+<div id="default_form" class="newsletter manage-send">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+        <ul class="zone_panel list">
+            <li class="title"><?php echo $listTitle; ?></li>
+            <?php foreach ($rsDataMembers as $key => $value): ?>
+            <li class="list-profile">
+                <span class="cell one-third"><?php echo $value['GP_FirstName']; ?> <?php echo $value['GP_LastName']; ?></span>
+                <span class="cell one-third">- <?php echo $value['GP_Email']; ?></span>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+
+<script type='text/javascript'>
+
+$(document).ready(function()
+{
+    $('#NR_CollectionFiltersID').change(function()
+    {
+        var NewUrl = "<?php echo $newUrl ?>/listeID/" + $('#NR_CollectionFiltersID').val();
+        window.location.href = NewUrl;
+    });
+
+    $('#NR_Status').change(function( event ) {
+        if($('#NR_Status').val()==1){
+            $('input#newsletter_send').css("opacity","0.5");
+            $('input#newsletter_send').css("cursor","inherit");
+            $('input#newsletter_send').attr('disabled','disabled');
+        }
+        else{
+            $('input#newsletter_send').css("opacity","1");
+            $('input#newsletter_send').css("cursor","pointer");
+            $('input#newsletter_send').removeAttr('disabled');
+        }
+    }).change();
+
+
+
+});
+
+</script>

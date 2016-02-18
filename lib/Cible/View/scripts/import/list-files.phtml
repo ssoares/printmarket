@@ -1,0 +1,21 @@
+<?php
+$interval = $this->interval;
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_import_catalog_text_default'),
+    'pageDescription' => str_replace(
+            '%INTERVAL%', 
+            $interval,
+            $this->getCibleText('header_import_catalog_description_default')
+        ),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php
+            if (isset($this->mylist))
+                echo($this->mylist->render());
+        ?>
+    </div>
+</div>

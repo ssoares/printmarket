@@ -1,0 +1,4 @@
+<?php $value = $this->filterValue; ?>
+<?php echo $this->formSelect($this->name . '[operators]', $this->operator, array(), $this->comparison);?>
+&nbsp;
+<?php echo $this->formSelect($this->name . '[filterValue]', $value, array('class' => 'filterSelect'), $this->list);?>

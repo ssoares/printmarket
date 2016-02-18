@@ -1,0 +1,28 @@
+//donne un width calculé proportionnellement au container courant
+.absolute-grid-width(@columns; @gutter: @grid-gutter-width) {    
+    padding:0 @gutter / 2;
+    @media @mq-large {
+        .absolute-grid-width-large(@columns,@gutter);
+    }
+    @media @mq-desktop {
+        .absolute-grid-width-desktop(@columns,@gutter);
+    }
+    @media @mq-tablet {
+        .absolute-grid-width-tablet(@columns,@gutter);
+    }
+    @media @mq-phone {
+        .absolute-grid-width-phone(@columns,@gutter);
+    }
+}
+.absolute-grid-width-large(@columns; @gutter: @grid-gutter-width) {
+    width:@screen-lg-min / @grid-columns * @columns;
+}
+.absolute-grid-width-desktop(@columns; @gutter: @grid-gutter-width) {
+    width:@screen-md-min / @grid-columns * @columns;
+}
+.absolute-grid-width-tablet(@columns; @gutter: @grid-gutter-width) {
+    width:@screen-sm-min / @grid-columns * @columns;
+}
+.absolute-grid-width-phone(@columns; @gutter: @grid-gutter-width) {
+    width:auto;
+}

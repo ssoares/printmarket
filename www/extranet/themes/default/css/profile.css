@@ -1,0 +1,201 @@
+/*
+    Document   : newsletterStats
+    Created on : 2011-09-27, 15:01:46
+    Author     : soaser
+    Description:
+        Style for the statistics of the newsletter
+    $Id: profile.css 1838 2016-01-08 21:21:38Z mlaplante $
+*/
+.ui-widget-header{
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.6);
+}
+.ui-tabs .ui-tabs-nav{
+    padding: 20px;
+}
+.ui-widget-content .ui-tabs-nav li{
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.3);
+}
+
+.ui-widget-content .ui-tabs-nav li a{
+    color: #fff !important;
+    font-family: 'nexaslab-bold',serif;
+    text-transform: uppercase;
+}
+.ui-tabs .ui-tabs-panel{
+    padding: 15px 0;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
+    background-color: #8f0e6f;
+    padding:0;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected{
+    background-color: #8f0e6f;
+    padding:0;
+}
+#default_form #action_panel,
+#profilesTab #fieldset-actions{
+    background-color: inherit;
+}
+#default_form #action_panel{
+    border-bottom: 0;
+}
+#profilesTab #fieldset-actions #submitSave:disabled{
+    cursor: default;
+
+}
+#profilesTab #fieldset-actions input#submitSave:disabled{
+    cursor: default;
+    background-color: inherit !important;
+/*    color: #CCC;*/
+    font-style: italic;
+    opacity : 0.5;
+}
+#profilesTab .ui-tabs-nav-item:hover{
+    background-color: rgba(150,150,150,0.6);
+}
+#addTab{
+    position: relative;
+}
+#addTab a{
+    color: #2e2e30 !important;
+}
+#default_form #action_panel .profiles{
+    background-color: #ccc;
+    border: 0;
+    border-bottom: 3px solid #222;
+    display: none;
+    line-height: 44px;
+    height: auto;
+    padding:0;
+    position: absolute;
+    text-align: left;
+    width: 100%;
+    z-index: 1000;
+}
+#default_form #action_panel ul.buttons ul.profiles li{
+    line-height: 40px;
+    width: 100%
+}
+#default_form #action_panel ul.buttons ul.profiles li:hover{
+    background-color: #3d3c3f;
+}
+#default_form #action_panel ul.buttons ul.profiles li:hover a{
+    color: #fff !important;
+}
+#default_form #action_panel ul.buttons ul.profiles li a{
+    padding: 8px 0 8px 5px;
+}
+#default_form #action_panel ul.buttons ul.profiles li img{
+    float: left;
+    height: 26px;
+    margin: 7px 0px 7px 5px;
+    width : 26px;
+}
+
+#profilesTab table{
+    border-collapse: collapse;
+}
+#profilesTab, #infosTab{
+    width: 100%;
+}
+#infosTab{
+    max-width: 425px;
+    margin-left: 10px;
+}
+.hidden{
+    display: none !important;
+}
+.btnHover{
+    background-color: #3d3c3f;
+}
+#addTab.btnHover a.add{
+    color: #fff !important;
+}
+#profilesTab.ui-widget-content{
+    background: none rgba(255,255,255, 0.5);
+}
+#profilesTab dl.zend_form{
+    background: none;
+}
+#profilesTab{
+    padding: 10px;
+}
+#profilesTab li .deleteTab {
+    display:none;
+    cursor: pointer;
+    height: 1.1428em;
+    padding: 0.5714em 1em 0.4285em 0;
+}
+#profilesTab li .deleteTab img{
+    height: 16px;
+    width: 16px;
+}
+#profilesTab #fieldset-actions{
+    border-bottom: 1px solid #2e2e30;
+    height: 53px;
+    line-height: 50px;
+    text-align: right;
+    width: auto;
+    left: 0;
+}
+#profilesTab #fieldset-actions button,
+#profilesTab #fieldset-actions input{
+    color: #2e2e30;
+    height: 100%;
+    line-height: inherit;
+}
+#profilesTab #fieldset-actions a{
+    color: #2e2e30;
+}
+#profilesTab #fieldset-retailerForm,
+#profilesTab #fieldset-retailerFormEn{
+    float: left;
+    width: 47%;
+}
+#profilesTab #fieldset-retailerFormEn{
+    margin-top: 76px;
+}
+#profilesTab #fieldset-retailerFormEn .formLanguage{
+    margin-bottom: 39px;
+}
+#profilesTab #fieldset-retailerForm .formLanguage,
+#profilesTab #fieldset-retailerFormEn .formLanguage{
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#genericProfile dl dl{
+    float: left;
+    margin: -265px 0 0 520px;
+}
+.ui-tabs-nav .modified {
+    color: #cc0000 !important;
+    font-style: italic;
+    font-weight: bold;
+}
+
+#profilesTab ul.emptyModel{
+    display: none;
+    float: left;
+    font-family: 'nexaslab-bold',serif;
+}
+
+.subFormClass{
+    min-height: 490px;
+}
+
+input.error{
+    border: 1px solid #e4222e;
+}
+.vertAlignRadio {
+    vertical-align: -20%;
+}
+.alert{
+    border: 2px solid #cc0000;
+    color: #cc0000;
+    padding: 5px;
+    margin: 5px;
+}
+#searchAgain{
+    margin-top: 5px;
+}
+

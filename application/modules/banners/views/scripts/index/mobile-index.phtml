@@ -1,0 +1,65 @@
+<?php
+$random = rand(1, 100000000);
+if ($this->imageToShow):
+    ?>
+    <section class="banners index module">
+        <?php
+            echo $this->showBlockTitle('h2', array('class' => 'banners-title'));
+        $alt = "banners";
+        if (!empty($this->bannersGroup[0]['BG_Name'])) {
+            $alt = $this->bannersGroup[0]['BG_Name'];
+        }
+        ?>
+        <div id="slideshow-<?php echo $random; ?>" class="banners-container">
+            <?php foreach ($this->imageToShow as $index => $image): ?>
+                <div class="banners-slide">
+                    <?php
+                    $content = '';
+                    //$content .= $this->image($image['img'], array('alt' => $alt, 'class' => 'banners-image', 'direct' => true));
+                    if (!empty($image['text']))
+                        $content .= '<span class="banners-content content">' . $image['text'] . '</span>';
+                    if (!empty($image['url']))
+                        $content = $this->link($image['url'], $content, array("class" => "banners-link"));
+                    else
+                        $content = '<span class="banners-nolink">' . $content . '</span>';
+
+                    echo $content;
+                    ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php if ($this->navi): ?>
+            <div class="cycle-pager banners-nav"></div>
+        <?php endif; ?>
+
+
+        <?php if (Zend_Registry::isRegistered('bannerLinkMore')): ?>
+            <div class="moreBanners">
+                <span class="suite_arrow">
+                    <?php $pageIndexName = Zend_Registry::get('bannerLinkMore'); ?>
+                    <a href="/<?php echo $pageIndexName; ?>">
+                        <?php echo $this->getCibleText('moreBannersText'); ?>
+                    </a>
+                </span>
+            </div>
+        <?php endif; ?>
+    </section>
+<?php endif; ?>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(window).load(function() {
+        var $slideshow = $('#slideshow-<?php echo $random; ?>');
+        $slideshow.cycle({
+        fx: "<?php echo $this->effect ?>",
+        slides : "> .banners-slide",
+                pager: '.cycle-pager',
+                speed : <?php echo $this->delais * 1000 ?>,
+                timeout : <?php echo ($this->autoPlay) ? $this->transition : 0 ?>,
+                //manualTrump:false,
+                log: false
+    });
+    }).resize();
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

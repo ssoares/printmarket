@@ -1,0 +1,64 @@
+<?php
+$questionsType = $this->questionsType;
+$modulo = 0;
+?>
+
+<div id='element_container'>
+    <div class="element_group_title">section</div>
+    <ul id="elements" class="connectedSortable_form">
+        <div class="elementLeft">
+            <li class="ui-state-default element_section" elementType="section" action="add">
+                <img alt="" width="48" height="48"
+                     src="<?php echo $this->baseUrl() ?>/form/index/get-icon/format/48x48/prefix/icon-section/ext/png" />
+                <p class="titleIcon">section</p>
+            </li>
+        </div>
+        <div class ="emptyZone">
+            <!--
+                <li class="ui-state-default element_breakpage" elementType="breakpage" action="add">
+                    <img alt="" width="48" height="48" src="<?php echo $this->baseUrl() ?>/text/index/get-icon/format/48x48" />
+                    <br/>page break
+                </li>
+            -->
+        </div>
+    </ul>
+
+
+    <div class="element_group_title">éléments</div>
+    <ul id="elements" class="connectedSortable_section">
+        <div class="elementLeft">
+            <li class="ui-state-default element element_textzone" elementType="textzone" action="add">
+                <img alt="" width="48" height="48" src="<?php echo $this->baseUrl() ?>/text/index/get-icon/format/48x48" />
+                <p class="titleIcon">zone de texte</p>
+            </li>
+        </div>
+    </ul>
+
+
+    <div class="element_group_title">questions</div>
+    <ul id="elements" class="connectedSortable_section">
+<?php foreach ($questionsType as $question):?>
+<?php ($modulo % 2 )? $class = 'marginLeft' : $class = 'elementLeft';?>
+            <li class="ui-state-default element element_question <?php echo $class ?>"
+                elementType="question"
+                questionType="<?php echo strtolower($question['FQT_TypeName']) ?>"
+                action="add">
+                <img alt="<?php echo $question['FQTI_Title'] ?>"
+                     title="<?php echo $question['FQTI_Title']
+                            . ". "
+                            . $question['FQTI_Description'] ?>"
+                     width="48" height="48"
+                     src="<?php echo $this->baseUrl() . strtolower($question['FQT_ImageLink']) ?>" />
+                <p class="titleIcon"><?php echo $question['FQTI_Title'] ?></p>
+            </li>
+<?php $modulo++  ?>
+<?php endforeach;?>
+
+    </ul>
+</div>
+
+
+
+<div id="all_form_container" style="">
+    <ul id="form_drop_zone" class="connectedSortable_form" style="">&nbsp;</ul>
+</div>

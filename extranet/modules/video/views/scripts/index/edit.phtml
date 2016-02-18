@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    $(document).ready(function() {        
+        $("#video1").val($("#VI_MP4").val());
+        $("#video2").val($("#VI_WEBM").val());
+        $("#video3").val($("#VI_OGG").val());
+    });
+</script>
+
+<?php
+if (!empty($this->category))
+    $headerText = str_replace('##CATEGORY##', $this->category, $this->getCibleText('header_'.$this->cleaction.'_edit_text'));
+else
+    $headerText = $this->getCibleText('header_'.$this->cleaction.'_video_text');
+
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $headerText,
+    'pageDescription' => $this->getCibleText('header_'.$this->cleaction.'_video_description'),
+    'breadcrumb' => ''
+));
+;
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>                    
+</div>

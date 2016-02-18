@@ -1,0 +1,7 @@
+//décide quel couleur de texte à mettre selon la couleur de l'arrière-plan
+.color-brightness(@bg-color) when(lightness(@bg-color) >= 50%) {
+    color:@text-color;
+}
+.color-brightness(@bg-color) when(lightness(@bg-color) < 50%) {
+    color:@text-color-inverted;
+}

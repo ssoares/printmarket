@@ -1,0 +1,26 @@
+<?php
+    
+    $newsletter  = $this->newsletter;
+?>
+<div id="container_middle_full">    
+<?php
+    if ($newsletter):
+?>      <h3><?php echo($newsletter['NR_Title']) ?></h3>
+
+        <p><?php echo str_replace('%ELEMENT_TITLE%', $newsletter['NR_Title'], $this->getCibleText('module_delete_message_confirmation')) ?></p>
+        <form action="<?php echo $this->url(array('action'=>'delete')); ?>" method="post">
+            <div>
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+        
+    <?php else: ?>
+
+        <p><?php echo $this->getCibleText('module_element_nout_found') ?></p>
+        <a href="<?php echo ($this->return); ?>"><?php echo $this->getCibleText('button_return') ?></a>
+    
+<?php
+    endif;
+?>
+</div>

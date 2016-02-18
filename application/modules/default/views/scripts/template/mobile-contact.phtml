@@ -1,0 +1,37 @@
+<?php
+// One place_holder template, so grab only the first place_holder elements
+$emptyPlaceholders = $this->zonesBlocks(array('nbZones' => $this->nbZones));
+?>
+
+<div class="site-banner" role="banner">   
+    <?php echo $this->image($this->imgHeader, array('class' => 'img-header', 'direct' => true)); ?>
+    <?php
+    $imgHeaderTitle = $this->PI_TitleImageAlt;
+
+    if (empty($this->PI_TitleImageAlt) || $this->PI_TitleImageAlt != 'exclude'):
+        $menuByPage = Cible_FunctionsPages::getMenuByPageId($this->currentPageID, null, 'all');
+        if (isset($menuByPage[0])):
+            $imgHeaderTitle = $menuByPage[0]['MII_Title'];
+        endif;
+    elseif ($imgHeaderTitle == 'exclude'):
+        $imgHeaderTitle = '';
+    endif;
+    ?>
+    <div class="site-banner-content content"><?php echo $imgHeaderTitle; ?></div>
+</div>
+<section class="site-main-zone">
+    <?php if ($this->showTitle): ?>
+        <h1 class="site-main-title"><?php echo $this->pageTitle()->toString(null, null, true) ?></h1>
+    <?php endif; ?>
+    <?php if (!isset($emptyPlaceholders[1])): ?>
+        <?php echo $this->placeholder('zone1') ?>
+    <?php endif; ?>
+    <div class="site-contact-zone-3">
+        <?php if (!isset($emptyPlaceholders[3])): ?>
+            <?php echo $this->placeholder('zone3') ?>
+        <?php endif; ?>
+    </div>
+    <?php if (!isset($emptyPlaceholders[2])): ?>
+        <?php echo $this->placeholder('zone2') ?>
+    <?php endif; ?>
+</section>

@@ -1,0 +1,23 @@
+<section class="newsletter module subscribe">
+    <?php //echo $this->showBlockTitle('h2', array('class'=> 'newsletter-title'));?>
+    <?php // echo $this->form; ?>
+    <p><?php echo $this->getCibleText('form_label_subscribe'); ?></p>
+    <div role="search" class="form-infolettre">
+        <div class="input-group add-on">
+            <input type="text" id="email" name="email" data-sticky-ignore="true" placeholder="<?php echo $this->getCibleText('form_label_email'); ?>" class="form-control">
+          <div class="input-group-btn">
+              <button id="gotoSubscription" type=button name="subscribe" class="btn btn-default "><span class="btn-infolettre"></span></button>
+          </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+    $('#gotoSubscription').click(function(){
+        window.location = '<?php echo $this->subscribeLink; ?>/email/' + $('#email').val();
+    })
+});
+//]]>
+</script>

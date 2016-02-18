@@ -1,0 +1,114 @@
+@import "../variables/custom-icons.less";
+
+@pagination-size: 16px;
+
+
+.pagination { 
+    display:block;
+    clear:both;
+    .make-lg-column(12);
+    list-style:none;
+    text-align:right;
+    .font-0();
+    border-top:@brand-grey 1px solid;
+    padding:30px 0 0 0;
+    margin:30px 0 50px 0;
+    
+    
+    &:after {
+        content:"";
+        display:table;
+        clear:both;
+    }
+}
+.pagination-list {
+    display:block;
+    clear:both;
+    //.make-row();
+    padding:0;
+    text-align:right;
+    list-style:none;
+    float:right;
+    .font-0();
+    @media @mq-phone {
+        float:none;
+    }
+    li {
+        margin-right:2px;
+        float:none;
+        display:inline-block;
+        .responsive-font(@font-size-base - 2);
+        .font-weight('normal', 'sans-serif');
+        vertical-align:middle;
+        padding:0 7px;
+        span {
+            border:0;
+        }
+        a, input {
+            border:0;
+            color:@text-color;
+            text-decoration:none;
+            &:hover {
+                text-decoration:none;
+            }
+        }
+    }
+    .module-navigation-arrow {
+        padding:0 14px;
+        vertical-align:top;
+        @media @mq-phone {
+            display:block;
+            margin-bottom:5px;
+        }
+        &.module-navigation-previous ~ .module-navigation-next { 
+            border-left:1px solid @brand-grey;
+            height:18px;
+            display:inline-block;
+            @media @mq-phone {
+                border:0;
+                padding-right:14px;
+            }
+        }
+    }
+    .module-navigation-page {
+        .responsive-font(@font-size-base - 2);
+        &.module-navigation-page-edge, &.module-navigation-page-out-of-range {
+            display:none;
+            &.first, &.last {
+                display:inline-block;
+                a {
+                    .font-0();
+                    &:after {
+                        content:"...";
+                        .responsive-font(@font-size-base - 2);
+                    }
+                }
+            }
+        }
+    }
+    .module-navigation-selected {
+        color:@brand-primary;
+    }
+    .module-navigation-previous {
+        & a:before { 
+            .import-icon-direct(@icon-banner-previous);
+            .responsive-font(@font-size-base);
+            vertical-align:middle;
+            margin:0 5px 0 0;
+            color:@brand-primary;
+        }
+    }
+    .module-navigation-next, .module-navigation-submit { 
+        padding-right:0;
+        a:after { 
+            .import-icon-direct(@icon-banner-next);
+            .responsive-font(@font-size-base);
+            vertical-align:middle;
+            margin:0 0 0 5px;
+            color:@brand-primary;
+        }
+        button {
+            margin-top:-4px;
+        }
+    }
+}

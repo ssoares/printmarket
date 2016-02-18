@@ -1,0 +1,249 @@
+<?php
+    $this->headLink()->prependStylesheet($this->LocateFile('cart.css'));
+    $taxFed = 0;
+    if(!empty($this->parameters['taxeFed']))
+        $taxFed = $this->parameters['taxeFed'];
+
+    $cartTotalCount = $this->cartTotal;
+$url = $this->baseUrl() . '/' . 'cart/index/ajax/';
+$this->headLink()->appendStylesheet($this->locateFile('cart.css'),'all');
+$this->jQuery()->addJavascriptFile($this->locateFile('jquery.numeric.js','jquery'));
+$this->jQuery()->addJavascriptFile($this->locateFile('jsAddToCart.js'));
+?>
+<section class="block cart-details">
+    <input type="hidden" id="userTaxProv" name="userTaxProv" value="<?php echo $this->parameters['noProvTax']; ?>"/>
+    <input type="hidden" id="userTaxFed" name="userTaxFed" value="<?php echo $this->parameters['noFedTax']; ?>"/>
+    <?php if(!empty($this->productData)): ?>
+        <?php
+        echo $this->partial('partials/stepTopLine.phtml', array('step' => $this->step));
+        ?>
+        <?php echo $this->partial(
+                'partials/cartNavigationLinks.phtml',
+                array(
+                    'urlBack'   => $this->urlBack,
+                    'itemCount' => $this->itemCount,
+                    'nextStep'  => $this->nextStep,
+                    'step'      => $this->step
+                    )
+                );
+        ?>
+        <div id="product-list" class="">
+            <div class="headerProductList row">
+                <div class="col-lg-8">
+                    <p class="col-lg-2">&nbsp;</p>
+                    <p class="col-lg-10"><?php echo $this->getClientText('product_label'); ?></p>
+        </div>
+                <div class="col-lg-4">
+                    <p class="col-lg-4"><?php echo $this->getClientText('form_item_qty_label'); ?></p>
+                    <p class="col-lg-4"><?php echo $this->getClientText('unit_price_label'); ?></p>
+                    <p class="col-lg-4 text-right"><?php echo $this->getClientText('cart_item_total_label'); ?></p>
+        </div>
+            </div>
+        <?php foreach ($this->productData as $cartId => $product):?>
+        <?php
+            $currProd  = $product['data'];
+            $currItem  = $product['items'];
+            $productId = $currProd['P_ID'];
+            $disable   = isset($product['cart']['disable'])?$product['cart']['disable']:array();
+            $promo     = $product['cart']['promoId'];
+            $itemId    = $currItem['I_ID'];
+            if (!$disable):
+                $labelPromo = $promo > 0 ?$this->getClientText('alert_special_offer_item') : '';
+        ?>
+            <article class="row">
+                <div class="col-md-8">
+                    <div class="col-lg-2">
+                        <?php
+                        echo $this->moduleImage('catalog',
+                            'products/' . $productId,
+                            $currProd['P_Photo'], 'thumb',
+                            array(
+                                'class'   => 'smallThumb img-responsive',
+                                'alt' => $currProd['P_Photo'],
+                                'useSize' => false,
+                                'prettyPhoto'=>array(
+                                    'size'  => 'original',
+                                    'image' => $currProd['P_Photo'])
+                                    )
+                            );
+                        ?>
+                    </div>
+                    <div class="product-description col-lg-10">
+                        <p class="">
+                            <?php echo $currProd['PI_Name'] . ' | ' . $currItem['II_Name'] ?>
+                            <br /><span class="alertSpecial"><?php echo $labelPromo ; ?></span>
+                        </p>
+                        <?php echo $this->link(
+                            'javascript:void(0);',
+                            $this->getClientText('cart_details_action_remove_item'),
+                            array(
+                                'class'=>'delete',
+                                'data-number-id'=> 'delete-'. $productId . '-' . $itemId . '-' . $cartId)
+                            )
+                        ?>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <?php echo $currItem['render']; ?>
+                </div>
+            </article>
+        <?php endif; ?>
+        <?php endforeach;?>
+        </div>
+        <div class="totalSummary ">
+            <div class="col-lg-7">
+            <?php if($this->parameters['nbPoint']): ?>
+                <?php echo $this->getClientText('cart_label_bonus_points'); ?>
+            <?php endif; ?>
+                <p class="infoTpsFees">
+                    <?php echo $this->getClientText('cart_label_tpFees_limit', null, array('##TP_FEES_LIMIT##' => $this->parameters['limitTpsFee'])); ?>
+                </p>
+                <p class="infoLimitOrder infoTpsFees">
+                    <?php echo $this->getClientText('cart_label_order_limit', null, array('##TP_ORDER_LIMIT##' => $this->parameters['limitOrder'])); ?>
+                </p>
+            </div>
+            <div class="col-lg-5 text-right">
+                <p id="zoneTitle" class="col-lg-12 force-right">
+                    <span class="bold-secondary">
+                    <?php echo $this->getClientText('cart_summary_title'); ?>
+                    </span>
+                </p>
+                <p id="subTotalLbl" class="col-lg-9">
+                    <?php echo $this->getClientText('cart_summary_subtotal'); ?>
+                </p>
+                <p id="subTotalValue" class="col-lg-3 number"><span>0</span> $</p>
+                <p id="transportLbl" class="col-lg-9">
+                    <?php echo $this->getClientText('cart_transport_label'); ?>
+                </p>
+                <p id="transportValue" class="col-lg-3 number">
+                    <span><?php echo $this->parameters['tpsFee']; ?></span> $
+                </p>
+                <p id="tvqLbl" class="col-lg-9">
+                    <?php if ($taxFed > 0): ?>
+                        <?php echo $this->getClientText('cart_tvq_label'); ?>
+                    <?php else: ?>
+                        <?php echo $this->parameters['taxeCode']; ?>
+                    <?php endif; ?>
+                </p>
+                <p id="tvqValue"class="col-lg-3 number"><span>0</span> $</p>
+                <?php if ($taxFed > 0): ?>
+                <p id="tpsLbl" class="col-lg-9">
+                    <?php echo $this->getClientText('cart_tps_label'); ?>
+                </p>
+                <p id="tpsValue" class="col-lg-3 number"><span>0</span> $</p>
+                <?php endif; ?>
+                <p id="totalLbl" class="col-lg-9 bold-secondary">
+                    <?php echo $this->getClientText('cart_total_label'); ?>
+                </p>
+                <p id="totalValue" class="col-lg-3 number bold-secondary"> </p>
+            </div>
+        </div>
+        <?php echo $this->partial(
+                'partials/cartNavigationLinks.phtml',
+                array(
+                    'urlBack'   => $this->urlBack,
+                    'itemCount' => $this->itemCount,
+                    'nextStep'  => $this->nextStep,
+                    'step'      => $this->step
+                    )
+                );
+        ?>
+
+        <?php
+            $account = Cible_FunctionsGeneral::getAuthentication();
+            if( $account && $cartTotalCount ): ?>
+            <?php if($this->valide) : ?>
+                    <div id="order-now">
+                        <?php /*echo $this->link(
+                            $this->baseUrl() . '/'
+                            . Cible_FunctionsCategories::getPagePerCategoryView(
+                                0,
+                                'cart_order_form',
+                                1001),
+                            $this->getClientText('cart_order_continue_link'),
+                            array('class'=>'order-button')
+                            )*/
+                        ?>
+                    </div>
+            <?php else : ?>
+                <div style="margin-top: 20px;">
+                    <?php //echo $this->getClientText('cart_need_confirm_email_text'); ?>
+                    <?php /*echo($this->link(
+                            $this->baseUrl() . '/'
+                            . Cible_FunctionsCategories::getPagePerCategoryView(
+                                0,
+                                'return_confirm_email',
+                                1002),
+                            $this->getClientText('return_email_confirmation')
+                            )
+                        );*/
+                    ?>
+                </div>
+
+            <?php endif;  ?>
+        <?php endif; ?>
+
+        <?php if(!$account): ?>
+
+            <span id="login-title">
+                <?php //echo $this->getClientText('login_title') ?>
+            </span>
+
+        <?php endif; ?>
+    <?php else : ?>
+        <div id="no-item"><?php echo $this->getClientText('cart_no_item') ?></div>
+    <?php endif; ?>
+</section>
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+    var baseUrl = "<?php echo $this->baseUrl() ?>";
+    defaultProperties.setBaseUrl(baseUrl);
+    var langId    = '<?php echo Zend_Registry::get('languageID')?>';
+    var taxProv   = '<?php echo $this->parameters['taxeProv']; ?>';
+
+    var taxFed    = '<?php echo $taxFed; ?>';
+    var nbPoint   = '<?php echo $this->parameters['nbPoint']; ?>';
+    var shipFee   = '<?php echo $this->parameters['tpsFee']; ?>';
+    var limitOrder   = '<?php echo $this->parameters['tpsFee']; ?>';
+    var limitShip = '<?php echo $this->parameters['limitTpsFee']; ?>';
+
+    defaultProperties.setTps(taxFed);
+    defaultProperties.setTvq(taxProv);
+    defaultProperties.setLimitOrder(limitOrder);
+    defaultProperties.setNbPoint(nbPoint);
+    defaultProperties.setShipFee(shipFee);
+    defaultProperties.setLimitShip(limitShip);
+    defaultProperties.setCartUrl('<?php echo $url; ?>');
+    cartActions.calculate();
+    $("input.quantity").numeric();
+    var keyTimer = 0;
+    $('.cart-details').on('keyup', '.qtyField', function(e){
+        var elem = $(this);
+        var num = parseInt(e.key);
+
+        if(!isNaN(num)){
+            var baseUrl = "<?php echo $this->baseUrl() ?>";
+            var idsData     = elem.attr('data-number-id').split("-");
+            defaultProperties.init(baseUrl, elem, idsData, 'update', null);
+            defaultProperties.isUpdate = true;
+            cartActions.ajax();
+        }else{
+            e.stopPropagation();
+        }
+    });
+
+    $('a.delete').click(function(){
+        var idsData  = ($(this).attr('data-number-id')).split("-");
+        defaultProperties.init(baseUrl, $(this), idsData, 'delete', null, null);
+        cartActions.ajax();
+        cartActions.removeLine();
+//        location.reload();
+    });
+
+    if ($('input.quantity').length == 0){
+        location.reload();
+    };
+});
+//]]>
+</script>

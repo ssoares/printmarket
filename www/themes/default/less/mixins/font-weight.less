@@ -1,0 +1,6 @@
+//permet de gérer les font-family et font-weight de façon centralisée
+.font-weight(@weight: 'normal', @serif: 'sans-serif', @special: '') when(default()) {
+    font-weight:normal;
+    @font-family: e('font-family-@{weight}-@{serif}');
+    font-family: @@font-family;
+}

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <?php $config = Zend_Registry::get('config'); ?>
+        <title>Cible Solutions d'Affaires - EDITH <?php echo $config->edith->version ?> - <?php echo $this->escape($this->title); ?></title>
+        <?php $this->jQuery()->enable() ?>
+
+        <?php $this->headScript()->captureStart() ?>
+
+        // JS variables for holding UI and edit current languages
+        var currentInterfaceLanguage = <?php echo Zend_Registry::get('languageID') ?>;
+        var currentEditLanguage = <?php echo Zend_Registry::get('currentEditLanguage') ?>;
+        var defaultEditLanguage = <?php echo Cible_Controller_Action::getDefaultEditLanguage() ?>;
+
+        var mousePosX = 0;
+        var mousePosY = 0;
+
+        $(function() {
+
+        $(document).mousemove(function(e){
+        mousePosX = e.pageX;
+        mousePosY = e.pageY;
+        });
+
+        $('a.handle').click(function(){
+
+        var currentHandle = $(this);
+        var tab = $(this).parent().find('.tree_view');
+
+        if(tab.css('display') == 'block'){
+        tab.hide("slow", function(){
+        currentHandle.removeClass('handleOpen');
+        });
+
+        }
+        else
+        {
+        $('.tree_view').each(function(){
+        if($(this).css('display') == 'block') {
+        $(this).hide('fast', function(){
+        $(this).parents('li:first').find('a.handle:first').removeClass('handleOpen');
+        });
+
+        }
+        });
+        tab.show('fast');
+        currentHandle.addClass('handleOpen');
+        }
+        });
+        });
+
+        <?php $this->headScript()->captureEnd() ?>
+
+        <?php if ((($this->isAdministrator() == 1) || ($this->isAdministrator() == 2)) && Zend_Registry::get('dictionnary_is_allowed') == 'true'): ?>
+
+            <?php
+            $base_url = $this->baseUrl();
+
+            if (substr($base_url, -1) != '/')
+                $base_url .= '/';
+            ?>
+
+            <?php
+            $fc = Zend_Controller_Front::getInstance();
+            $_request = $fc->getRequest();
+
+            $module_name = $_request->getModuleName();
+            $controller_name = $_request->getControllerName();
+            $action_name = $_request->getActionName();
+            ?>
+
+            <?php $this->headScript()->captureStart() ?>
+
+            $(function(){
+            var enable_dictionnary_url = '<?php echo $this->url() ?>';
+            var disable_dictionnary_url = '<?php echo $this->url(array('enableDictionnary' => null)) ?>';
+
+            if(enable_dictionnary_url == '<?php echo $base_url ?>' ){
+            <?php $route = "$module_name/$controller_name/$action_name"; ?>
+            enable_dictionnary_url += '<?php echo $route ?>';
+            }else if( enable_dictionnary_url == '<?php echo "$base_url$module_name" ?>' ){
+            <?php $route = "$controller_name/$action_name"; ?>
+            enable_dictionnary_url += '<?php echo $route ?>';
+            }else if( enable_dictionnary_url == '<?php echo "$base_url$controller_name" ?>' ){
+            <?php $route = "/$action_name"; ?>
+            enable_dictionnary_url += '<?php echo $route ?>';
+            }else if( enable_dictionnary_url == '<?php echo "$base_url$module_name/$controller_name" ?>' ){
+            <?php $route = "/$action_name"; ?>
+            enable_dictionnary_url += '<?php echo $route ?>';
+            }
+
+
+            enable_dictionnary_url += '/enableDictionnary/true';
+
+
+            $('#content').prepend('<div style="text-align: center"><a href="'+enable_dictionnary_url+'">Activer l\'édition du dictionnaire</a> | <a href="'+disable_dictionnary_url+'">Désactiver l\'édition du dictionnaire</a></div>');
+            });
+
+            <?php $this->headScript()->captureEnd() ?>
+
+        <?php endif; ?>
+
+        <?php if (Zend_Registry::get('enableDictionnary') == 'true') : ?>
+
+            <?php //$this->headScript()->appendFile($this->baseUrl().'/js/tinymce/tinymce.min.js')  ?>
+
+            <?php $this->headScript()->captureStart() ?>
+
+            function dictionnary_edit(identifier, type, lang){
+
+            var edit_box = $('#dictionnary_edit');
+
+            if( edit_box.size() == 0 ){
+            edit_box = $('<div id="dictionnary_edit" style="display: none; width: 600px; background-color: #fff; border: solid 1px #333;"></div>').appendTo('body');
+            }
+
+            $.get('<?php echo $this->baseUrl() ?>/index/dictionnary/identifier/' + identifier + '/type/' + type + '/lang/' + lang, function(data){
+            edit_box.html(data);
+
+            $('#insert_presets').click(function(){
+            var current_text = $('#ST_Value').val();
+            $('#ST_Value').val(current_text + '<a class="toggle_help">&nbsp;</a><div class="help_content"></div>');
+            });
+
+            var editbox_top = ($(window).height() - edit_box.height()) / 2;
+            var editbox_left = ($(window).width() - edit_box.width()) / 2;
+            edit_box.css({'position' : 'fixed',
+            'top' :  editbox_top,
+            'left' : editbox_left
+            });
+
+            edit_box.slideDown('fast');
+
+            $('form button#cancel', edit_box).click(function(){
+            edit_box.slideUp('slow', function(){
+            edit_box.empty();
+            });
+            });
+
+            $('form', edit_box).submit(function(){
+            //tinyMCE.triggerSave();
+            $.post('<?php echo $this->baseUrl() ?>/index/dictionnary/identifier/' + identifier + '/type/' + type + '/lang/' + lang, $(this).serialize(), function(data){
+
+            var value = '';
+
+            edit_box.html(data);
+
+            var resultPane = $('#result');
+
+            // if not empty resultPane, we've got a result, else, we need to fill in the form
+            if(resultPane.size() > 0){
+
+            var _value = resultPane.find('#value').html();
+
+            $('#'+identifier).html(_value);
+
+            edit_box.slideUp('fast', function(){
+            edit_box.empty();
+            });
+
+            }
+            });
+            return false;
+            });
+
+            });
+
+            }
+
+            <?php $this->headScript()->captureEnd() ?>
+
+        <?php endif; ?>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->locateFile("site.css") ?>" />
+        <?php echo $this->jQuery(); ?>
+
+        <?php echo $this->headScript() ?>
+
+        <?php echo $this->headStyle() ?>
+
+        <?php echo $this->headLink() ?>
+        <!--[if IE]>
+            <link rel="stylesheet" type="text/css" href="<?php echo $this->locateFile("site.css"); ?>/themes/default/css/site-ie.css" media="all">
+        <![endif]-->
+        <!--[if IE 7]>
+            <link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl(); ?>/themes/default/css/site-ie7.css" media="all">
+        <![endif]-->
+        <!--<link rel="stylesheet" type="text/css" media="screen" href="<?php // echo $this->locateFile('integration.css', null, 'front', 'default'); ?>" />-->
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->locateFile('integration.css', null, 'front', $this->currentSite); ?>" />
+        <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $this->locateFile('jquery.ui.selectmenu.css', null, 'front', 'default'); ?>" />
+        <link rel="stylesheet" type="text/css" media="print" href="<?php echo $this->locateFile('print.css'); ?>" />
+        <link rel="icon" type="image/png" href="<?php echo $this->locateFile('favicon.png', null, 'front', $this->currentSite) ?>" />
+        <!--[if IE]>
+        <link rel="shortcut icon" href="<?php echo $this->locateFile('favicon.ico', null, 'front', $this->currentSite) ?>" />
+        <![endif]-->
+    </head>
+    <?php
+    $AdminName = '';
+    $classLogin = 'login-page';
+    $Credentials = $this->user;
+    if (!empty($Credentials)){
+        $AdminName = $Credentials['EU_FName'] . ' ' . $Credentials['EU_LName'];
+        $classLogin = '';
+    }
+    $tmpVal =  $this->siteList();
+    ?>
+    <body class="<?php echo $classLogin; ?>">
+            <!-- Start : Top Banner -->
+            <div id="topBanner">
+                <div class="bannerHeader">
+                <div id="topBanner_logo">
+                    <?php
+                    // Affichage du logo de la compagnie
+//                    if (!empty($tmpVal)){
+                        echo $this->image($this->locateFile($config->clientLogo->src, null, 'front', $this->currentSite), array(
+//                            'height' => $config->clientLogo->height,
+//                                'width' => $config->clientLogo->width,
+                            'alt' => $config->clientLogoAlt,
+                        ));
+//                    }else{
+//                        echo $this->image($this->locateFile($config->clientLogo->src), array(
+//                            'height' => $config->clientLogo->height,
+//                            'width' => $config->clientLogo->width,
+//                            'alt' => $config->clientLogoAlt,
+//                        ));
+//                    }
+                    ?>
+                </div>
+                <div id="topBanner_titre">
+                    <div id="interface_lang_switcher">
+                        <?php // echo $this->partial('partials/languages.widget.phtml', array('currentLangID' => Zend_Registry::get('languageID'), 'params' => $this->params)); ?>
+                    </div>
+                    <div id="topBanner_titre_titre_gestion">
+                        <!--<span><?php echo $this->getCibleText('outil_gestion_title'); ?></span>-->
+                        <?php // echo $this->image("{$this->baseUrl()}/icons/logo-cms.jpg");?>
+                    </div>
+                    <!--<div id="topBanner_version">v.<?php // echo $config->edith->version ?></div>-->
+                </div>
+                <div id="topBanner_credentials">
+                    <?php if ($Credentials != null):?>
+                        <span id="topBanner_credentials_username"><?php echo ("$AdminName"); ?></span>
+                        <ul>
+                            <li class="sprite-ext home-lnk">
+                                <span>
+                                <?php echo $this->link($this->baseUrl(), '&nbsp;', array('title' => $this->getCibleText('extranet_back_main_menu'))); ?>
+                                </span>
+                            </li>
+                            <li class="sprite-ext profile-lnk">
+                            <?php $url = $this->url(array('module' => 'default', 'controller' => 'administrator', 'action' => 'profile')); ?>
+                                <span>
+                                <?php echo $this->link($url, '&nbsp;', array('title' => $this->getCibleText('extranet_profile_modify_link'))); ?>
+                                </span>
+                            </li>
+                            <li class="sprite-ext logout-lnk">
+                                <span>
+                                <?php echo $this->link($this->baseUrl() . '/auth/logout', '&nbsp;', array('title' => $this->getCibleText('extranet_logout_link'))); ?>
+                                </span>
+                            </li>
+                        </ul>
+
+                    <?php endif; ?>
+                </div>
+                <div class="spacerEmpty"></div>
+                </div>
+            </div>
+            <!-- End : Top Banner -->
+
+            <!-- Start : Top Menu -->
+            <?php if ($Credentials != null) {?>
+                <div class="menu-container">
+                    <div id="topMenu">
+                        <div id="topMenu_middle_left">
+                        <?php if ($Credentials != null): ?>
+                                <ul id="ext_menu" class="ext_menu">
+                                    <li id="first"><a class="handle"><?php echo $this->getCibleText('treeview_contents_management_title') ?></a>
+                                        <div class="tree_view content_management" style="display: none">
+                                            <?php
+                                            echo $this->collapsibleTree(Cible_FunctionsPages::buildUlLiMenu($this->baseUrl(), 0, Cible_Controller_Action::getDefaultEditLanguage(), 's'), array(
+                                                'id' => 'content_menu',
+                                                'images' => array(
+                                                    'close' => $this->baseUrl() . '/themes/default/images/treeview-open.png',
+                                                    'open' => $this->baseUrl() . '/themes/default/images/treeview-close.png'
+                                                ),
+                                                'class' => 'collapsible_tree'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </li>
+                                    <li class="max-width"><a class="handle"><?php echo $this->getCibleText('treeview_data_management_title') ?></a>
+                                        <div class="tree_view data_management" style="display: none">
+                                            <!--<?php echo $this->getTreeView('manage') ?>-->
+
+                                            <table cellpadding="0" cellspacing="0" border="0" width="746px">
+
+                                                <?php
+                                                $modules = Cible_FunctionsModules::getModulesList(); //$this->modules;
+
+                                                $i = 0;
+                                                foreach ($modules as $module):
+
+                                                    $action_links = '';
+
+                                                    $access = false;
+
+                                                    foreach ($module['actions'] as $action)
+                                                    {
+
+                                                        if ($this->aclIsAllowed($module['M_MVCModuleTitle'], $action['permission']))
+                                                        {
+                                                            $access = true;
+                                                            $pos = strpos($action['action'],"/");
+                                                            $actionLink = $action['action'];
+                                                            $paramsName = '';
+                                                            if($pos){
+                                                                $params = substr($actionLink,$pos+1,strlen($actionLink));
+                                                                $actionLink = substr($actionLink,0,$pos);
+                                                                $paramsName = '_'.str_replace('/','_',$params);
+                                                            }
+
+                                                            $action_links .= $this->link(
+                                                                "{$this->baseUrl()}/{$module['M_MVCModuleTitle']}/{$action['controller']}/{$action['action']}/",
+                                                                    $this->getCibleText('management_module_' . $module['M_MVCModuleTitle'] . '_' . str_replace('-', '_', $actionLink) . $paramsName) . (($module['M_MVCModuleTitle'] == 'text' && $action['action'] == 'list-approbation-request') ? Cible_FunctionsGeneral::getApprobationRequest('text') : '')
+                                                            );
+                                                        }
+                                                    }
+
+                                                    if (!$access)
+                                                        continue;
+
+                                                    if ($i == 0)
+                                                        echo "<tr>";
+                                                    ?>
+                                                    <td <?php echo ($i == 0 || $i == 1 ? "id=\"td_data_management_border_right\"" : "id=\"td_data_management_without_border_right\"") ?> valign="top">
+                                                        <table cellpadding="0" cellspacing="0" border="0" class="table_data_management">
+                                                            <tr>
+                                                                <td width="48px" valign="top" style="padding-left:15px; padding-right:15px; padding-top:15px; padding-bottom:40px;"><img src="<?php echo $this->baseUrl() ?>/<?php echo($module['M_MVCModuleTitle']) ?>/index/get-icon/format/48x48" /></td>
+                                                                <td class="table_td_data_management">
+                                                                    <div id="data_management_module_title"><?php echo $this->getCibleText($module['M_MVCModuleTitle'] . '_module_name') ?></div>
+                                                                    <div id="data_management_module_link">
+                <?php echo $action_links ?>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <?php
+                                                    $i++;
+
+                                                    if ($i % 3 == 0)
+                                                    {
+                                                        //echo "</tr><tr>";
+                                                        echo "</tr>";
+                                                        $i = 0;
+                                                    }
+
+                                                endforeach;
+                                                ?>
+
+                                            </table>
+                                        </div>
+                                    </li>
+                                </ul>
+                            <?php if (($this->isAdministrator() == 1) || ($this->isAdministrator() == 2)): ?>
+                            <ul id="ext_administration" class="ext_menu ext_administration">
+                                <li><a class="handle"><?php echo $this->getCibleText('dashboard_administration_title') ?></a>
+                                    <div class="tree_view administration_management" style="display: none">
+                                        <?php if ($this->mobileManagement)
+                                        {
+                                            ?>
+                                            <div id="administration_management_module_title"><?php echo $this->getCibleText('dashboard_administration_website_mobile_title') ?></div>
+                                            <div id="administration_management_module_link">
+                                                <a href="<?php echo $this->baseUrl() ?>/page/manage/structure/site/m/"><?php echo $this->getCibleText('dashboard_administration_website_sitemap_management') ?></a>
+                                                <a href="<?php echo $this->baseUrl() ?>/page/manage/menu/site/m"><?php echo $this->getCibleText('dashboard_administration_website_menu_structure') ?></a>
+                                                <a href="<?php echo $this->baseUrl() ?>text/index/list/site/m"><?php echo $this->getCibleText('treeview_contents_management_title') ?></a>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
+                                        <div id="administration_management_module_title"><?php echo $this->getCibleText('dashboard_administration_administrators_title') ?></div>
+                                        <div id="administration_management_module_link">
+                                            <a href="<?php echo $this->baseUrl() ?>/administrator-group/index/order/EGI_Name/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_administrators_groups_management') ?></a>
+                                            <a href="<?php echo $this->baseUrl() ?>/administrator/index/order/EU_FName/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_administrators_administrator_management') ?></a>
+                                        </div>
+
+                                        <div id="administration_management_module_title"><?php echo $this->getCibleText('dashboard_administration_static_text_title') ?></div>
+                                        <div id="administration_management_module_link">
+                                            <a href="<?php echo $this->baseUrl() ?>/static-texts/index/order/ST_Desc_backend/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_static_text_description') ?></a>
+                                                        <?php if ($this->isAdministrator() == 1): ?>
+                                                        <a href="<?php echo $this->baseUrl() ?>/utilities/references/references/"><?php echo $this->getCibleText('dashboard_administration_references_description') ?></a>
+                                                    <?php endif; ?>
+                                        </div>
+        <?php if ($this->hasProfile): ?>
+                                            <div id="administration_management_module_title"><?php echo $this->getCibleText('dashboard_administration_profil_list') ?></div>
+                                            <div id="administration_management_module_link">
+                                                <a href="<?php echo $this->baseUrl() ?>/users/index/general/order/lastName/order-direction/ASC"><?php echo $this->getCibleText('dashboard_administration_profil_list_description') ?></a>
+                                            </div>
+                                            <?php
+                                        endif;
+                                            ?>
+                                        <div id="administration_management_module_title"><?php echo $this->getCibleText('dashboard_administration_website_title') ?></div>
+                                        <div id="administration_management_module_link">
+        <?php if (($this->isAdministrator() == 1) || ($this->isAdministrator() == 2)): ?>
+                                            <?php if ($this->hasReindexation){ ?>
+                                                <a href="<?php echo $this->baseUrl() ?>/search/index/reindexing/"><?php echo $this->getCibleText('dashboard_administration_website_reindexing') ?></a>
+                                                <!--<a href="<?php echo $this->baseUrl() ?>/search/index/reindexing-pdf/"><?php echo $this->getCibleText('dashboard_administration_website_reindexing_pdf') ?></a>-->
+                                            <?php } ?>
+                                                <a href="<?php echo $this->baseUrl() ?>/utilities/index/google-analytics/"><?php echo $this->getCibleText('dashboard_administration_utilities_googleAnalytics') ?></a>
+                                        <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        </div>
+                        <div id="topMenu_middle_right">
+                            <?php echo !empty($tmpVal) ? $this->getCibleText('entity_label') . $this->siteList() : ''; ?>
+                        </div>
+                    </div>
+                </div>
+<?php } ?>
+            <!-- End : Top Menu -->
+        <div id="content">
+
+            <!-- Start : Top Menu Icons -->
+            <!--<div id="topMenuIcons">
+                Menu Icons
+            </div>-->
+            <!-- End : Top Menu Icons -->
+
+            <!-- Start : Container -->
+            <div id="container" class="photoPretty_block container">
+                <div id="container_middle">
+                    <?php echo $this->layout()->content; ?>
+                </div>
+            </div>
+            <!-- End : Container -->
+
+            <!-- Start : Footer -->
+            <!--<div id="footer"><?php echo str_replace("##YEAR##", date('Y'), $this->getCibleText('cible_all_right_reserved')) ?></div>-->
+            <!-- End : Footer -->
+        <?php echo $this->placeholder('footerScript'); ?>
+        </div>
+        <?php echo $this->partial('partials/jsPrettyPhoto.phtml') ?>
+
+        <script type="text/javascript" src="<?php echo $this->locateFile('manageChangedFields.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->locateFile('siteSwitch.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->locateFile('jquery.ui.selectmenu.js', 'jquery', 'front'); ?>"></script>
+        <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function(){
+            $(document).siteSwitch({baseUrl : '<?php echo $this->baseUrl(); ?>'});
+            $('div#container').find('.italic-offline').prev().attr("src", "<?php echo $this->baseUrl(); ?>/icons/icon-drag-offline-22x22.png");
+        });
+        if ($('#sitelist')){
+            $('#sitelist').selectmenu();
+        }
+        //]]>
+        </script>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+<table id="log">
+    <thead>
+        <tr>
+            <th class="borders first center">Date</th>
+            <th class="borders center">Action</th>
+            <th class="borders center">Module</th>
+            <th class="borders last center">Détails</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->logRenderData as $key => $value): ?>
+        <tr id="nl-<?php echo $key; ?>">
+            <td class="borders alignLeft"><?php echo $value['L_Datetime']; ?></td>
+            <td class="borders alignLeft"><?php echo $this->getCibleText('log_arg_param_' . $value['L_Action']); ?></td>
+            <td class="borders alignLeft"><?php echo $this->getCibleText('module_' . $value['L_ModuleNm']); ?></td>
+            <td class="borders bold alignLeft">
+                <?php foreach ($value['L_Details'] as $key => $val): ?>
+                        <?php echo $this->getCibleText('log_arg_param_' . $key); ?> : <?php echo $val?><br />
+                <?php endforeach; ?>
+            </td>
+        </tr>
+        <?php
+        endforeach;
+        ?>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+       $().log({
+            baseUrl: '<?php echo $this->baseUrl(); ?>',
+            lang: '<?php echo $this->language; ?>'
+        });
+    });
+    //]]>
+</script>

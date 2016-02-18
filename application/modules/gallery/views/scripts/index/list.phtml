@@ -1,0 +1,65 @@
+<?php
+
+$styleToAdd = "";
+?>
+
+<div class="block" style="<?php echo $styleToAdd;?>">
+    <?php
+    $flag = 1;
+    //var_dump($this->galleriesData);
+    $galleriesData = $this->galleriesData;
+    if(count($galleriesData) > 0){
+         foreach($galleriesData as $gallery){ 
+            $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));           
+            $date = new Zend_Date($gallery['G_CreationDate'],null, $langSuffix);
+            
+            $date_string_url = Cible_FunctionsGeneral::dateToString($date,Cible_FunctionsGeneral::DATE_SQL,'-');
+            ?>
+             <div class="gallery gallery_4columns gallery_position_4columns_<?php echo ($flag%4); ?>">                            
+                <div class="gallery_text_container">                    
+                    <?php echo $gallery['GI_Title'] ?>
+                </div>               
+               <?php
+                if(!empty($gallery['I_ThumbLink'])){               
+                    ?>
+                    <div class="gallery_photo_container">
+                    <?php                        
+                        echo $this->moduleImage('gallery',$gallery['G_ID'] . "/" . $gallery['G_ImageID'], $gallery['I_OriginalLink'], 'thumb', array('class'=>'newsletter_photo', 'border'=>'0', 'prettyPhoto' => array('size'=>'original','alt'=>htmlentities($gallery['GI_Title']),'title'=>htmlentities($gallery['GI_Description']))));
+                    ?>     
+                    </div>
+                 
+                <?php            
+                }
+                // 
+                ?>   
+                 <div class="gallery_brief">
+                        <a href="<?php echo $this->details_page . "/"   . $gallery['GI_ValUrl'] ?>" title="<?php echo $this->getCibleText('see_details_gallery_text') ?>">
+                    <?php
+                        $text = $gallery['GI_Description'];
+                        $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                        echo $text;
+                    ?>
+                        </a>
+                    </div>
+       </div>
+        <?php            
+            
+                $flag++;
+               
+                if($flag%4==1){?>
+                    <div class="gallery_separator">
+                        &nbsp;
+                    </div>
+                <?php
+                }
+            
+        }        
+        ?>
+        <div class="clear_both"></div>
+    <?php
+        
+    }else{
+        ?><div><p><?php echo $this->getCibleText('gallery_no_gallery') ?></p></div><?php
+    }
+    ?>
+</div>

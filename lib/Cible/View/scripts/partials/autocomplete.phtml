@@ -1,0 +1,26 @@
+<script type="text/javascript">
+//<![CDATA[
+/*
+ * Autocomplete actions.
+ * Autocomplete field for the cities
+ */
+$(document).ready(function(){
+    var baseUrl = "<?php echo $this->baseUrl() ?>";
+    var langId = <?php echo Zend_Registry::get('languageID')?>;
+
+    $('input[id$=A_CityTextValue]').keyup(function(){
+        var url    = baseUrl + "/default/index/ajax/actionAjax/citiesList";
+        var select = $(this).parents('fieldset:first').find('select[id$=A_StateId]');
+        var selectId = select.attr('id');
+        if ($('#' + selectId + ':not(:disabled)'))
+            url += "/state/" + select.val();
+
+        $(this).autocomplete({source:url});
+        return false;
+    });
+    url = baseUrl + "/default/index/ajax/actionAjax/locationAddr";
+    $('#SI_LocationAddr').autocomplete({source:url});
+
+})
+//]]>
+</script>

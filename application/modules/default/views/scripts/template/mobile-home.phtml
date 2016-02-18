@@ -1,0 +1,39 @@
+<?php
+// loads the placeholders according to the number of zones
+$emptyPlaceholders = $this->zonesBlocks(array('nbZones' => $this->nbZones));
+?>
+<?php if (!isset($emptyPlaceholders[7])): ?>
+    <div class="site-banner site-main-zone-7">
+        <?php echo $this->placeholder('zone7') ?>
+    </div>
+<?php else: ?>
+    <div class="site-banner" role="banner">   
+        <?php $src = $this->imgHeader; ?>
+        <?php echo $this->image($this->imgHeader, array('class' => 'img-header', 'direct' => true)); ?>
+    </div>
+<?php endif; ?>
+<?php if ($this->showTitle): ?>
+    <h1 class="title"><?php echo $this->pageTitle()->toString(null, null, true) ?></h1>
+<?php endif; ?>
+<div class="site-main-zone">
+    <?php if (!isset($emptyPlaceholders[1])): ?>
+        <?php echo $this->placeholder('zone1') ?>
+    <?php endif; ?>
+    <?php if (!isset($emptyPlaceholders[2])): ?>
+        <?php echo $this->placeholder('zone2') ?>
+    <?php endif; ?>
+    <?php if (!isset($emptyPlaceholders[3])): ?>
+        <?php echo $this->placeholder('zone3') ?>
+    <?php endif; ?>
+    <?php if (!isset($emptyPlaceholders[4])): ?>
+        <?php echo $this->placeholder('zone4') ?>
+    <?php endif; ?>
+    <?php if (!isset($emptyPlaceholders[6])): ?>
+        <?php echo $this->placeholder('zone6') ?>
+    <?php endif; ?>
+</div>
+<div class="site-main-blue inverted">
+    <?php if (!isset($emptyPlaceholders[5])): ?>
+        <?php echo $this->placeholder('zone5') ?>
+    <?php endif; ?>
+</div>

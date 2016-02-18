@@ -1,0 +1,149 @@
+<?php
+$associationSetID = $this->options[0];
+$fieldPrefix = $this->options[1];
+$dataFieldToDisplay = $this->options[2];
+$associationSetCpt = $this->options[3];
+$associationSetTitle = $this->options[4];
+$associationsData = $this->options[5]['dims'];
+$assocPermissionData = $this->options[5]['perm'];
+$associationArray = $this->options[6];
+$addLine = $this->options[7];
+$idOffset = $fieldPrefix . 'ID';
+if(count($associationArray) == 0){
+    $associationArray[0] = -1;
+}else{
+    $associationArrayTmp = array();
+    foreach($associationArray as $association){
+        $associationArrayTmp[] = $association;
+    }
+    $associationArray = $associationArrayTmp;
+}
+
+$cptAssociation = count($associationArray);
+?>
+<?php if(!$addLine): ?>
+    <fieldset id="fieldset-<?php echo $associationSetID ?>">
+        <div id="associationSet_<?php echo $associationSetCpt?>" class="associationSetContent" associationSetID="<?php echo $associationSetID; ?>">
+            <div class='associationSetContent_action'>
+                <div class='action'>
+                    <fieldset id='fieldset-actions-association'>
+                        <ul class='actions-buttons'>
+                            <li><button name='addAssociation' id='addAssociation' type='button' class='stdButton addAssociation'>Ajouter</button></li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class='title'><?php echo $associationSetTitle; ?></div>
+            </div>
+            <div class="associationContent">
+                <input type="hidden" id="associationCountID" value="<?php echo $cptAssociation; ?>"/>
+                <input type="hidden" id="associationCount" value="<?php echo $cptAssociation; ?>"/>
+                <table cellpadding="0" cellspacing="0">
+<?php endif; ?>
+            <?php
+            $i = 0;
+            if($addLine)
+            {
+                $i = $associationSetCpt - 1;
+                $cptAssociation = $associationSetCpt;
+            }
+
+            $keyVal = key($associationsData);
+            for($i; $i < $cptAssociation; $i++):
+                $row = $i % 2 ? 'row_odd' : $row = 'row_even';
+                $optionsValues = array();
+            ?>
+                <?php if(!$addLine): ?>
+                    <tr class="association" associationID="<?php echo $i; ?>">
+                        <td class=" <?php echo $row; ?>">
+                <?php endif; ?>
+                <?php if(count($associationArray) > 0): ?>
+                            <?php if (is_string($keyVal)):
+                                $optionsValues[-1] = $this->getCibleText('form_select_default_label');
+                                foreach($associationsData as $key => $associationD):
+                                    foreach($associationD as $key => $association):
+                                        $values[] = array($key, $association);
+                                    endforeach;
+                                    $optionsValues[$key][] = $values;
+                                endforeach;
+                            else:
+                                $optionsValues[-1] = $this->getCibleText('form_select_default_label');
+                                foreach($associationsData as $key => $association):
+                                    $val = is_array($association) ? $association[$idOffset] : $key;
+                                    $label = is_array($association) ? $association[$dataFieldToDisplay] : $association;
+                                    $optionsValues[$key] = $label;
+                                endforeach;
+                            endif;
+                            $name = $associationSetID . 'Set[' . $i . '][CDD_RelatedProductID]';
+                            echo $this->formSelect($name, $associationArray[$i]['CDD_RelatedProductID'], array("class" => ""), $optionsValues);
+                        ?>
+                    <?php endif; ?>
+                        </td>
+                        <td class=" <?php echo $row; ?>">
+                        <?php if (is_string($keyVal)):
+                                $optionsValues[-1] = $this->getCibleText('form_select_default_label');
+                                foreach($assocPermissionData as $key => $associationD):
+                                    foreach($associationD as $key => $association):
+                                        $values[] = array($key, $association);
+                                    endforeach;
+                                    $optionsValues[$key][] = $values;
+                                endforeach;
+                            else:
+                                $optionsValues[-1] = $this->getCibleText('form_select_default_label');
+                                foreach($assocPermissionData as $key => $association):
+                                    $val = is_array($association) ? $association[$idOffset] : $key;
+                                    $label = is_array($association) ? $association[$dataFieldToDisplay] : $association;
+                                    $optionsValues[$key] = $label;
+                                endforeach;
+                            endif;
+                            $name = $associationSetID . 'Set[' . $i . '][CDD_PermissionId]';
+                            echo $this->formSelect($name, $associationArray[$i]['CDD_PermissionId'], array("class" => "",'style'=>"width: 145px;"), $optionsValues);
+                        ?>
+                        </td>
+                        <td class=" <?php echo $row; ?>" style="width: 145px;" title="<?php echo $this->getClientText('form_CDD_FullContainer_description'); ?>">
+                            <!--CDD_ForceContainer	tinyint(1)-->
+                            <?php $cheched = $associationArray[$i]['CDD_ForceContainer'] > 0 ? 'checked="checked"' : ""?>
+                            <input type="checkbox" class="" value="1" name="<?php echo $associationSetID . 'Set[' . $i . '][CDD_ForceContainer]' ?>" <?php echo $cheched; ?> id=""/>
+                            <label class=""><?php echo $this->getCibleText('form_label_CDD_ForceContainer'); ?></label>
+                        </td>
+                        <td class=" <?php echo $row; ?>">
+                        <!--CDD_BatchQty	int(5)-->
+                            <label class=""><?php echo $this->getCibleText('form_label_CDD_BatchQty'); ?></label><br />
+                            <input type="text" class="numeric integer" value="<?php echo $associationArray[$i]['CDD_BatchQty']; ?>" name="<?php echo $associationSetID . 'Set[' . $i . '][CDD_BatchQty]' ?>" id=""/>
+                        </td>
+                        <td class=" <?php echo $row; ?>">
+                        <!--CDD_Min	int(5)-->
+                            <label><?php echo $this->getCibleText('form_label_CDD_Min'); ?></label><br />
+                            <input type="text" class="numeric integer" value="<?php echo $associationArray[$i]['CDD_Min']; ?>" name="<?php echo $associationSetID . 'Set[' . $i . '][CDD_Min]' ?>" id=""/>
+                        </td>
+                        <td class=" <?php echo $row; ?>">
+                        <!--CDD_Max	int(5)-->
+<label><?php echo $this->getCibleText('form_label_CDD_Max'); ?></label><br />
+                            <input type="text" class="numeric integer" value="<?php echo $associationArray[$i]['CDD_Max']; ?>" name="<?php echo $associationSetID . 'Set[' . $i . '][CDD_Max]' ?>" id=""/>
+                        </td>
+                        <td class=" <?php echo $row; ?>">
+                        <!--CDD_Price	decimal(6,3)-->
+<label><?php echo $this->getCibleText('form_label_CDD_Price'); ?></label><br />
+                            <input type="text" class="numeric decimal" value="<?php echo $associationArray[$i]["CDD_Price"]; ?>" name="<?php echo $associationSetID . 'Set[' . $i . '][CDD_Price]' ?>" id=""/>
+                        </td>
+                    <?php if(!$addLine): ?>
+                        <td class="tdAssociationAction <?php echo $row; ?>">
+                    <?php if(count($associationArray) > 0): ?>
+                            <div class='action'>
+                                <fieldset id='fieldset-actions-association'>
+                                    <ul class='actions-buttons'>
+                                        <li><button name='deleteAssociation' id='deleteAssociation' type='button' class='stdButton delAssociation'>Supprimer</button></li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+                    <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+    <?php endfor; ?>
+
+<?php if(!$addLine): ?>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+<?php endif; ?>

@@ -1,0 +1,27 @@
+/* File is actually in /components/spritesheet.less */
+
+/**
+.sprite {
+    display:inline-block;
+    overflow:hidden;
+    background-repeat:no-repeat;
+    font-size:0;
+    background-image:url(../../images/common/spritesheet.png)
+}
+.[img] {
+    width:[width];
+    height:[height];
+    background-position: -[x] -[y]
+}
+.import-sprite(@name) when(@name = '[img]') {
+    .sprite;
+    width:[width];
+    height:[height];
+    background-position: -[x] -[y]
+}
+.import-sprite-only(@name) when(@name = '[img]') {
+    width:[width];
+    height:[height];
+    background-position: -[x] -[y]
+}
+**/

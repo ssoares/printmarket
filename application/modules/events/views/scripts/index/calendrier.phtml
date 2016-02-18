@@ -1,0 +1,241 @@
+<?php $this->headLink()->appendStylesheet("{$this->baseUrl()}/themes/default/css/calendrier.css") ?>
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/jquery/jMonthCalendarCible.js") ?>
+<div class="block block-events">
+    <center>
+        <div style="position:relative;">
+            <div id="jMonthCalendar"></div>
+            <div id="EventDetailOutside">
+                <div id="Eventdetail">
+                </div>
+            </div>
+        </div>
+    </center>
+</div>
+<script type="text/javascript">
+
+    // Diviseur pour le nombre de lettre maximum par case du calendrier
+    var diviseurNombreLetterMax = 5;
+    var indiceNombreLetterMax = 30;
+
+    function CutTitle(strToCut, maxLength)
+    {
+        strToCut += " .";
+        var trimmedString = strToCut.substr(0, (maxLength));
+
+        trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
+        return trimmedString + "...";
+    }
+
+    function PopUp(e, state, site)
+    {
+        // retrouver la hauteur et la largeur de la div info
+        var height = $('#EventDetailOutside').height();
+        //var width = $('#Eventdetail').width();
+
+        //calculer le offset
+        //$('div#jMonthCalendar').offset().left
+        var x = $("div#jMonthCalendar").offset().left;
+        var y = $("div#jMonthCalendar").offset().top;
+
+        leftVal = e.pageX-(x+120)+"px";
+        topVal = e.pageY-(height+y+30)+"px";
+
+        if(state == "show")
+        {
+            $('#EventDetailOutside').css({left:leftVal,top:topVal});
+            $('#Eventdetail').addClass(site);
+            $('#EventDetailOutside').addClass(site);
+            $('#EventDetailOutside').show();
+            //$('#Eventdetail').fadeTo('fast', 1).stopPropagation();
+        }
+        else
+        {
+
+            $('#EventDetailOutside').hide();
+            $('#Eventdetail').attr('class','');
+            $('#EventDetailOutside').attr('class','');
+            //$('#Eventdetail').fadeTo('fast', 0).stopPropagation();
+        }
+
+    }
+
+    $().ready(function()
+    {
+        var Url = "<?php echo $this->BaseUrl() ?>";
+        var blockID = "<?php echo $this->BlockID ?>";
+
+        var options = {
+            onMonthChanging: function(dateIn)
+            {
+                $.getJSON(Url + "/events/index/calendrier/BlockID/" + blockID + "/Year/" + dateIn.getFullYear() + "/Month/" + (dateIn.getMonth() + 1), null,
+                function(data)
+                {
+                    //Array of my events
+                    var events = new Array();
+
+                    //Boucle parmis les événements et les chrger dans un tableau
+                    $.each(data, function(i, item)
+                    {
+                        var event = { "EventID": item.EventID,
+                            "Identifiant" : item.CellsIds,
+                            "DateComplete" : item.DateComplete,
+                            "Date": item.StartDate,
+                            "EndDateTime": item.EndDate,
+                            "Title": item.Title,
+                            "Description": item.Description,
+                            "URL": item.URL,
+                            "site": item.site
+                        };
+                        events.push(event);
+                    });
+
+                    // Charger les événements dans le calendrier
+                    $.jMonthCalendar.ReplaceEventCollection(events);
+                    $.jMonthCalendar.DrawCalendar(dateIn);
+
+                    $('.Event').each(function(index)
+                    {
+                        var strMax = Math.floor(($(this).width() / indiceNombreLetterMax) * diviseurNombreLetterMax);
+
+                        //var content = $(this).text();
+                        var content = $(this).find('a').text();
+
+                        var newContent = CutTitle(content, strMax);
+                        $(this).find('a').text(newContent);
+                    });
+                });
+
+                return true;
+            },
+            onEventBlockOver: function(cell)
+            {
+                var siteTmp = cell.currentTarget.classList;
+                var site = "c3s";
+                if(siteTmp === undefined){
+                    var target = cell.target;
+                    var parent = $(target).parent();
+                    var classList = parent.attr('class');
+                    var siteTmp = classList.split(' ');
+                }
+
+                $.each( siteTmp, function(index, item){
+                    switch(item)
+                    {
+                        case 'c3s':
+                        case 'fondation':
+                        case 'cdrv':
+                            site = item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+                cell.stopPropagation();
+                var date = cell.data.Event.DateComplete  || '';
+                var title = cell.data.Event.Title  || '';
+                var descr = cell.data.Event.Description  || '';
+                
+                var InfoEvent = "<p id='date'>" + date + "</p>";
+                InfoEvent += "<p id='title'>" + title + "</p>";
+                InfoEvent += "<p id='description'>" + descr + "</p>";
+
+                $('#Eventdetail').html(InfoEvent)
+                PopUp(cell, "show",site);
+
+                return false;
+            },
+            onEventBlockOut: function(cell)
+            {
+                var site = "cdrv";
+                PopUp(cell, "hide",site);
+                cell.stopPropagation();
+                return false;
+            },
+            onDayLinkClick: function(cell)
+            {
+                /*alert(cell.data.Date.toLocaleDateString());*/
+                return true;
+            },
+            onDayCellClick: function(cell)
+            {
+                //alert(cell.data.Date.toLocaleDateString());
+                return true;
+            },
+            dragableEvents:false,
+            navLinks: {
+                enableToday: false,
+                enableNextYear: false,
+                enablePrevYear: false,
+                p:'<?php echo $this->clientImage('bullet-blanc-reverse.png'); ?>',
+                n:'<?php echo $this->clientImage('bullet-blanc.png'); ?>',
+                t:'Today',
+                showMore: ''
+            },
+            locale: {
+                dayNames:[<?php echo $this->getCibleText('events_calendar_days');?>],
+                abbreviatedDayNames:[<?php echo $this->getCibleText('events_calendar_day');?>],
+                shortestDayNames:[<?php echo $this->getCibleText('events_calendar_day');?>],
+                firstLetterDayNames:[<?php echo $this->getCibleText('events_calendar_d');?>],
+                monthNames:[<?php echo $this->getCibleText('events_calendar_months');?>],
+                abbreviatedMonthNames:[<?php echo $this->getCibleText('events_calendar_month');?>]
+            },
+            useLocale: true,
+            smallCalendar: true,
+            arrowToEventContinuty: false
+        };
+
+
+
+        // Créer le calendrier et charger les événements dedans
+        //$.jMonthCalendar.Initialize(options, events);
+
+        // Créer le calendrier vide
+        $.jMonthCalendar.Initialize("#jMonthCalendar",options, null);
+
+        var dateTmp = new Date();
+
+        // Charger les événements en ajax
+        $.getJSON(Url + "/events/index/calendrier/BlockID/" + blockID + "/Year/" + dateTmp.getFullYear() + "/Month/" + (dateTmp.getMonth() + 1), null,
+        function(data)
+        {
+            //Array of my events
+            var events = new Array();
+
+            //Boucle parmis les événements et les chrger dans un tableau
+            $.each(data, function(i, item)
+            {
+
+                var event = { "EventID": item.EventID,
+                    "Identifiant" : item.CellsIds,
+                    "DateComplete" : item.DateComplete,
+                    "Date": item.StartDate,
+                    "EndDateTime": item.EndDate,
+                    "Title": item.Title,
+                    "Description": item.Description,
+                    "URL": item.URL,
+                    "site": item.site
+                    // "URL": Url + "/evenement/detail/ID1/" + item.EventID
+                };
+                events.push(event);
+            });
+            // Charger les événements dans le calendrier
+            $.jMonthCalendar.ReplaceEventCollection(events);
+
+            $('.Event').each(function(index)
+            {
+                var strMax = Math.floor(($(this).width() / indiceNombreLetterMax) * diviseurNombreLetterMax);
+
+                //var content = $(this).text();
+                var content = $(this).find('a').text();
+
+                var newContent = CutTitle(content, strMax);
+
+                $(this).find('a').text(newContent);
+
+            });
+
+        });
+
+    });
+</script>

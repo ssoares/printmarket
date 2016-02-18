@@ -1,0 +1,104 @@
+//Général
+@icon-font-path:          "../fonts/";
+@icon-font-name:          "glyphicons-halflings-regular";
+
+@body-bg:white;//couleur de l'arrière-plan ici
+@text-color: @brand-grey;//couleur du texte ici
+@text-color-inverted: @brand-white;
+@link-color: @brand-primary;//couleur des liens
+@link-hover-color:#858585;
+
+@font-family-sans-serif:  'ProximaNova-Light', sans-serif;//font sans empatement
+@font-family-normal-sans-serif:  'ProximaNova-Light', sans-serif;//font sans empatement
+@font-family-normal-sans-serif-mobile:  @font-family-sans-serif;//font sans empatement
+@font-family-light-sans-serif:  'ProximaNova-Light', sans-serif;//font sans empatement
+@font-family-light-sans-serif-mobile:  @font-family-light-sans-serif;//font sans empatement
+@font-family-bold-sans-serif:  'ProximaNova-Bold', sans-serif;//font sans empatement
+@font-family-bold-sans-serif-mobile:  @font-family-bold-sans-serif;//font sans empatement
+@font-family-serif:       'oswaldregular', serif;//font avec empatements
+@font-family-normal-serif:       @font-family-serif;//font avec empatements
+@font-family-normal-serif-mobile:       @font-family-serif;//font avec empatements
+@font-family-bold-serif:       'oswaldbold', serif;//font avec empatements
+@font-family-bold-serif-mobile:       @font-family-bold-serif;//font avec empatements
+@font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace;//monochasse
+@font-family-icons:'edith', Arial, sans-serif; 
+
+@font-family-print: "Times New Roman", Georgia, serif;
+
+@font-size-h1:18px;
+@font-size-h2:25px;
+@font-size-h3:18px;
+@font-size-h4:22px;
+@font-size-h5:20px; 
+@font-size-h6:18px;
+
+
+@screen-xs-min:480px;//width mobile
+@screen-xs-min-minus-one:479px;//width mobile
+@screen-sm-min:768px;//width tablet
+@screen-sm-min-minus-one:767px;
+@screen-md-min:992px;//width normal
+@screen-md-min-minus-one:991px;//width normal
+@screen-lg-min:1200px;//width large
+@screen-lg-min-minus-one:1199px;//width large
+
+@font-size-base:16px;//taille de base du texte
+@line-height-base:1.2;//hauteur de ligne de base (mettre en unité, pas en em)
+
+@headings-font-weight:    500;
+@headings-line-height:    1.1;
+@headings-color:          inherit;
+
+@grid-columns:              12;//nombre de colonnes
+@grid-gutter-width:         20px;//taille des goutières
+@grid-float-breakpoint:     769px;//lorsque la largeur de la fenêtre est plus petite, les colonnes commencent à floater 
+
+@container-tablet:             ((720px + @grid-gutter-width));//largeur conteneur tablette 
+@container-desktop:            ((940px + @grid-gutter-width));//largeur conteneur normal
+@container-large-desktop:      ((1140px + @grid-gutter-width));//largeur conteneur large
+
+@brand-primary: #009cda; 
+@brand-secondary: #DDD100;
+
+@brand-success: #5cb85c;
+@brand-warning: #f0ad4e;
+@brand-danger: #d9534f;
+@brand-info: #5bc0de;
+
+@brand-black: #000000;
+@brand-very-grey-dark: #303030;
+@brand-grey-dark: #353535;
+@brand-grey: #4b575f;
+@brand-grey-light: #b9b9b9;
+@brand-grey-very-light: #dfe4e6;
+@brand-white: #FFFFFF;
+
+@navbar-height: 42px;
+@menu-secondaire-height:32px;
+
+@menu-side-width: 200px;
+
+@mq-large: ~'(min-width: @{screen-lg-min})';
+@mq-desktop: ~'(min-width: @{screen-md-min}) and (max-width: @{screen-lg-min-minus-one})';
+@mq-tablet: ~'(min-width: @{screen-sm-min}) and (max-width: @{screen-md-min-minus-one})';
+@mq-phone: ~'(max-width: @{screen-sm-min-minus-one})';
+
+@mq-desktop-below:~'(max-width: @{screen-lg-min-minus-one})';
+@mq-tablet-below:~'(max-width: @{screen-md-min-minus-one})';
+
+@mq-desktop-upward: ~'(min-width: @{screen-md-min})';
+@mq-tablet-upward: ~'(min-width: @{screen-sm-min})';
+
+@mq-pixel-ratio:~'(-webkit-min-device-pixel-ratio: 2),(min-resolution: 120dpi)';
+
+@mq-small-mobile: ~'(min-width: @{screen-sm-min}) and (max-width: @{screen-md-min-minus-one})';
+
+@print: ~'print';
+
+@mobile-divider: 0.5;
+@mobile-divider-text: 1;
+@mobile-gutter-width: 71px;
+
+@mq-landscape: ~'screen and (orientation:landscape)';
+@mq-portrait: ~'screen and (orientation:portrait)';
+@mq-large-mobile: ~'(min-width: @{screen-sm-min})';

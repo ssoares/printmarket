@@ -1,0 +1,57 @@
+<?php
+$moreClasses = '';
+if ($this->step > 1)
+    $backButtonLabel = 'form_label_prev_step_btn';
+else
+    $backButtonLabel = 'btn_cart_add_another';
+
+if ($this->step > 2)
+    $customSubmitLabel = 'form_label_confirm_order_btn';
+else
+    $customSubmitLabel = 'form_label_next_step_btn';
+
+if (isset($this->moreClass))
+    $moreClasses = $this->moreClass;
+?>
+<div class='module-pagination pagination'>
+    <ul id="cart-big-buttons" class="module-paginatio-list pagination-list <?php echo $moreClasses; ?>">
+        <?php if (!empty($this->urlBack)): ?>
+            <li class="module-navigation-arrow module-navigation-previous">
+                <a href="<?php echo $this->urlBack; ?>"><?php echo $this->getClientText($backButtonLabel) ?></a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (!empty($this->itemCount)): ?>
+            <li class="module-navigation-arrow module-navigation-next">
+                <a href="<?php echo $this->nextStep; ?>"><?php echo $this->getCibleText("form_label_next_step_btn") ?></a>
+            </li>
+        <?php endif; ?>
+
+        <?php if (!empty($this->customNext)): ?>
+            <li class="module-navigation-arrow module-navigation-next">
+                <a id="stepTopNext" href="#" class="<?php echo $this->customNext ?>"><?php echo $this->getCibleText($customSubmitLabel) ?></a>
+            </li>
+        <?php endif; ?>
+        <?php if (!empty($this->customSubmit)): ?>
+            <li class="module-navigation-arrow module-navigation-submit">
+                <button id="stepTopNext" class="<?php echo $this->customSubmit ?> button-submit"><?php echo $this->getCibleText($customSubmitLabel) ?></button>
+            </li>
+        <?php endif; ?>
+
+    </ul>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    // Permet du soumettre le formulaire en simulant le clique sur le submit
+    $(document).ready(function() {
+
+        $('#stepTopNext').click(function(e){
+            e.preventDefault();
+//            $('#submitOrder').submit();
+            $('#submit').click();
+        });
+
+    });
+
+    //]]>
+</script>

@@ -1,0 +1,55 @@
+<?php
+$langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));           
+$date = new Zend_Date($this->parution_date,null, $langSuffix);
+$date_string = Cible_FunctionsGeneral::dateToString($date,Cible_FunctionsGeneral::DATE_LONG_NO_DAY,'.');
+?>hgghg
+<div class="newsletter_title">
+<?php
+    echo($this->parution_title);
+?>
+</div>
+<div class="newsletter_article_container">
+<?php
+    if($this->articles)
+    {
+        foreach ($this->articles as $article)
+        {?>
+         <div class="newsletter_article_title">
+             <?php
+                $this->headTitle($article['NA_Title']);
+                echo $article['NA_Title'];
+             ?>
+         </div>
+        <div class="newsletter_date">
+            <?php
+                echo $date_string;
+            ?>
+        </div>
+         <?php
+            if($article['NA_ImageSrc']){
+                echo "<div class='newsletter_article_image'>";
+                echo $this->moduleImage('newsletter',$article['NA_ReleaseID'] . "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'thumb', array('class'=>'newsletter_photo', 'border'=>'0', 'prettyPhoto' => array('size'=>'original')));
+                echo "</div>";
+                if($article['NA_Text']){
+                    echo "<div class='newsletterArticleText'>";
+                    echo $this->decorateImage($article['NA_Text']);
+                    echo "</div>";
+                }
+             }
+             else{
+                 if($article['NA_Text']){
+                    echo "<div class='newsletterArticleTextNoImage'>";
+                    echo $this->decorateImage($article['NA_Text']);
+                    echo "</div>";
+                }
+             }
+        }
+    }
+    ?>
+    <div class="newsletter_article_return">
+         <a href="javascript:history.back();">
+            <?php echo($this->getCibleText('newsletter_button_return_to_newsletter'));?>&nbsp;
+            <img src="<?php echo Zend_Registry::get('www_root') ?>/themes/default/images/common/fleche_suivant.png" alt="" border="0"/>
+        </a>
+    </div>
+</div>

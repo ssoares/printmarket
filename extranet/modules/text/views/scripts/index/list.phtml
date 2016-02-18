@@ -1,0 +1,30 @@
+<?php
+    
+?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_list_arbo_text_text'),
+    'pageDescription' => $this->getCibleText('header_list_arbo_text_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <div id="all-text" style="padding-left: 20px; padding-top: 10px;">
+            <?php
+            echo $this->collapsibleTree(Cible_FunctionsPages::buildUlLiMenu($this->baseUrl(), 0, $this->langId, $this->type), array(
+                'id' => 'content_menu',
+                'images'=> array(
+                    'close'=> $this->baseUrl() . '/themes/default/images/treeview-open.png',
+                    'open'=> $this->baseUrl() . '/themes/default/images/treeview-close.png'
+                ),
+                //'li_template' => "<li id='%OBJECT_ID%' class='%LI_CLASS%'>",
+                'class' => 'collapsible_tree'
+                //'class' => 'tree-view',
+                //'customLiClass' => 'sortable_items'
+            ));
+            ?>
+        </div>
+    </div>
+</div>

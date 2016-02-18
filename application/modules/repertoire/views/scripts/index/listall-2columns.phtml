@@ -1,0 +1,235 @@
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        $('.repertoire_text_container').each(function(){
+            if($(this).height() > 350)
+            {
+                var info = $(this).attr("id").split("_");
+
+                if(info[2] == 1)
+                    $('#' + info[0] + "_" + info[1] + "_0").height($(this).height());
+                else
+                {
+                    if($('#' + info[0] + "_" + info[1] + "_1").height() < $(this).height())
+                        $('#' + info[0] + "_" + info[1] + "_1").height($(this).height());
+                }
+            }
+
+        });
+
+
+    });
+
+    //]]>
+</script>
+<div class="block">
+    <?php
+
+    echo $this->formFilter;
+
+    echo($this->groupDescription['GI_Description']);
+
+
+    $line = 1;
+
+    $arrayParam = array();
+
+    if(!empty($this->alpha))
+        $arrayParam["alpha"] = $this->alpha;
+    if(!empty($this->mrc))
+        $arrayParam["listId"] = $this->listId;
+
+    if($this->repertoires)
+    {
+        ?>
+        <h2 class="title">
+            <?php
+                echo $this->getCibleText('distributeurs_representant');
+            ?>
+        </h2>
+        <?php
+         $flag = 0;
+        foreach($this->repertoires as $repertoire){
+            if($repertoire['RD_RepDist']==1) {
+
+            ?>
+            <div class="distributeurs_zone3">
+                <p class="repertoire_subtitle">
+                    <?php echo $repertoire['AI_Name'] ?>
+                </p>
+                <?php if($repertoire['AI_FirstTel']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php
+                        echo $this->getCibleText('distributeur_telephone') . $repertoire['AI_FirstTel'];
+                        ?>
+                    </p>
+                <?php
+                }
+                ?>
+               <?php if($repertoire['AI_SecondTel']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php
+                        echo $this->getCibleText('distributeur_telephone') . $repertoire['AI_SecondTel'];
+                        ?>
+                    </p>
+                <?php
+                }
+                if($repertoire['A_Fax']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php
+                        echo $this->getCibleText('distributeur_fax') . $repertoire['A_Fax'];
+                        ?>
+                    </p>
+                <?php
+                }
+                ?>
+                    <?php if($repertoire['A_Email']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php $tmp = json_encode(explode('@', $repertoire['A_Email'])); ?>
+                        <script type="text/javascript">
+                        //<![CDATA[
+                        var string = <?php echo $tmp; ?>;
+                        string = string[0]+'@'+string[1];
+                        var act = 'mail';
+                        var ion = 'to:';
+                        document.write('<a href=' + act+ ion + string + '>' + string + '</a>');
+                        //]]>
+                        </script>
+                    </p>
+                <?php
+                }
+                ?>
+
+            </div>
+            <?php
+                $flag++;
+                if($flag%3==0){
+                    $flag=0;
+                    ?>
+                <div class="clear_both clear_both_margin_bottom">
+                </div>
+                <?php
+                }
+            }
+        }
+        ?>
+        <div class="clear_both clear_both_with_line"></div>
+        <h2 class="title">
+            <?php
+                echo $this->getCibleText('distributeurs_distributeurs');
+            ?>
+        </h2>
+        <?php
+        $flag=0;
+        foreach($this->repertoires as $repertoire){
+            if($repertoire['RD_RepDist']==2){
+            ?>
+            <div class="distributeurs_zone3">
+                <p class="repertoire_subtitle">
+                    <?php echo $repertoire['RI_Name'] ?>
+                </p>
+                <?php if($repertoire['AI_FirstTel']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php
+                        echo $this->getCibleText('distributeur_telephone') . $repertoire['AI_FirstTel'];
+                        ?>
+                    </p>
+                <?php
+                }
+                ?>
+               <?php if($repertoire['AI_SecondTel']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php
+                        echo $this->getCibleText('distributeur_telephone') . $repertoire['AI_SecondTel'];
+                        ?>
+                    </p>
+                <?php
+                }
+                if($repertoire['A_Fax']!=""){
+                    ?>
+                    <p class="text_distributeur">
+                        <?php
+                        echo $this->getCibleText('distributeur_fax') . $repertoire['A_Fax'];
+                        ?>
+                    </p>
+                <?php
+                }
+                if($repertoire['A_Email']!=""){
+                ?>
+                    <p class="text_distributeur">
+                       <a href="mailto:<?php echo $repertoire['A_Email']; ?>" >
+                        <?php
+                        echo $repertoire['A_Email'];
+                        ?>
+                        </a>
+                    </p>
+                <?php
+                }
+                if($repertoire['AI_WebSite']!=""){
+                ?>
+                    <p class="text_distributeur">
+                        <a href="<?php echo $repertoire['AI_WebSite']; ?>" >
+                        <?php
+                        echo $repertoire['AI_WebSite'];
+                        ?>
+                        <a/>
+                    </p>
+                <?php
+                }
+                ?>
+
+            </div>
+            <?php
+                $flag++;
+                if($flag%3==0){
+                    $flag=0;
+                    ?>
+                <div class="clear_both clear_both_margin_bottom">
+                </div>
+                <?php
+                }
+            }
+        }
+        ?>
+
+
+
+
+
+    <?php
+      //  echo $this->paginationControl($this->paginator,'sliding', 'partials/products.paginator.phtml', $arrayParam);
+    }else{
+        ?><div class="no_distributor">
+            <p><?php echo $this->getCibleText('repertoire_no_repertoire') ?></p>
+        </div><?php
+    }
+    ?>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        $('#listeAlpha').change(function(e){
+            e.preventDefault();
+            if($(this).val() == "")
+                $("#selectedAlpha").val("");
+            else
+                $("#selectedAlpha").val($(this).val());
+
+            $("#FiltreRepertoire").submit();
+
+        });
+
+        $('#filterList').change(function(){
+            $("#FiltreRepertoire").submit();
+        });
+
+    });
+
+    //]]>
+</script>

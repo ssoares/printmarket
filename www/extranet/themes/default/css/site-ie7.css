@@ -1,0 +1,62 @@
+/* Version SVN: $Id: site-ie7.css 722 2011-12-06 16:19:39Z freynolds $*/
+div.searchable-list div.search input{
+    height: 10px;
+    border: solid 1px #fff;
+    font-size: 10px;
+}
+
+ul.collapsible_tree li{
+    position: static!important;
+}
+
+ul.collapsible_tree li img{
+    position: static!important;
+    margin-left: -15px;
+}
+
+div#all-text ul.collapsible_tree li img{
+    margin-bottom: 4px;
+}
+div.floatRight p.textzone{
+    float: left;
+}
+div.floatRight p.links{
+    float: none;
+}
+form.params input#FSI_Title{
+    position: relative;
+    left: -55px;
+}
+
+.url_text_input{
+    top: -40px;
+    position: relative;
+
+}
+.statFieldset table{
+    border : 1px solid #c4c4c4;
+}
+.container{
+    border: none;
+    margin: 8px;
+    width: 98%;
+}
+#article{
+    width: 100%;
+}
+.hasDatepicker{
+    margin-right: 18%;
+}
+#detailsReasons th.sorting_disabled,
+#viewers th.sorting_disabled,
+#tabContainer th.sorting_disabled{
+    border: 0;
+    border-bottom: 1px solid #c4c4c4;
+}
+.dataTables_length{
+    float: left;
+}
+
+.url_text_input{
+    top: -70px;
+}

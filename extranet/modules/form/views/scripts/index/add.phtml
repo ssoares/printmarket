@@ -1,0 +1,47 @@
+<?php
+
+
+echo $this->partial(
+        'partials/header.pageDetails.phtml',
+        array(
+            'pageTitle' => $this->getCibleText('header_add_form_text'),
+            'pageDescription' => $this->getCibleText('header_add_form_description'),
+            'breadcrumb' => ''
+            )
+        );  
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <div id="form_header">
+            <?php echo($this->form);?>
+        </div>
+        
+    </div>                    
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+
+    $(window).load(function() {
+
+        if($('#F_Notification').is(':checked'))
+        {
+            $('#FN_Email').slideUp('display', 'inline');
+        }
+        else
+        {
+            $('#FN_Email').css('display', 'none');
+        }
+    });
+    $('#F_Notification').live('click', function(){
+        if($('#FN_Email').is(':visible'))
+        {
+            $('#FN_Email').css('display', 'none');
+        }
+        else
+        {
+            $('#FN_Email').css('display', 'inline');
+        }
+    });
+});
+</script>

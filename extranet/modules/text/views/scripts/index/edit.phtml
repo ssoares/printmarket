@@ -1,0 +1,144 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . '/js/csa/overlay.js') ?>
+<?php $this->jQuery()->onLoadcaptureStart(); ?>
+
+    $('#preview-box button#preview_cancel').click(function(){
+        $('#preview-box').slideUp('fast', function(){
+            $('#preview-content').empty();
+            overlay.hide();
+        });
+    });
+
+    $('#compare-box button#compare_cancel').click(function(){
+        $('#compare-box').slideUp('fast', function(){
+            $('#compare-content td.draft').empty();
+                overlay.hide();
+        });
+    });
+
+<?php $this->jQuery()->onLoadcaptureEnd(); ?>
+<?php $this->headScript()->captureStart(); ?>
+
+    overlay = new CSAOverlay('overlay');
+
+    function showPreview(tiny_id){
+
+        editor = tinyMCE.get(tiny_id);
+
+        overlay.show();
+
+        var window_height = $(window).height();
+        var window_width = $(window).width();
+
+        var preview_box = $('#preview-box');
+
+        $('#preview-content').html( editor.getContent() );
+        $('#preview-content').setTabsBox();
+        // Popup has been loaded, we grab the height
+        var popup_height = preview_box.height();
+
+        // We define the acceptable height for our popup
+        var acceptable_popup_height = window_height - (window_height / 10);
+
+        // if popup_height is greater than acceptable_height, we use acceptable height instead
+        if( popup_height > acceptable_popup_height ){
+            popup_height = acceptable_popup_height;
+            content_height = popup_height - 40;
+
+            $('#preview-content').css('height',content_height);
+        }
+
+        // we set the css top attribute for our popup
+        var popup_top = Math.round((window_height - popup_height ) / 2);
+
+        // we set our popup size and position
+        preview_box.css({
+            'top': popup_top + 'px',
+            'left': Math.round((window_width - 700) / 2) + 'px',
+            'width': '700px'
+        }).slideDown('fast');
+    }
+
+    function showCompare(tiny_id){
+
+        editor = tinyMCE.get(tiny_id);
+
+        overlay.show();
+
+        var window_height = $(window).height();
+        var window_width = $(window).width();
+
+        var compare_box = $('#compare-box');
+
+        $('#compare-content td.draft').html( editor.getContent() );
+        $('#compare-content td').setTabsBox();
+
+        // Popup has been loaded, we grab the height
+        var popup_height = compare_box.height();
+
+        // We define the acceptable height for our popup
+        var acceptable_popup_height = window_height - (window_height / 10);
+
+        // if popup_height is greater than acceptable_height, we use acceptable height instead
+        if( popup_height > acceptable_popup_height ){
+            popup_height = acceptable_popup_height;
+            content_height = popup_height - 40;
+
+            $('#compare-content').css('height',content_height);
+        }
+
+        // we set the css top attribute for our popup
+        var popup_top = Math.round((window_height - popup_height ) / 2);
+
+        // we set our popup size and position
+        var leftOffset = window_width *0.9;
+        if (leftOffset > 1300)
+            leftOffset = 1300;
+
+        compare_box.css({
+            'top': popup_top + 'px',
+            'left': Math.round((window_width - leftOffset) / 2) + 'px',
+            'width': '90%',
+            'maxWidth': '1300px'
+        }).slideDown('fast');
+    }
+
+<?php $this->headScript()->captureEnd(); ?>
+
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_text_text'),
+    'pageDescription' => $this->getCibleText('header_edit_text_description'),
+    'breadcrumb' => Cible_FunctionsPages::buildTextBreadcrumb($this->pageId)
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>
+</div>
+<div id="preview-box">
+    <div id="default_form">
+        <div id="action_panel"><?php echo $this->formButton('preview_cancel',$this->getCibleText('button_preview_close'))  ?></div>
+        <div id="preview-content"></div>
+    </div>
+</div>
+<div id="compare-box">
+    <div id="default_form">
+        <div id="action_panel"><?php echo $this->formButton('compare_cancel',$this->getCibleText('button_preview_close'))  ?></div>
+        <div id="compare-content">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                    <tr>
+                        <td><?php echo $this->getCibleText('text_draft_title') ?></td>
+                        <td><?php echo $this->getCibleText('text_online_title') ?></td>
+                    </tr>
+                </thead>
+                <tr>
+                    <td class="draft"></td>
+                    <td class="online"><?php echo $this->onlineText ?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

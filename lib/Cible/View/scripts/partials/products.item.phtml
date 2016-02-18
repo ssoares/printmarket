@@ -1,0 +1,27 @@
+<?php 
+    
+    $page = Cible_FunctionsCategories::getPagePerCategoryView( 0, 'product_details', 1000 );
+    $details_link = "{$this->baseUrl()}/{$page}/ID/{$this->item['itemID']}";
+    
+    $config = Zend_Registry::get('config')->toArray();
+    $itemMaxWidth  = $config['xxxxxx']['image']['search']['maxWidth'];
+    $itemMaxHeight = $config['xxxxxx']['image']['search']['maxHeight'];
+    
+    if( $this->item['itemImageSrc'] != 'none')
+        $image_path = Zend_Registry::get("web_root")."/data/images/xxxxxx/{$this->item['itemID']}/".$itemMaxWidth."x".$itemMaxHeight."_{$this->item['itemImageSrc']}";
+    else
+        $image_path = Zend_Registry::get("web_root")."/themes/default/images/common/none-thumb.jpg";
+?>
+<div class="product-item">
+    <span class="item-image"><?php echo $this->link($details_link,$this->image($image_path, array('width'=>'100', 'height'=>'100', 'border'=>0))) ?></span>
+    <?php if( !empty($this->item['sampleSkuID']) ): ?>
+        <span class="item-add-to-cart"><?php echo $this->link("javascript:addToCart('{$this->item['itemID']}')",$this->getClientText('cart_item_add_link')) ?></span>
+    <?php else: ?>
+        <span class="item-add-to-cart-disabled">&nbsp;</span>
+    <?php endif; ?>
+    <a href="<?php echo $details_link ?>">
+        <span class="item-color"><?php echo $this->item['itemColor'] ?></span>
+        <span class="brand-name"><?php echo $this->item['brandName'] ?></span>
+        <span class="item-name"><?php echo $this->item['itemName'] ?></span>
+    </a>
+</div>

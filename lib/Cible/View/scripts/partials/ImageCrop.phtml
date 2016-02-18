@@ -1,0 +1,120 @@
+<script type="text/javascript" src="<?php echo $this->locateFile('jquery.imgareaselect.pack.js','imgareaselect/scripts') ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl() . "/js/imgareaselect/css/imgareaselect-default.css" ?>" />
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_crop_header_text'),
+    'pageDescription' => $this->getCibleText('header_crop_header_description'),
+    'breadcrumb' => ''
+));
+
+$this->fileSource;
+?>
+<?php if($this->showActionButton==true):?>
+<div id="action_panel">
+    <fieldset id="fieldset-actions" style="border: none; padding: 0px; margin: 0px;">
+        <?php echo $this->formButton('crop', $this->getCibleText('crop'), array('class' => 'stdButton','onclick'=> "javascript: submitform();")) ?>
+        <?php echo $this->formButton('cancel', $this->getCibleText('button_cancel'), array('class' => 'stdButton','onclick'=> "document.location.href='{$this->cancelPage}'")) ?>
+    </fieldset>
+</div>
+<br />
+<?php endif;?>
+<form id="imageCropForm" name="imageCropForm" action="<?php echo $this->submitPage; ?>" method="post">
+    <div class="size_crop_div">
+        <label id="realhw" name="realhw">
+            <span class="half-left"><?php echo $this->getCibleText('crop_maximum_width') . ' = ' . $this->sizeXWanted; ?></span>
+            <span class="half-right"><?php echo $this->getCibleText('crop_maximum_height') . ' = ' . $this->sizeYWanted; ?></span>
+        </label>
+    </div>
+    <div class="modify_size_crop_div">
+        <label for="widthinput"><span class="spancell"><?php echo $this->getCibleText('crop_selection_width'); ?> :</span><input id="widthinput" class="width_input" type="text" value="0" /> px</label>
+        <label for="heightInput"><span class="spancell"><?php echo $this->getCibleText('crop_selection_height'); ?> :</span><input id="heightInput" class="height_input" type="text" value="0"> px</label>
+    </div>
+    <div class="clear_both_line_top" style="height:10px;border-bottom: 1px solid #000000;margin-bottom:10px;">
+    </div>
+    <div class="center">
+        <div class="frame">
+            <img id="photo" width="<?php echo $this->maxWShow; ?>" height="<?php echo $this->maxHShow; ?>" />
+        </div>
+    </div>
+    <input id="ImageSrc" type="hidden" name="ImageSrc" value="<?php echo $this->fileSource; ?>">
+    <input id="ImageDestination" type="hidden" name="ImageDestination" value="<?php echo $this->fileDestination; ?>">
+    <input id="x1" type="hidden" name="x1" />
+    <input id="x2" type="hidden" name="x2" />
+    <input id="y1" type="hidden" name="y1" />
+    <input id="y2" type="hidden" name="y2" />
+    <input id="w" type="hidden" name="w" />
+    <input id="h" type="hidden" name="h" />
+    <input id="rh" type="hidden" name="rh" />
+    <input id="rw" type="hidden" name="rw" />
+    <input id="maxWShow" type="hidden" name="orignal_new_width" />
+    <input id="maxHShow" type="hidden" name="orignal_new_Height" />
+    <input id="maxWPreShow" type="hidden" name="maxWPreShow" />
+    <input id="maxHPreShow" type="hidden" name="maxHPreShow" />
+    <input id="realHShow" type="hidden" name="realHShow" value="<?php echo $this->realHShow; ?>">
+    <input id="realWShow" type="hidden" name="realWShow" value="<?php echo $this->realWShow; ?>">
+    <input id="sizeXWanted" type="hidden" name="sizeXWanted" value="<?php echo $this->sizeXWanted; ?>" />
+    <input id="sizeYWanted" type="hidden" name="sizeYWanted" value="<?php echo $this->sizeYWanted; ?>" />
+    <input id="returnPage" name="returnPage" type="hidden" value="<?php echo $this->returnPage; ?>" />
+</form>
+<script type="text/javascript">
+    function submitform()
+    {
+        document.forms["imageCropForm"].submit();
+    }
+</script>
+<script type="text/javascript">
+   //<![CDATA[
+$(document).ready(function() {
+    $("#photo").attr("src", "<?php echo $this->fileSource; ?>?timestamp=" + new Date().getTime());
+
+    var ratioX = <?php echo $this->ratioX; ?>;
+    var ratioY = <?php echo $this->ratioY; ?>;
+    var coefW = <?php echo $this->realWShow; ?>;
+    var coefH = <?php echo $this->realHShow; ?>;
+
+    function preview(img, selection) {
+        if (!selection.width || !selection.height)
+            return;
+
+        $('.imgareaselect-selection').parent().css('z-index','100000');
+        $('#x1').val(selection.x1);
+        $('#y1').val(selection.y1);
+        $('#x2').val(selection.x2);
+        $('#y2').val(selection.y2);
+        $('#w').val(selection.width);
+        $('#h').val(selection.height);
+
+        var widthPrev = Math.round((selection.x2 * coefW)-(selection.x1 * coefW));
+        var heightPrev = Math.round((selection.y2 * coefH)-(selection.y1 * coefH));
+        $(".width_input").val(widthPrev);
+        $(".height_input").val(heightPrev);
+    }
+
+    $('#photo').imgAreaSelect({
+        aspectRatio:ratioX + ':' + ratioY,
+        handles: true,
+        fadeSpeed: 200,
+        parent: '#imageCropForm',
+//            maxWidth: ratioX / coefW,
+//            maxHeight: ratioY / coefH,
+        onSelectChange: preview });
+    $('div.sec0').live('mouseout', function(){
+        $(this).find('.text2').hide(0);
+    });
+
+    $(".width_input").keyup(function (){
+        var value = $(this).val();
+        var widthR = ratioX/ratioY;
+        $(".height_input").val((Math.round(value/widthR)));
+    }).keyup();
+
+    $(".height_input").keyup(function (){
+        var value = $(this).val();
+        var heightR = ratioY/ratioX;
+        $(".width_input").val((Math.round(value/heightR)));
+    }).keyup();
+
+
+//]]>
+});
+</script>

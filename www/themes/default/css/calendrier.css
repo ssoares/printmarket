@@ -1,0 +1,377 @@
+#calendarPlaceholder
+{
+    overflow:visible;    
+    clear: both;    
+    min-height: 230px;
+    height: 250px;
+    padding-bottom: 40px;
+}
+
+#jMonthCalendar
+{
+    position:relative;
+    height:500px;
+    width:90%;
+    border:0px;
+}
+
+
+.MonthlyCalendar,
+.MonthlyCalendar tr td
+{
+    background-color: #fff;
+    border:1px solid #ffffff;
+}
+
+.MonthlyCalendar .MonthNavigation
+{
+    background-color: #fff;    
+    padding:8px 0 8px 0;
+}
+
+.MonthlyCalendar .MonthNavPrev,
+.MonthlyCalendar .TodayLink
+{
+    width:2%;
+    float:left;
+}
+
+.MonthlyCalendar .MonthNavNext
+{
+    width:6px;
+    float:right;
+}
+
+.MonthlyCalendar .YearNavNext,
+.MonthlyCalendar .YearNavPrev
+{
+    width:5%;
+    float:left;
+}
+
+.MonthlyCalendar .FormHeader
+{
+    margin:0px;
+    padding:0px;
+    
+}
+
+.MonthlyCalendar .MonthName
+{
+    width:96%;
+    line-height: 18px;
+    text-align:center;
+    font-weight:bold;
+    float:left;
+    font-family: arial;
+    background-color:#F0F0F0; 
+    text-transform: uppercase;
+}
+
+
+
+.MonthlyCalendar
+{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.MonthlyCalendar #CalendarHead 
+{
+    width:100%;
+    background:#F7F7F7 none repeat scroll 0 0;
+    height:60px;
+}
+
+
+
+.MonthlyCalendar #CalendarHead .DateHeader
+{
+    color:#ffffff;
+    width:14.285%;
+    text-align:center;
+    background-color: #ADBF2D;
+    font-family: Arial;
+    font-size:12px;
+    font-weight: bold;
+    height:30px;
+}
+
+.MonthlyCalendar #CalendarBody
+{
+}
+
+.DateBox
+{
+    vertical-align:top;    
+    width:14.285%;
+    height: 75px;
+    background:#F0F0F0;    
+}
+
+.DateLabel
+{
+    height:16px;
+    width:100%;   
+    text-align:right;
+}
+
+.DateLabel a
+{
+    cursor:pointer;
+    padding:0 5px 2px;
+    text-decoration:none;
+    line-height:16px;
+    color:#52585A;
+    font-family: arial;
+}
+
+
+
+.cellWithEvent
+{
+    cursor:pointer;
+    background-color:#ADBF2D;
+    font-family: Arial;
+}
+
+.cellWithEvent a,
+.cellWithEvent a:hover
+{
+    text-decoration:none;
+    color:#fff;
+    font-family: Arial;    
+}
+
+
+#CalendarBody .Weekend
+{
+    background-color:#F0F0F0;
+    color:#ADBF2D;   
+}
+
+#CalendarBody .Inactive,
+#CalendarBody .Inactive .DateLabel,
+#CalendarBody .Inactive .DateLabel a
+{    
+    background:#DFDFDF;
+    color:#bbbbbb;   
+}
+
+.Today, #CalendarBody .DateBoxOver
+{
+    background:#F0F0F0;
+    color:#ADBF2D;    
+}
+
+.Today .DateLabel a
+{    
+    color:#ADBF2D;
+    font-weight: bold;
+}
+
+#jMonthCalendar .MoreEvents
+{
+    font-size:12px;
+    padding:1px 1px 1px 4px;
+    cursor:pointer;
+    display:block;
+    position:absolute;
+    text-align:center;
+    height:14px;
+}
+
+#jMonthCalendar .Event 
+{ 
+    font-size:12px;
+    padding:1px 0 1px 0;
+    background-color:#ADBF2D;
+    cursor:pointer;    
+    text-align:left;
+    overflow: hidden;   
+}
+
+.cellWithEvent
+{
+    background-color:#ADBF2D;
+    font-family: Arial;
+}
+
+.Event a
+{
+    text-decoration:none;
+    color:#fff;
+    font-family: Arial;
+    float:left;    
+    white-space:nowrap;
+    padding:1px 4px 1px 4px;
+}
+.Event a:hover { text-decoration:none; color:#fff; }
+.Event span.ui-icon-triangle-1-w { float:left; }
+.Event span.ui-icon-triangle-1-e { float:right; }
+
+#Eventdetail
+{
+    display:none;
+    position:absolute;
+    width:200px;
+    overflow: auto;
+    background-color: #ffffff;
+    border:1px solid #53585B;
+    padding:5px;
+    background-image:url(../images/common/detail-corner.jpg); background-repeat:no-repeat; background-position:bottom left;
+}
+
+
+
+#Eventdetail p#date
+{
+    margin:0px;    
+    text-align: left;
+    color:#ACBF2C;
+    font-weight: bold;
+    font-family: Arial;
+    font-size:11px;
+    text-transform: uppercase;   
+}
+
+#Eventdetail p#title
+{
+    margin:0px;
+    text-align: left;
+    color:#525859;
+    font-size:11px;
+    font-family: Arial;
+    font-weight:bold;
+}
+
+#Eventdetail p#description
+{
+    margin:0px;    
+    text-align: left;
+    color:#525859;
+    font-size:11px;
+    font-family: Arial;    
+}
+
+#Eventdetail p#detail
+{
+    margin:0px;    
+    text-align: right;
+    color:#525859;
+    font-size:10px;
+    font-family: Arial;   
+    text-decoration: underline;
+}
+
+.link_under_cal
+{
+    height: 30px;
+    vertical-align: middle;
+    clear: both;
+}
+
+.link_under_cal a,
+.link_under_cal a:link,
+.link_under_cal a:hover
+{
+    color:#525859;
+    font-size:11px;
+    font-family: Arial;
+    text-transform: uppercase;
+    font-weight:bold;    
+}
+
+
+.link_under_cal a img
+{
+    vertical-align: middle;
+    border: 0px;
+    margin-right:5px;
+}
+
+
+#EventdetailSmall
+{
+    display:none;
+    position:absolute;
+    width:150px;
+    overflow: auto;
+    background-color: #ffffff;
+    border:1px solid #53585B;
+    padding:5px;
+    background-image:url(../images/common/detail-corner.jpg); background-repeat:no-repeat; background-position:bottom left;
+}
+
+#jMonthCalendarSmall
+{
+    height: 200px;
+    width:250px;
+    border:0px;
+    clear: both;
+}
+#jMonthCalendarSmall .MonthlyCalendar .MonthNavPrev,
+#jMonthCalendarSmall .MonthlyCalendar .TodayLink
+{
+    width:6px;
+    float:left;
+}
+#jMonthCalendarSmall .MonthlyCalendar .MonthNavNext
+{
+    width: 2%;
+    float:right;
+}
+#jMonthCalendarSmall .MonthlyCalendar .MonthName
+{
+    width:227px;
+    line-height: 18px;
+    text-align:center;
+    font-weight:bold;
+    float:left;
+    font-family: arial;
+    background-color:#F0F0F0;
+    text-transform: uppercase;
+}
+
+#jMonthCalendarSmall .MonthlyCalendar
+{
+    width:250px;
+    border-collapse:collapse;
+}
+
+#jMonthCalendarSmall .MonthlyCalendar #CalendarHead
+{
+    width:100%;
+    background:#F7F7F7 none repeat scroll 0 0;
+    height:30px;
+}
+#jMonthCalendarSmall .DateBox
+{
+    vertical-align:top;
+    width:35px;
+    height: 35px;
+    background:#F0F0F0;
+}
+#jMonthCalendarSmall .DateLabel
+{
+    height:15px;
+    width:100%;
+    text-align:right;
+}
+#jMonthCalendarSmall .DateLabel a
+{
+    cursor:pointer;
+    padding:0 5px 2px;
+    text-decoration:none;
+    line-height:15px;
+    color:#52585A;
+    font-family: arial;
+}
+
+#jMonthCalendarSmall .Inactive{
+    background-color: #DFDFDF;
+}
+
+#jMonthCalendarSmall .cellWithEvent{
+    background-color: #ABC6DD;
+}

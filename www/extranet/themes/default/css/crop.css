@@ -1,0 +1,110 @@
+/*
+    Document   : for crop related styles
+    Created on : 2011-09-27, 15:01:46
+    Author     : freynolds
+    Description:
+        Style for the statistics of the newsletter
+    $Id: quoterequest.css 7 2012-03-15 12:58:58Z freynolds $
+*/
+
+div.news_crop{
+    position: absolute;
+    margin-left: 0px;
+}
+div.news_crop:hover{
+    cursor: pointer;
+    color: #82B8CE;
+}
+
+
+#boxes #dialog {
+    background-color: #FFFFFF;
+    height: 300px;
+    width: 450px;
+}
+#boxes .window {
+    display: none;
+    height: 200px;
+    padding: 20px;
+    position: absolute;
+    width: 440px;
+    z-index: 9999;
+}
+
+div#boxes{
+    display: none;
+}
+
+#mask {
+    position:absolute;
+    z-index:9000;
+    background-color: #666666;
+    display:none;
+}
+
+#boxes .window {
+    position:absolute;
+    width:440px;
+    height:200px;
+    display:none;
+    z-index:9999;
+    padding:20px;
+}
+
+/* Customize your modal window here, you can add background image too */
+#boxes #dialog {
+    width:450px;
+    height:300px;
+    background-color: #FFFFFF;
+}
+
+#boxes #dialog #status_select{
+    width: 200px;
+}
+
+#boxes #dialog .close{
+    width: 80px;
+    height: 30px;
+    background: url("../../../icons/button_cancel.png") no-repeat scroll 5px 50% transparent;
+    text-align: right;
+    cursor: pointer;
+    background-color: #D4E2E8;
+    padding: 10px;
+    color: #767676;
+    background-color: transparent;
+}
+
+#boxes #dialog .close:hover{
+    background-color: #D4E2E8;
+}
+
+#boxes #dialog .close a,
+#boxes #dialog .close a:hover{
+    color: #767676;
+}
+
+#boxes #dialog .save{
+    width: 100px;
+    height: 30px;
+    background: url("../../../icons/button_save.png") no-repeat scroll 5px 50% transparent;
+    text-align: right;
+    cursor: pointer;
+    background-color: #D4E2E8;
+    padding: 10px;
+    color: #767676;
+    background-color: transparent;
+}
+
+#boxes #dialog .save:hover{
+    background-color: #D4E2E8;
+}
+
+#boxes #dialog .save a,
+#boxes #dialog .save a:hover{
+    color: #767676;
+}
+
+#boxes #dialog .spacing_activity{
+    width: 300px;
+    height: 30px;
+}

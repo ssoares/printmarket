@@ -1,0 +1,24 @@
+<?php
+    // One place_holder template, so grab only the first place_holder elements
+    $ph1_blocks = isset($this->blocks[1]) ? $this->blocks[1] : array();
+    $ph2_blocks = isset($this->blocks[2]) ? $this->blocks[2] : array();    
+    $controller = 'index';
+?>
+<div id="template" style="width: 958px">    
+   
+    <div style="width: 30%; margin: 1%;float: left;">
+       <div class="zone1">
+            <!-- Placeholder 1 -->
+            <?php $options =array('zoneId' => 1,'rows' => $ph1_blocks,'controller' => $controller);?>
+            <?php echo $this->zonesTemplate($options); ?>
+        </div>
+    </div>
+    <div style="width: 60%; margin: 1%;float: right;">
+       <div class="zone2">
+            <!-- Placeholder 2 -->
+            <?php $options =array('zoneId' => 2,'rows' => $ph2_blocks,'controller' => $controller);?>
+            <?php echo $this->zonesTemplate($options); ?>
+        </div>
+    </div>
+    <hr class="clear_both" />
+</div>

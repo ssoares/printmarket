@@ -1,0 +1,26 @@
+<?php
+$action  = $this->action;
+$data    = $this->data;
+?>
+<section class="news module delete">
+<?php
+    if ($data && !$this->errorInfo):
+?>      <h3><?php echo $data['NI_Title'] ?></h3>
+        <p><?php echo $this->getCibleText('confirm_delete_record'); ?></p>
+        <form action="<?php echo $this->url(array('action'=>$action)); ?>" method="post">
+            <div>
+                <input type="hidden" name="blockID" value="<?php echo $this->cleaction ?>" />
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+<?php
+    else:
+?>
+      <p><?php echo $this->getCibleText('header_delete_teams_text') ?></p>
+        <a href="<?php echo ($this->return); ?>">Retour</a>
+
+<?php
+    endif;
+?>
+</section>

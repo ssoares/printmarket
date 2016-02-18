@@ -1,0 +1,39 @@
+<?php $newAccountUrl = Cible_FunctionsCategories::getPagePerCategoryView(0, 'become_client', 17, null, false); ?>
+<?php $cartUrl = $this->baseUrl() . '/' . 'cart/index/ajax/'; ?>
+<?php // $loginUrl = $this->baseUrl() . '/' . 'catalog/index/login/'; ?>
+<?php // $dispCartUrl = $this->baseUrl() . '/' . 'cart/index/cart/'; ?>
+<?php $baseUrl = $this->baseUrl(); ?>
+<?php $langId = Zend_Registry::get('languageID'); ?>
+<?php $user = Zend_Registry::get('user'); ?>
+<?php $isLogIn = $user ? 1 : 0; ?>
+<?php $hiddenLogin = $isLogIn ? 'hidden' : ''; ?>
+<?php $hiddenCart = $isLogIn ? '' : 'hidden'; ?>
+<?php // $link = $this->link($baseUrl . $newAccountUrl, $this->getCibleText('form_account_button_submit'), array('class' => 'button-submit')); ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var isLogIn = <?php echo $isLogIn ?>;
+        defaultProperties.setCartUrl('<?php echo $cartUrl ?>');
+        defaultProperties.setLangId('<?php echo $langId ?>');
+        defaultProperties.setBaseUrl('<?php echo $baseUrl ?>');
+
+//        if (isLogIn) {
+            updateCart('<?php echo $cartUrl; ?>', 'refresh');
+//        }
+        var link = {};
+
+        $('.items-list').on('click', '.add-to-cart', function(e) {
+            e.preventDefault();
+            link = $(this);
+            $(this).addClass('loading').attr('disabled', true);
+            setTimeout(function(){
+                var info = link.attr('data-order-id').split("-");
+                var quantite = 1;
+                var pId = info[0];
+                var itemId = info[1];
+                addToCart('<?php echo $cartUrl; ?>', pId + '-' + itemId + '-' + quantite, '<?php echo $langId; ?>');
+            },1000);
+
+    });
+});
+</script>

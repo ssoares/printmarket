@@ -1,0 +1,13 @@
+<li class="listAlllLink">
+    <p class="listAlllLinkText">
+    <?php 
+    $linkContent  = $this->clientImage('pix.gif', array('alt'=>$this->getClientText('menu_list_all_link')));
+    $linkContent .= $this->getClientText('menu_list_all_link');
+    ?>
+    <?php 
+    echo $this->link(
+        $this->url,
+        $linkContent
+        ); ?>
+    </p>
+</li>

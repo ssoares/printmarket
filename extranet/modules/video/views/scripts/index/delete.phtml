@@ -1,0 +1,29 @@
+<?php
+    
+    $action  = $this->action;
+    $data    = $this->data;
+    //print_r($event);
+?>
+<div id="container_middle_full">    
+<?php
+    //var_dump($data);
+    if ($data):
+?>      <h3><?php echo $this->getCibleText('header_'.($this->cleaction).'_video_text') ?></h3>
+        <p>Êtes-vous sûr de vouloir supprimer cet enregistrement? [<?php echo $data['V_Alias']; ?>]</p>
+        <form action="<?php echo $this->url(array('action'=>$action)); ?>" method="post">
+            <div>
+                <input type="hidden" name="blockID" value="<?php echo $this->cleaction ?>" />
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+<?php
+    else:
+?>
+      <p><?php echo $this->getCibleText('header_'.$this->cleaction.'_video_text') ?></p>
+        <a href="<?php echo ($this->return); ?>">Retour</a>
+    
+<?php
+    endif;
+?>
+</div>

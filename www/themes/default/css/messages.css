@@ -1,0 +1,70 @@
+/*
+    Document   : messages
+    Created on : 2012-07-06, 10:56:46
+    Author     : soaser
+    Description:
+        Purpose of the stylesheet follows.
+
+    $Id: messages.css 1005 2012-07-17 13:31:20Z ssoares $
+*/
+
+.messagesContainer{
+    display: none;
+}
+/*pop up box style*/
+#fade { /*--Transparent background layer--*/
+	display: none; /*--hidden by default--*/
+	background: #000;
+	position: fixed; left: 0; top: 0;
+	width: 100%; height: 100%;
+	opacity: .80;
+	z-index: 10001;
+}
+.popup_block{
+	display: none; /*--hidden by default--*/
+	background: #fff;
+	padding: 15px;
+        text-align: left;
+	border: 10px solid #ddd;
+	float: left;
+        color: #696c71;
+        font-size: 12px;
+        font-family: Arial;
+        overflow: auto;
+	position: fixed;
+	top: 50%; left: 50%;
+	z-index: 10002;
+/*	--CSS3 Box Shadows--
+	-webkit-box-shadow: 0px 0px 20px #000;
+	-moz-box-shadow: 0px 0px 20px #000;
+	box-shadow: 0px 0px 20px #000;
+	--CSS3 Rounded Corners--
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;*/
+}
+
+.popup_block h2{
+    font-family: Arial;
+    font-size: 30px;
+    color: #002154;
+    font-weight: normal;
+    line-height: 32px;
+    text-transform: uppercase;
+}
+.popup_block a, .popup_block a:hover{
+    color: #CC0000;
+}
+
+.btn_close {
+	float: right;
+	margin: -12px;
+        color: #002255;
+}
+/*--Making IE6 Understand Fixed Positioning--*/
+* html #fade {
+	position: absolute;
+}
+* html .popup_block {
+	position: absolute;
+}

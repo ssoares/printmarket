@@ -1,0 +1,100 @@
+<?php
+$config = Zend_Registry::get('config');
+$lang = Zend_Registry::get("languageID");
+$title = $config->site->title->$lang;
+$shareTitle = 'sharePartialsSocial';
+switch($this->view->current_module)
+{
+    case 'teams':
+    case 'news':
+    case 'newsletter':
+        $shareTitle .= '_' . $this->view->current_module;
+        break;
+
+    default:
+        break;
+}
+?>
+
+<aside class="socialNetworks">
+    <h2 class="title">
+        <?php echo $this->getCibleText($shareTitle); ?>
+    </h2>
+    <div class="socials facebook">
+        <span class="icon-facebook"></span>
+        <?php echo $this->getClientText("sharesFacebook"); ?>
+    </div>
+    <div class="socials linkedin">
+        <span class="icon-linkedin"></span>
+        <?php echo $this->getClientText("sharesLinkin"); ?>
+    </div>
+    <div class="socials google">
+        <span class="icon-google"></span>
+        <?php echo $this->getClientText("sharesGooglePlus"); ?>
+    </div>
+    <div class="socials twitter">
+        <span class="icon-twitter"></span>
+        <?php echo $this->getClientText("sharesTwitter"); ?>
+    </div>
+    <div class="socials email g-plus"  data-action="share">
+        <a href="mailto:?subject=<?php echo $title; ?>&body=<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>">
+            <span class="icon-email"></span>
+            <?php echo $this->getClientText("sharesEmail"); ?>
+        </a>
+    </div>
+</aside>
+
+<script type="text/javascript">
+   //<![CDATA[
+$(document).ready(function() {
+    var shareForm;
+    var popupHeight = 436;
+    var popupWidth = 656;
+    var popupX = screen.width / 2 - popupWidth / 2;
+    var popupY = screen.height / 2 - popupHeight / 2;
+    var popupArgs = 'toolbar=0,status=0,width=' + popupWidth + ',height=' + popupHeight + ',top=' + popupY + ', left=' + popupX;
+
+    jQuery(document).ready(function() {
+        $('a.fermer').click(function() {
+            window.parent.closeFormPopup();
+        });
+
+        var title = "<?php echo $title; ?>";
+        var url = "<?php echo "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>";
+
+        $('.socialNetworks .facebook').click(function() {
+            shareForm = window.open('http://www.facebook.com/sharer.php?u=' + encodeURIComponent(url) + '&t=' + encodeURIComponent(title) + '&redirect_uri=' + encodeURIComponent(url), 'sharer', popupArgs);
+            return false;
+        });
+
+        $('.socialNetworks .linkedin').click(function() {
+            window.open("http://linkedin.com/cws/share?url=" + url + "&text=" + title, 'Linkedin', popupArgs);
+            return false;
+        });
+
+
+        $('.socialNetworks .twitter').click(function() {
+            window.open("https://twitter.com/share?url=" + url + "&text=" + title, 'Twitter', popupArgs);
+            return false;
+        });
+
+        $('.socialNetworks .google').click(function() {
+            window.open("https://plus.google.com/share?url=" + url + "&hl=en", "Google", popupArgs);
+            return false;
+        });
+
+    });
+
+    $(window).load(function() {
+    });
+
+    function closeShareForm() {
+        shareForm.close();
+    }
+
+
+
+
+});
+//]]>
+</script>

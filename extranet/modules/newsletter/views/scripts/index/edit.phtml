@@ -1,0 +1,854 @@
+<?php $this->headScript()->appendFile($this->baseUrl() .'/js/tinymce/tinymce.min.js') ?>
+<style>
+    .container_control-panel{
+        background-color:rgba(255, 255, 255, 0.5);
+        padding:20px;
+        margin-top:20px;
+    }
+    
+    .container_control-panel-part{
+        background-color:#FFF;
+        padding:20px;height:100%;
+        height:340px;
+        margin:0 0 0 14px;
+    }
+    
+    #tableContainer{
+        /*border-top: 1px solid #cccccc; */
+        margin-top:-18px;
+        
+    }
+    
+    .switchButton,.switchButtonOver{
+        font-size:1.4rem;
+        text-align:center;
+    }
+
+    .small-btn .switchButton,.small-btn .switchButtonOver{
+        font-size:1.2rem;
+        padding:10px;
+        text-transform:none;
+    }
+    
+    div#switchPanel.small-btn{
+        margin:0;
+        height:auto;
+    }
+    div#switchPanel.small-btn a{
+        padding:10px;
+    }
+    
+    .container_actions{
+        background-color:#404040;
+        text-align:right;
+        margin-top:30px;
+    }
+    
+    .container_actions .action_back{
+        line-height:72px;
+        padding:0 10px;
+        color:#FFF;
+        display:inline-block;
+    }
+    
+    .container_actions .action_back:hover{
+        background-color:#CCC;
+        color:#404040;
+    }
+    
+    
+    
+    table#tableContainer td{
+        vertical-align: top;
+        padding-top: 20px;
+    }
+    .blue{
+        color:#008CD9;
+    }
+    #table_newsletterInformations{
+        /*width: 100%;*/
+    }
+    #table_newsletterInformations tbody tr td, #table_newsletterInformations thead tr td, #table_newsletterInformations tfoot tr td{
+        padding: 0;
+        margin: 0;
+    }
+
+    #table_newsletterInformations tbody tr td.td_first{
+        padding-right: 5px;
+    }
+
+    td.newsletterInformationTitle, div.newsletterInformationTitle{
+        font-weight:bolder;
+        text-align: left;
+        font-size: 18px;
+        padding-bottom: 20px;
+
+
+    }
+    .newsletterInformationTitle{
+        padding-bottom: 20px;
+    }
+
+    #table_newsletterInformations tfoot tr td.footer{
+        padding-top: 15px;
+    }
+
+    #messageEmailSendConfirmation{
+        color: green;
+        display:none;
+    }
+
+
+
+    .zone {min-height: 50px}
+    .zone,
+    #modules { list-style-type: none; margin: 0; padding: 0; }
+
+    .zone li.ui-state-default,
+    #modules li.ui-state-default{ background: none; }
+    .zone li,
+    #modules li { margin: 2px 2px 2px 2px; font-size: 1.2em; }
+
+    #modules li { padding: 0px; margin: 2px 2px 2px 2px; border: none; }
+
+    #modules li { height: 50px; width: 50px; display: inline }
+    .place-holder { min-height: 60px; line-height: 60px; border: solid 1px #65A8C9; background-color: #D3E7EF !important; }
+
+    #garbage { list-style-type: none; margin: 0; padding: 0; width: 100%; min-height: 128px; padding-top: 40px; background: #fff url(<?php echo $this->baseUrl() . '/themes/default/images/deactivated.gif' ?>) no-repeat 50% 10px }
+    #garbage li {margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; height: 100px; width: 225px; float: left }
+    #garbage li .block_action_icon img.edit,
+    #garbage li .block_action_icon img.online-status
+    { display: none }
+    #garbage .ui-state-highlight { background: none; border: none }
+</style>
+<script type="text/javascript">
+    $(document).ready(function() {
+        /************************************************************/
+        // trap cancel button to hide new article with nothing inside
+        $('#pageCancel').click(function(event){
+            $('#article--1').remove();
+        });
+
+        /************************************************************/
+        // trap action when something is submit with success
+        $("#result").live("click", function(){
+            var resultPane = $('#result');
+            var action = resultPane.find('#action').text();
+
+            // EDIT ARTICLE
+            if(action == "editArticle"){
+                var articleID = resultPane.find('#articleID').text();
+                var articleTitle = resultPane.find('#articleTitle').text();
+                var articleResume = resultPane.find('#articleResume').html();
+
+                $("#article-"+articleID+ " .article-title").html(articleTitle);
+                $("#article-"+articleID+ " .article-resume").html(articleResume);
+            }
+
+            // ADD ARTICLE
+            else if(action == "addArticle"){
+                var articleID = resultPane.find('#articleID').text();
+                var articleTitle = resultPane.find('#articleTitle').text();
+                var articleResume = resultPane.find('#articleResume').html();
+
+                newArticle = $('#article--1');
+                zoneID = newArticle.attr('zoneID');
+
+                articleElement = $('#zone_'+ zoneID +' #clone').clone();
+                newArticle.replaceWith(articleElement);
+
+                articleElement.attr('id','article-'+articleID);
+                articleElement.attr('zoneID',zoneID);
+
+                articleElement.find(".link-edit").attr('href','<?php echo $this->url(array('controller'=>'article','action'=>'edit')) ?>/articleID/'+articleID);
+                articleElement.find(".link-delete").attr('href','<?php echo $this->url(array('controller'=>'article','action'=>'delete')) ?>/articleID/'+articleID);
+                articleElement.find(".article-title").text(articleTitle);
+                articleElement.find(".article-resume").html(articleResume);
+
+                articleElement.show();
+            }
+
+            // DELETE ARTICLE
+            else if(action == "deleteArticle"){
+                var articleID = resultPane.find('#articleID').text();
+                var currentZoneID = $("#article-"+articleID).parent().attr('id').replace('zone_', '');
+
+                $("#article-"+articleID).slideUp('slow',
+                    function(){
+                        $(this).remove();
+                        var currentZoneOrderedIDs = retrieveArticleIDs(currentZoneID);
+                        for (i = 0; i<currentZoneOrderedIDs.length; i++){
+                            $("#article-"+currentZoneOrderedIDs[i]).attr("positionID", i);
+                        }
+                });
+            }
+        });
+
+        /************************************************************/
+        // trap action when a delete article link is click
+        $('.link-delete').live('click',function(event){
+            /*
+            event.preventDefault();
+            link = $(this).attr('href');
+
+            //$("#page_edit #header #title").attr('value',"Suppression d'un article");
+            $("#page_edit #header #title").val("Suppression d'un article");
+            $("#page_edit #header #description").val('Cliquez sur le bouton "Oui" pour supprimer définitivement cet article');
+            $("#page_edit #header #breadcrumb").attr('value','');
+            getEditPage(link);
+            */
+        });
+
+        /************************************************************/
+        // trap action when a edit article link is click
+        /*
+        $('.link-edit').live('click',function(event){
+            event.preventDefault();
+            var liParent = $(this).parent('div').parent('li');
+            var articleID = liParent.attr('articleID');
+
+
+            //liParent.children('.article-title').html('');
+            /*
+
+            link = $(this).attr('href');
+
+            $("#page_edit #header #title").attr('value',"Modification d'un article");
+            $("#page_edit #header #description").attr('value','');
+            $("#page_edit #header #breadcrumb").attr('value','');
+            getEditPage(link);
+
+        });
+        */
+
+        /************************************************************/
+        // trap action when web preview is click
+        $('#showWebLink').click(function(event){
+            /*
+            event.preventDefault();
+            var currentLink = $(this);
+            var action = currentLink.attr('href');
+            window.open(currentLink.attr('href'),"web","status=0","toolbar=0",);
+            currentLink.data('link', action);
+            //currentLink.attr('href','javascript:void(0);');
+
+            $("#page_edit #newsletterInformationTitle #title").attr('value',"Apperçu Web");
+            $("#page_edit #newsletterInformationTitle #description").attr('value','Description');
+            $("#page_edit #newsletterInformationTitle #breadcrumb").attr('value','BreadCrumb');
+
+
+            //getEditPage(action);
+            */
+        });
+
+        /************************************************************/
+        // trap action when email preview is click
+        $('#showEmailLink').click(function(){
+            /*
+            var currentLink = $(this);
+            var action = currentLink.attr('href');
+            currentLink.data('link', action);
+            currentLink.attr('href','javascript:void(0);');
+
+            $("#page_edit #newsletterInformationTitle #title").attr('value',"Apperçu Courriel");
+            $("#page_edit #newsletterInformationTitle #description").attr('value','');
+            $("#page_edit #newsletterInformationTitle #breadcrumb").attr('value','');
+            getEditPage(action);
+            */
+        });
+
+        $('#email').change(function(){
+            validateEmailTest();
+        });
+
+        $('#email').blur(function(){
+            validateEmailTest();
+        });
+
+        $('#email').focus(function(){
+            validateEmailTest();
+        });
+
+        $('#email').keyup(function(){
+            validateEmailTest();
+        });
+
+        function validateEmailTest(){
+            var email = $("#email").val();
+            if(email != 0){
+                if(isValidEmailAddress(email)){
+                    $('#sendEmailButton').removeAttr("disabled");
+                }
+                else{
+                    $('#sendEmailButton').attr("disabled", true);
+                }
+            }
+            else{
+                $('#sendEmailButton').attr("disabled", true);
+            }
+        }
+
+        $('#sendEmailButton').click(
+            function (e) {
+                var url             = $("#ajaxLink").val();
+                var releaseID       = $("#releaseID").val();
+                var emailTest       = $("#email").val();
+                $.getJSON(url,{releaseID : releaseID, email : emailTest},
+                    function(data){
+                        $('#email').val("");
+                        $('#sendEmailButton').attr("disabled", true);
+                        $('#messageEmailSendConfirmation').slideDown("slow");
+                    }
+                );
+            }
+        );
+
+        function isValidEmailAddress(emailAddress) {
+            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            return pattern.test(emailAddress);
+        }
+    });
+
+    /************************************************************/
+    //Retrieves all the blocks' ID for a zone
+    function retrieveArticleIDs(zone){
+        var ids = [];
+
+        $('#zone_' + zone + ' li').each(function(i){
+            ids.push( $(this).attr('id').replace('article-', ''));
+        });
+
+        return ids;
+    }
+
+    /************************************************************/
+    function articlePosition(articleID, zoneID){
+        currentZoneOrderedIDs = retrieveArticleIDs(zoneID);
+        for (i = 0; i<currentZoneOrderedIDs.length; i++){
+            if(currentZoneOrderedIDs[i] == articleID)
+                var newpositionID = i+1;
+        }
+        return newpositionID;
+    }
+
+    $(function() {
+        $("li.module").draggable({
+            connectToSortable: '.zone',
+            helper: 'clone',
+            cursorAt: { top: 25, left: 25 },
+            zIndex: '10000',
+            cursor: 'move',
+            drag: function(){
+                if($.browser.msie)
+                    $(this).css(
+                    {
+                        'position':'absolute',
+                        'margin-left' : '41px',
+                        'margin-top': '0px',
+                        'cursor': 'move'
+                    });
+                else
+                    $(this).css(
+                    {
+                        'position':'absolute',
+                        'margin-left' : '-28px',
+                        'margin-top': '0px',
+                        'cursor': 'move'
+                    });
+
+            },
+            stop: function(){
+                $(this).css(
+                {
+                    'position':'inherit',
+                    'margin-left' : '2px',
+                    'margin-top': '0px'
+                });
+            }
+        });
+
+        $(".zone").sortable({
+            items: 'li',
+//            placeholder: 'place-holder',
+            connectWith: '.connectedSortable',
+            appendTo: "body",
+            receive: function(event, ui){
+
+                var mode = $(ui.item).parent().attr('id') == 'garbage' ? 'delete' : 'update';
+
+                if(mode == 'garbage')
+                    $(ui.helper).sortable('cancel');
+
+            },
+            stop: function(event, ui) {
+                var dragged_el = $(ui.item);
+                var baseUrl = '<?php echo $this->baseUrl() ?>';
+                var pageID = dragged_el.attr('pageid');
+                var module = dragged_el.attr('module');
+                var blockID = dragged_el.attr('blockid');
+                var previousZoneID = dragged_el.attr('zoneid');
+                var releaseID = dragged_el.attr('releaseid');
+                var articleID = dragged_el.attr('id').replace('article-', '');
+                var currentZoneID = $(ui.item).parent().attr('id').replace('zone_', '');
+                dragged_el.attr('zoneid', currentZoneID);
+
+                dragged_el.removeClass('ui-draggable module');
+
+                var mode = 'update';
+                var action = '';
+
+                // if we come from garbage, lets reactivate it
+                if( previousZoneID == -1){
+                    mode = 'new';
+                    dragged_el.attr('id', 'article--1');
+                    dragged_el.css('border', '0px');
+
+                    //action = baseUrl + '/' + module + '/article/add/releaseID/' + releaseID + '/zoneID/' +  currentZoneID + '/position/0';
+                }
+                // if we drop on garbage, lets deactivate it
+                else if( currentZoneID == 'garbage' ){
+                    mode = 'deactivate';
+                    action = baseUrl + '/' + module + '/index/deactivate-block/pageID/' + pageID + '/blockID/' +  blockID;
+                }
+                else if(currentZoneID != previousZoneID){
+                    var newpositionID = articlePosition(articleID, currentZoneID)
+                    action = baseUrl + '/newsletter/article/updatezone/articleID/' + articleID + '/newzoneID/' +  currentZoneID + '/newpositionID/' + newpositionID;
+                    $.post(action);
+
+                }
+                else{
+                    /*
+                    currentZoneOrderedIDs = retrieveArticleIDs(currentZoneID);
+                    for (i = 0; i<currentZoneOrderedIDs.length; i++){
+                        if(currentZoneOrderedIDs[i] == articleID)
+                            var newpositionID = i+1;
+                    }
+                    */
+                    newpositionID = (articlePosition(articleID, currentZoneID)) - 1;
+                    //if(newpositionID != dragged_el.attr('positionID')){
+                        action = baseUrl + '/newsletter/article/updateposition/articleID/' + articleID + '/newpositionID/' + newpositionID;
+                        $.post(action, function(data){
+                             currentZoneOrderedIDs = retrieveArticleIDs(currentZoneID);
+                             for (i = 0; i<currentZoneOrderedIDs.length; i++){
+                                 $("#article-"+currentZoneOrderedIDs[i]).attr("positionID", i);
+                             }
+                        });
+                    //}
+
+                }
+
+
+                // set the action
+                //var action = mode == 'deactivate' ? baseUrl + '/' + module + '/index/deactivate/pageID/' + pageID + '/blockID/' +  blockID : baseUrl + '/' + module + '/index/quick-add/pageID/' + pageID + '/mod/' + module + '/zoneID/' + zoneID;
+
+                // If a block is dropped onto the garbage list, we deactivate it, meaning we set its zoneID to -1
+                switch(mode){
+                    case 'new':
+                        currentZoneOrderedIDs = retrieveArticleIDs(currentZoneID);
+                        for (i = 0; i<currentZoneOrderedIDs.length; i++){
+                            if(currentZoneOrderedIDs[i] == -1)
+                                var positionID = i;
+                        }
+                        //action = baseUrl + '/' + module + '/article/add/pageID/' + pageID + '/releaseID/' + releaseID + '/zoneID/' +  currentZoneID + '/positionID/' + positionID;
+                        action = baseUrl + '/' + module + '/article/add/releaseID/' + releaseID + '/zoneID/' +  currentZoneID + '/positionID/' + positionID;
+
+                        newArticle = $('#article--1');
+
+                        //$("#page_edit #header #title").attr('value',"Ajout d'un article");
+
+                        //alert($("#page_edit > #header > #title").attr('value'));
+                        $("#page_edit #header #title").val("Ajout d'un article");
+                        $("#page_edit #header #description").attr('value','');
+                        $("#page_edit #header #breadcrumb").attr('value','');
+
+                        window.location = action;
+                        //getEditPage(action);
+
+                    break;
+                    case 'deactivate':
+//                        $.post( action , function(data){
+//
+//                        },'json');
+//
+//                        // update the order of the previous zone
+//                        previousZoneOrderedIDs = retrieveArticleIDs(previousZoneID);
+//                        action = baseUrl + '/' + module + '/index/updatezone/pageID/' + pageID + '/blockID/' +  blockID;
+//                        _post = 'currentZoneID=' + previousZoneID + '&currentIds=' + $.toJSON( previousZoneOrderedIDs );
+//
+//                        $.post( action, _post, function(data){
+//
+//                        },'json');
+                    break;
+
+                    // If a block has been dropped onto a zone and that its previous zone was garbage, then we reactivate it by setting its zoneID to the new zoneID
+                    case 'activate':
+                        $.post( action, 'zoneID=' + currentZoneID, function(data){
+                              if(data.result != true){
+                                // should reload the page or moved back the object to the garbage
+                              }
+                        },'json');
+                    case 'update':
+                        // update the current zone
+//                        action = baseUrl + '/' + module + '/index/updatezone/pageID/' + pageID + '/blockID/' +  blockID;
+//                        currentZoneOrderedIDs = retrieveArticleIDs(currentZoneID);
+//                        _post = 'currentZoneID=' + currentZoneID + '&currentIds=' + $.toJSON( currentZoneOrderedIDs );
+//
+//                        // update the order of the previous and current zone
+//                        if( previousZoneID != currentZoneID && previousZoneID != 'garbage' ){
+//                            previousZoneOrderedIDs = retrieveArticleIDs(previousZoneID);
+//                            _post += '&previousZoneID=' + previousZoneID + '&previousIds=' + $.toJSON( previousZoneOrderedIDs );
+//                        }
+//
+//                        $.post( action, _post, function(data){
+//
+//                        },'json');
+                    break;
+                }
+
+                $("ul.zone").sortable('refresh');
+            }
+        });
+
+        overlay = new CSAOverlay('overlay');
+
+        var loading_el = $("#loading");
+
+        loading_el.ajaxStart(function(){
+            $(this).show();
+            overlay.show();
+        });
+
+        loading_el.ajaxStop(function(){
+            $(this).hide();
+            overlay.hide();
+        });
+
+        var loading_top = ($(window).height() / 2) - 50;
+        var loading_left = ($(window).width() / 2) - 100;
+        loading_el.css({'position' : 'absolute',
+            'top' :  loading_top,
+            'left' : loading_left
+        });
+    });
+
+</script>
+<?php
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_newsletter_release_text'),
+    'pageDescription' => $this->getCibleText('header_edit_newsletter_release_description'),
+    'breadcrumb' => ''
+));
+
+
+    $pageID         = $this->pageID;
+    $newsletterData = $this->newsletter;
+    $editLink       = $this->editLink;
+    $manageRecipientsLink = $this->manageRecipientsLink;
+    $manageSendLink = $this->manageSendLink;
+    $showWebLink    = $this->showWebLink;
+    $showEmailLink  = $this->showEmailLink;
+
+    //$this->dump($newsletterData);
+?>
+<input id="ajaxLink" name="ajaxLink" type="hidden" value="<?php echo($this->ajaxLink) ?>"/>
+<input id="releaseID" name="releaseID" type="hidden" value="<?php echo($newsletterData['NR_ID']) ?>"/>
+<input id="pageCancel" type="hidden"/>
+<input id='deleteArticleTitle' name="deleteArticleTitle" type="hidden" value="<?php $this->getCibleText('header_delete_newsletter_article_title') ?>"
+<input id='deleteArticleDescription' name="deleteArticleDescription" type="hidden" value="<?php $this->getCibleText('header_delete_newsletter_article_description') ?>"
+<?php // echo $this->partial('partials/overlayEditPage.phtml') ?>
+
+<div id="container_middle_full">
+    <div class="container_actions">
+        <a class="action_back" href="<?php echo $this->baseUrl(); ?>/newsletter/index/list-all/" class="list_all_newsletters td_first blue">
+            <?php echo($this->getCibleText('extranet_newsletter_return_list_newsletter')); ?>
+        </a>
+    </div>
+    <div class="container_control-panel" style="width:100%; clear:both;">
+        <table id="tableContainer" width="100%">
+            <tr>
+                <td>
+                    <table id="table_newsletterInformations">
+                        <thead><tr><td colspan="2" class="newsletterInformationTitle"><?php echo($this->getCibleText('form_title_create_article')); ?></td></tr></thead>
+                        <tbody align="center">
+                            <tr>
+                                <td class="td_first" height="60">
+                                    <?php if ($this->allowEdit): ?>
+                                    <ul id="modules" class="connectedSortable">
+                                        <li id="module-article" zoneid="-1" class="ui-state-default module" pageid="<?php echo($pageID) ?>" module="newsletter" releaseid="<?php echo $newsletterData['NR_ID'] ?>" articleid="-1">
+                                            <img alt="" width="55" height="55" style="" src="<?php echo $this->baseUrl() ?>/text/index/get-icon/format/48x48" />
+                                        </li>
+                                    </ul>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td valign="top">
+                                    <?php if ($this->allowEdit): ?>
+                                    <?php echo($this->getCibleText('texts')); ?>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="35%">
+                    <div class="container_control-panel-part">
+                    <table id="table_newsletterInformations">
+                        <thead><tr><td colspan="2" class="newsletterInformationTitle" style="padding-bottom:20px;"><?php echo($this->getCibleText('form_title_release_information')); ?></td></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td class="td_first blue"><?php echo($this->getCibleText('form_extranet_newsletter_label_releaseDate')); ?></td>
+                                <td><?php echo($newsletterData['NR_Date']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="blue"><?php echo($this->getCibleText('form_label_title')); ?></td>
+                                <td><?php echo($newsletterData['NR_Title']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="blue"><?php echo($this->getCibleText('form_label_language')); ?></td>
+                                <td><?php echo($newsletterData['L_Title']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="blue"><?php echo($this->getCibleText('form_label_category')); ?></td>
+                                <td><?php echo($newsletterData['CI_Title']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="blue"><?php echo($this->getCibleText('form_label_model')); ?></td>
+                                <td><?php echo($newsletterData['NMI_Title']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="blue"><?php echo($this->getCibleText('form_label_showOnline')); ?></td>
+                                <td>
+                                    <?php   if ($newsletterData['NR_Online'] == 2)
+                                                echo($this->getCibleText('button_no'));
+                                            else
+                                                echo($this->getCibleText('button_yes'));
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <?php if ($this->allowEdit): ?>
+                                    <div id="switchPanel">
+                                        <?php
+                                        echo $this->link($editLink,
+                                            $this->getCibleText('button_edit_informations'),
+                                            array('class' => 'switchButton',
+                                            'onmouseover' => "this.className = 'switchButtonOver';",
+                                            'onmouseout' => "this.className = 'switchButton';"
+                                        ))
+                                        ?>
+                                    </div>
+<?php endif; ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot><tr><td colspan="2" class="footer">
+                        </td></tr></tfoot>
+
+                    </table>
+                    </div>
+                </td>
+                <td width="48%">
+                    <div class="container_control-panel-part">
+                    <table id="table_newsletterInformations">
+                        <thead><tr><td colspan="2" class="newsletterInformationTitle" style="padding-bottom:20px;"><?php echo($this->getCibleText('form_title_overview_and_test')); ?></td></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td class="td_first blue"><?php echo($this->getCibleText('form_label_overview_type')); ?></td>
+                                <td>
+                                    <a id="showEmailLink" href="<?php echo($showEmailLink) ?>"><?php echo($this->getCibleText('button_overview_email')); ?></a>&nbsp;-&nbsp;
+                                    <a id="showWebLink" target="_blank" href="<?php echo($showWebLink) ?>"><?php echo($this->getCibleText('button_overview_web')); ?></a>
+                                </td>
+                            </tr>
+
+                            <?php if ($this->allowEdit): ?>
+                            <tr>
+                                <td valign="top" style="padding-top:5px;" class="blue"><?php echo($this->getCibleText('form_label_send_test')); ?></td>
+                                <td>
+                                    <input id="email" name="email" type="text" />
+                                    <input id="sendEmailButton" name="sendEmailButton" type="button" value="<?php echo($this->getCibleText('button_send')); ?>" disabled="disabled" /><br/>
+                                    <div id="messageEmailSendConfirmation" name="messageEmailSendConfirmation">courriel envoyé avec succès</div>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                            <tr><td colspan="2" class="newsletterInformationTitle" style="padding-top:25px;"><?php echo($this->getCibleText('form_title_send_and_statistic')); ?></td></tr>
+
+                            <?php if ($this->allowEdit): ?>
+                            <tr>
+                                <td class="blue" style="vertical-align:middle;"><?php echo($this->getCibleText('form_label_recipients')); ?></td>
+                                <td>
+                                    <div id="switchPanel" class="small-btn" style="float:left; margin-right:5px;">
+                                        <?php echo $this->link($this->url(array(
+                                            'module' => 'requests',
+                                            'controller' => 'index',
+                                            'action' => 'requests',
+                                            'blockID' => null,
+                                            'pageID' => null,
+                                            'newsletterID' => null,
+                                            'reportType' => 1,
+                                            'reportType_associatedTo' => 'RE_ReportType',
+                                            )),
+                                            $this->getCibleText('button_set_list'),
+                                            array('class' => 'switchButton',
+                                                'onmouseover' => "this.className = 'switchButtonOver';",
+                                                'onmouseout' => "this.className = 'switchButton';",
+                                                'title' => $this->getCibleText('management_module_newsletter_list_collection')))
+                                            ?>
+                                    </div>
+                                    <div id="switchPanel" class="small-btn"  style="float:left;">
+                                        <?php echo $this->link($manageSendLink,
+                                            $this->getCibleText('button_send_to_list'),
+                                            array('class' => 'switchButton',
+                                                'onmouseover' => "this.className = 'switchButtonOver';",
+                                                'onmouseout' => "this.className = 'switchButton';"
+                                            ))
+                                        ?>
+                                    </div>
+                                </td>
+                            </tr>
+<?php endif; ?>
+                            <tr>
+                                <td class="blue">
+                                    <?php $url = $this->baseUrl() . '/newsletter/statistic/index/releaseId/' . $this->newsletterData['NR_ExternalId'];
+                                    echo $this->link($url, $this->getCibleText('form_label_statistics'));
+                                    ?>
+                                </td>
+                                <td>
+                                <?php
+                                $envoiTxt = ($this->sendTo > 1) ? ' envois ' : ' envoi';
+                                $total = $this->sendTo;
+                                $str = '<strong>' . $this->sendTo . '</strong>'
+                                    . $envoiTxt .' / '. $this->targetedTotal
+                                    .' au total, le '
+                                    . '<strong>' . $this->sentOn . '</strong>.';
+                                if($this->sendTo > 0){
+                                    echo $this->link($url, $str);
+                                }
+                                ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <!--
+        <div style="float:left;">
+            <table id="table_newsletterInformations">
+                <thead><tr><td colspan="2" class="newsletterInformationTitle">Informations sur la parution</td></tr></thead>
+                <tbody>
+                    <tr>
+                        <td class="td_first"><?php echo($this->getCibleText('form_extranet_newsletter_label_releaseDate')); ?></td>
+                        <td><?php echo($newsletterData['NR_Date']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo($this->getCibleText('form_label_title')); ?></td>
+                        <td><?php echo($newsletterData['NR_Title']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo($this->getCibleText('form_label_language')); ?></td>
+                        <td><?php echo($newsletterData['L_Title']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo($this->getCibleText('form_label_category')); ?></td>
+                        <td><?php echo($newsletterData['CI_Title']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo($this->getCibleText('form_label_model')); ?></td>
+                        <td><?php echo($newsletterData['NMI_Title']); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo($this->getCibleText('form_label_showOnline')); ?></td>
+                        <td>
+                            <?php   if ($newsletterData['NR_Online'] == 2)
+                                        echo($this->getCibleText('button_no'));
+                                    else
+                                        echo($this->getCibleText('button_yes'));
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot><tr><td colspan="2" class="footer"><a href="<?php echo($editLink) ?>">Éditer ces informations</a></td></tr></tfoot>
+            </table>
+        </div>
+
+        <div style="float:right;">
+            <table id="table_newsletterInformations">
+                <thead><tr><td colspan="2" class="newsletterInformationTitle">Présentation, envois et tests</td></tr></thead>
+                <tbody>
+                    <tr>
+                        <td class="td_first"><?php echo("Aperçu :"); ?></td>
+                        <td>
+                            <a id="showEmailLink" href="<?php echo($showEmailLink) ?>">Courriel</a>&nbsp;-&nbsp;
+                            <a id="showWebLink" href="<?php echo($showWebLink) ?>">Web</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php echo("Les destinataires :"); ?></td>
+                        <td><a href="<?php echo($manageRecipientsLink) ?>">Gérer</a>&nbsp;-&nbsp;<a href="<?php echo($manageSendLink) ?>">Envoyer</a></td>
+                        <td><a href="<?php echo($manageSendLink) ?>">Envoyer</a></td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="padding-top:5px;"><?php echo("Envoyez un test à l'adresse suivante :"); ?></td>
+                        <td>
+                            <input id="email" name="email" type="text" />
+                            <input id="sendEmailButton" name="sendEmailButton" type="button" value="Envoyer" disabled="disabled" /><br/>
+                            <div id="messageEmailSendConfirmation" name="messageEmailSendConfirmation">courriel envoyé avec succès</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table id="table_newsletterInformations">
+                <thead><tr><td colspan="2" class="newsletterInformationTitle">Statistiques d'envoies</td></tr></thead>
+                <tbody>
+                    <tr>
+                        <td class="td_first">Envoyé date: </td>
+                        <td>
+                            <?php echo $this->sentOn ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Destinataires: </td>
+                        <td><?php echo "{$this->sendTo} / {$this->targetedTotal}"?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        -->
+    </div>
+    
+    <div style="width:100%; clear:both; padding-top:25px;">
+        <!--
+        <div class="newsletterInformationTitle" style="margin-bottom:15px;">Gestion de la parution et de ses articles</div>
+        <div class="newsletterInformationTitle" style="margin-bottom:15px;">
+            <ul id="modules" class="connectedSortable">
+                <li id="module-article" zoneid="-1" class="ui-state-default module" pageid="<?php echo($pageID) ?>" module="newsletter" releaseid="<?php echo $newsletterData['NR_ID'] ?>" articleid="-1">
+                    <img alt="" width="55" height="55" src="<?php echo $this->baseUrl() ?>/text/index/get-icon/format/48x48" />
+                </li>
+
+            </ul>
+            Déplacez l'icône dans la zone ou vous désirez ajouter un texte
+        </div>
+        -->
+        <?php
+            $registry = Zend_Registry::getInstance()->set('format','edit');
+            echo $this->render($newsletterData['NM_Directory']);
+
+            //echo(str_replace(strrchr($newsletterData['NM_Directory'], '/'),'/add.phtml',$newsletterData['NM_Directory']));
+
+        ?>
+    </div>
+</div>
+
+<div id="loading" style="z-index: 100000; display: none; height: 50px; width: 180px; border: solid 5px #666; background-color: #fff; color: #999; line-height: 50px; text-align: center">
+    <img src="<?php echo $this->baseUrl() ?>/themes/default/images/loading.gif" align="absbottom" />Veuillez patienter ...
+</div>
+
+<div id="page_edit">
+    <div id="page_action"><a id="close_edit">Close</a></div>
+    <div id="page_content"></div>
+</div>

@@ -1,0 +1,75 @@
+<?php
+
+$currentLang = Zend_Registry::get('languageID');
+$languages = Cible_FunctionsGeneral::getAllLanguage();
+$currentPageId = Zend_Registry::get('pageID');
+
+$content = '';
+$first = true;
+
+$numberOfLanguage = sizeof($languages);
+$numberOfLanguageNow = 0;
+foreach ($languages as $lang)
+{
+    $class = 'class="';
+    $numberOfLanguageNow++;
+    if ($first == true)
+    {
+        $first = false;
+        $class .= 'first';
+    }
+    else
+    {
+        $class .= '';
+    }
+    if ($numberOfLanguageNow == count($languages))
+        $class .= 'last';
+
+    $contentTmp = "";
+    $classTmp = "";
+    $textTruncate = $lang['L_Suffix'];
+    if ($lang['L_ID'] != $currentLang)
+    {
+        $localizedPage = Cible_FunctionsPages::getPageNameByID($currentPageId, $lang['L_ID']);
+//        $localizedAction = Cible_FunctionsPages::getActionNameByLang(Zend_Registry::get('currentUrlAction'), $lang['L_ID']);
+        $localizedAction = '';
+        $url = empty($localizedAction) ? $this->url(array('controller' => $localizedPage)) : $this->url(array('controller' => $localizedPage, 'action' => $localizedAction));
+
+
+        if ($localizedPage)
+        {
+                $module = '';
+                if (Zend_Registry::isRegistered('module') && !is_null(Zend_Registry::get('module')))
+                {
+                    $module = Zend_Registry::get('module');
+                    $url = $this->action('langswitch','index', $module, array('lang' => $lang['L_ID'], 'url' => $url));
+                }
+            $contentTmp .= $this->link($url, $textTruncate);
+        }
+        else
+        {
+            $contentTmp .= "<span class=''> $textTruncate</span>";
+            $classTmp .= " language-unavailable";
+        }
+    }
+    else
+    {
+        $contentTmp .= "<span class=''>$textTruncate</span>";
+        $classTmp .= " language-unavailable";
+    }
+
+    $class .= $classTmp . '"';
+    $content .= "<li $class>";
+    $content .= $contentTmp;
+    $content .= '</li>';
+
+    if ($numberOfLanguageNow < $numberOfLanguage)
+    {
+        $content .= '<li class="verticalSeparator">';
+        $content .= '|';
+        $content .= '</li>';
+    }
+}
+echo '&nbsp;<ul class="language_top">' . $content . '</ul>';
+//    echo '&nbsp;<ul class="language_top"><li>' . $this->clientImage('flag.jpg', array('alt' => $this->languageSuffix)) . '</li>' . $content . '</ul>';
+?>

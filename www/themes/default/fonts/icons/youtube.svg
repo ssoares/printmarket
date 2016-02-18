@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="youtube.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="-50.961666"
+     inkscape:cy="33.483239"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1030"
+     inkscape:window-height="804"
+     inkscape:window-x="1705"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3010"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1004.3622)">
+    <path
+       style="fill:#000000"
+       d=""
+       id="path3000"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#000000"
+       d=""
+       id="path2998"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#000000"
+       d="m 13.645953,1045.0871 c -4.8885231,-0.1505 -6.3037698,-0.3482 -7.8090728,-1.0901 -2.4315923,-1.1984 -4.617093,-3.8964 -5.29167772,-6.5323 -0.58380176,-2.2811 -0.74103018,-12.2082 -0.26357179,-16.6414 0.3342848,-3.1036 2.06749891,-5.8964 4.72608971,-7.6148 2.0829872,-1.3461 3.3084132,-1.4846 14.9176906,-1.6837 6.532639,-0.1116 17.961073,0.1344 19.96546,0.4306 1.325697,0.1959 3.341555,1.1739 4.470138,2.1688 1.954076,1.7226 3.128061,4.0604 3.451085,6.8724 0.249673,2.1734 0.250843,12.5589 0.0017,14.7258 -0.225066,1.9572 -0.732475,3.3906 -1.732767,4.8954 -1.452321,2.1845 -3.945919,3.8416 -6.270623,4.167 -3.005796,0.4206 -17.052539,0.5831 -26.164413,0.3023 z m 11.818565,-13.253 c 3.418116,-1.7685 6.214753,-3.2628 6.214753,-3.3205 0,-0.1246 -12.475703,-6.5866 -12.716026,-6.5866 -0.109868,0 -0.164917,2.2075 -0.164917,6.6134 0,5.5901 0.03492,6.6053 0.22572,6.5612 0.124147,-0.03 3.022358,-1.4989 6.44047,-3.2675 z"
+       id="path3023"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<script>
+    $(document).ready(function() {
+        $("#ImageSrc_preview").load(function(){
+            var imageUrl = $("#imageUrl").val();
+            if($(this).attr('src') != imageUrl){
+                $("#isNewImage").val('true');
+            }
+        });    
+    });
+</script>
+<input type="hidden" id="imageUrl" value="<?php echo($this->imageUrl) ?>"/>
+
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_newsletter_article_title'),
+    'pageDescription' => $this->getCibleText('header_edit_newsletter_article_description')
+    //'breadcrumb' => Cible_FunctionsPages::buildTextBreadcrumb($this->pageId)
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>                    
+</div>
+
+<?php /*
+    if( $this->isXmlHttpRequest ){
+        if( $this->success ){
+?>          <div id="result">
+                <span id="action" style="display: none">editArticle</span>
+                <span id="success" style="display: none">true</span>
+                <span id="articleID" style="display: none"><?php echo $this->articleID ?></span>
+                <span id="articleTitle" style="display: none"><?php echo $this->articleTitle ?></span>
+                <span id="articleResume" style="display: none"><?php echo $this->articleResume ?></span>
+            </div>
+<?php   }
+        else{
+?>          <dd><ul style="top: 104px;" id="language-switcher"><li>&nbsp;</li></ul></dd>
+            <div id="default_form">
+                <div id="form_panel">
+                    <?php echo($this->inlineScript());?>
+                    <?php echo($this->form);?>        
+                </div>                    
+            </div>
+<?php   }
+    } */
+?>
+
+    

@@ -1,0 +1,65 @@
+<?php if( !$this->success): ?>
+
+    <?php $this->headScript()->captureStart() ?>
+
+    $(function() {
+        $('#B_ZoneID').change(function(){
+
+            var selected_zone = this.value;
+            var link = '<?php echo $this->url(array('action'=>'list-positions')) ?>' + '/zoneID/' + selected_zone;
+            var block_zone = <?php echo $this->block_zone ?>;
+            var blockID = <?php echo $this->blockID ?>;
+
+            $.getJSON( link , function(data){
+                var total = data.length;
+
+                var position_select = $('#B_Position');
+                position_select.empty();
+
+                if( total == 0 )
+                    position_select.append("<option value='1'>Première position</option>");
+                else
+                {
+                    var count = 1;
+
+                    $.each(data, function(i, item){
+
+                        if( count == 1 ){
+
+                            if( blockID == item['B_ID'] && block_zone == selected_zone ){
+                                position_select.append("<option value='" + item['B_ID'] + "'>"+item['BI_BlockTitle']+"</option>");
+                            } else {
+                                position_select.append("<option value='-1'>Première position</option>");
+                                position_select.append("<option value='" + item['B_ID'] + "'>"+item['BI_BlockTitle']+"</option>");
+                            }
+
+                        } else {
+
+                            if(blockID == item['B_ID'] )
+                                position_select.append("<option value='" + item['B_ID'] + "' selected='selected'>"+item['BI_BlockTitle']+"</option>");
+                            else
+                                position_select.append("<option value='" + item['B_ID'] + "'>"+item['BI_BlockTitle']+"</option>");
+
+                        }
+
+                        count++;
+                    });
+                }
+
+            });
+        }).change();
+    });
+
+    <?php $this->headScript()->captureEnd(); ?>
+    <?php echo $this->inlineScript();?>
+    <?php echo $this->form;?>
+<?php else: ?>
+
+    <div id="result" style="display: none">
+        <span id="block_id"><?php echo $this->block_id ?></span>
+        <span id="blockTitle"><?php echo $this->blockTitle ?></span>
+        <span id="blockLangID"><?php echo $this->blockLangID ?></span>
+        <span id="blockDescription"><?php echo $this->blockDescription ?></span>
+    </div>
+
+<?php endif; ?>

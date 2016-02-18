@@ -1,0 +1,54 @@
+RewriteEngine On
+
+#RewriteCond %{HTTP_HOST} ^##REPLACEDOMAIN##.com [NC]
+#RewriteRule ^(.*)$ http://www.##REPLACEDOMAIN##.com/$1 [L,R=301]
+
+# Si 1 domaine par langue
+#RewriteCond %{HTTP_HOST} ^##REPLACEDOMAIN_EN##.com [NC]
+#RewriteRule ^(.*)$ http://www.REPLACEDOMAIN_EN.com/$1 [L,R=301]
+#RewriteCond %{HTTP_HOST} ^www.##REPLACEDOMAIN_EN##.com$ [NC]
+#RewriteRule ^$ http://www.##REPLACEDOMAIN_EN##.com/home [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} ^.*/[a-zA-Z]+-[0-9]+-[0-9]+-[0-9]+.[jpg|png|gif]{3}$
+RewriteRule ^.*/([^/]+).[jpg|png|gif]$ http://%{SERVER_NAME}/xx/edith/www/newsletter/index/log-access/params/$1 [NC,L]
+
+
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
+
+
+AddDefaultCharset utf-8
+
+AddType audio/ogg .oga
+AddType video/ogg .ogv
+AddType video/ogg .ogg
+AddType video/mp4 .mp4
+AddType video/webm .webm
+AddType video/3gpp .3gp
+
+<ifModule mod_headers.c>
+ Header set Connection keep-alive
+ Header append Vary: Accept-Encoding
+ Header append Vary: User-Agent
+ <FilesMatch "\.(html|htm)$">
+  Header set Cache-Control "max-age=7200, public"
+ </FilesMatch>
+ # Disable caching for scripts and other dynamic files
+ <FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
+  Header unset Cache-Control
+ </FilesMatch>
+</ifModule>
+<ifModule mod_deflate.c>
+SetOutputFilter DEFLATE
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/x-javascript application/x-httpd-php
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip
+Header append Vary: Accept-Encoding
+Header append Vary: User-Agent
+</ifModule>

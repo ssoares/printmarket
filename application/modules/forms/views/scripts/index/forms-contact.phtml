@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="col-md-6">
+      <h2><?php echo $this->info['registredName']; ?></h2>
+    <p class="contact-adresse">
+        <?php echo $this->info['registredName']; ?><br/>
+	    <?php echo $this->info['address1']; ?><br/>
+	    <?php if (!empty($this->info['address2'])): ?>
+        <?php echo $this->info['address2']; ?><br/>
+        <?php endif; ?>
+	    <?php echo str_replace(' ', '&nbsp;', $this->info['address3']); ?><br/>
+	    <?php echo $this->info['country']; ?>
+    </p>
+
+    <?php if (!empty($this->info['phone']) || !empty($this->info['fax'])): ?>
+    <p class="contact-tel">
+        <?php echo $this->info['phone']; ?><br/>
+        <?php if(!empty($this->info['fax'])): ?>
+            <?php echo $this->info['fax']; ?>
+        <?php endif; ?>
+    </p>
+    <?php endif; ?>
+    <p class="contact-courriel">
+        <a href="mailto:<?php echo $this->info['email']; ?>" title="Écrivez-nous!"><?php echo $this->info['email']; ?></a>
+    </p>
+  </div>
+  <div class="col-md-6">
+    <form class="form-contact" method="post">
+        <?php
+        $inscriptionValidate = $this->inscriptionValidate;
+        echo $this->showBlockTitle('h2', array('class' => 'forms-title content-h1-style super-margin-bottom'));
+
+        if (!$inscriptionValidate) {
+            echo "<div class='row'>";
+            echo($this->form);
+            echo "</div>";
+            echo "<div class='champs-obligatoires'>".$this->getCibleText('champs_obligatoires')."</div>";
+        } else {
+        ?>
+        <p class="forms-contact-succeed">
+            <?php
+            echo($this->getClientText('form_contact_sent_tank_you_message'));
+            ?>
+        </p>
+        <?php } ?>
+    </form>
+  </div>
+</div>
+
+<section class="forms module forms-contact content container">
+    <div class="clear"></div>
+</section>
+
+

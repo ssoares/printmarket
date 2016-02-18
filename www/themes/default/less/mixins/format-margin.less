@@ -1,0 +1,28 @@
+//ces mixin font la meme chose que le make-column, a l'exception qu'ils conservent la largeur initiale de l'element et utilise des margins pour le positionnement
+.format-margin(@container-width,@width,@child,@cols) when (default()) {
+    @first-width:round(@container-width / @cols);
+    @container-margin:(@first-width - @width) / 2;
+    @child-width:(@container-width + @container-margin * 2) / @cols;
+    @child-margin:(@child-width - @width) / 2;
+    
+    margin-left:-@container-margin + @grid-gutter-width / 2;
+    margin-right:-@container-margin + @grid-gutter-width / 2;
+    @{child} {
+        margin-left:@child-margin - @grid-gutter-width / 2 / @cols;
+        margin-right:@child-margin - @grid-gutter-width / 2 / @cols;
+    }
+}
+.format-margin-responsive(@width,@child,@cols-large:6,@cols-desktop:6,@cols-tablet:4,@container-percentage:1) when (default()) {
+    @media @mq-large {
+        .format-margin(@container-large-desktop * @container-percentage,@width,@child,@cols-large);
+    }
+    @media @mq-desktop {
+        .format-margin(@container-desktop * @container-percentage,@width,@child,@cols-desktop);
+    }
+    @media @mq-tablet {
+        .format-margin(@container-tablet * @container-percentage,@width,@child,@cols-tablet);
+    }    
+    @media @mq-phone {
+        .format-margin(@container-tablet * @container-percentage,@width,@child,@cols-tablet);
+    }    
+}

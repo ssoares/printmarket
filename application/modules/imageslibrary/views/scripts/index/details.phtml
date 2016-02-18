@@ -1,0 +1,237 @@
+<?php $data = $this->data; ?>
+<?php $urlDownload = $this->baseUrl() . '/' . 'tmpDownload.php?img='; ?>
+<?php $_viewscript = 'partials/imagesDetails.paginator.phtml'; ?>
+
+
+<section class='imageslibrary details module' >
+    <?php if (count($this->mylist)): ?>
+        <?php $i = 1; ?>
+        <?php foreach ($this->mylist->getCurrentItems() as $item): ?>
+            <?php $i == 0 ? $i = 1 : $i = 0; ?>
+            <?php
+            $id = $item[$this->field_list['idField']];
+            $img = $item[$this->field_list['filenameField']];
+
+            if ($this->showTitle) {
+                ?>
+                <h2 class="imageslibrary-title"><?php echo $item['ILI_Label1'] ?></h2>            
+            <?php } else { ?>
+                <h1 class="imageslibrary-title"><?php echo $item['ILI_Label1'] ?></h1>
+            <?php } ?>
+            <div class="imageslibrary-container">
+                <nav class='imageslibrary-nav'>
+                    <?php echo $this->link('#', $this->getCibleText('back_to_image_list'), array('id' => 'imageslibraryBack', 'class' => 'imageslibrary-back')); ?>
+                </nav>
+
+                <div class="imageslibrary-image-wrapper">
+                    <?php
+                    $src = $this->moduleImage(
+                            $this->moduleName, $id, $img, 'original', array('getSrc' => true)
+                    );
+                    $wwwRoot = Zend_Registry::get('www_root');
+                    if (!empty($wwwRoot))
+                        $imgPath = str_replace($wwwRoot, Zend_Registry::get('document_root'), $src);
+                    else
+                        $imgPath = Zend_Registry::get('document_root') . $src;
+                    $fileExists = file_exists($imgPath);
+                    if ($fileExists)
+                        list($width, $height) = getimagesize($imgPath);
+                    else {
+                        $width = 0;
+                        $height = 0;
+                    }
+
+                    $fullImg = false;
+                    if ($width >= 959)
+                        $fullImg = true;
+                    ?>
+                    <?php
+                    $url = $this->url(array('img' => $id));
+                    $image = $this->moduleImage($this->moduleName, $id, $img, 'original', array('class' => 'imageslibrary-image'));
+                    echo $image;
+                    ?>
+                    <?php if ($fileExists): ?>
+
+                        <ul class="imgContainer" style="width:<?php echo ($width) ?>px;">
+                            <?php if ($fullImg): ?>
+                                <li class="shadow" style="width:<?php echo ($width) ?>px;">&nbsp;</li>
+                            <?php else: ?>
+                                <li class="shadowLeft">&nbsp;</li><li class="shadow" style="width:<?php echo ($width - 14) ?>px;">&nbsp;</li><li class="shadowRight">&nbsp;</li>
+                            <?php endif; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+
+            <?php //echo $this->paginationControl($this->mylist, 'sliding', $_viewscript, array('top' => -($height / 2 + 30), 'img' => $this->imgId)); ?>
+            <?php
+        else:
+            echo $this->getCibleText('fo_gallery_information_message_noGallery');
+        endif;
+        ?>
+    </div>
+    <div class="imageslibrary-informations">
+        <div class="imageslibrary-description"><?php echo $data['ILI_Description']; ?></div>
+        <div class="imageslibrary-albums">
+            <h3 class="imageslibrary-subtitle"><?php echo $this->getCibleText('form_label_listKeywords'); ?> </h3>
+            <?php
+            $list = array('keywords' => array());
+//            $list = array('prodline' => array(), 'collection' => array(), 'keywords' => array());
+//            $prodlinesId = isset($data['rawColl']['prodlineId']) ? $data['rawColl']['prodlineId'] : array();
+//            $prodlines = isset($data['rawColl']['prodline']) ? $data['rawColl']['prodline'] : array();
+//            $collId = isset($data['rawColl']['id']) ? $data['rawColl']['id'] : array();
+//            $coll = isset($data['rawColl']['value']) ? $data['rawColl']['value'] : array();
+//            $urlOpt = array(
+//                'productline' => null,
+//                'spec' => null,
+//                'collection' => null,
+//                'img' => null
+//            );
+//            if ($prodlinesId) {
+//                foreach ($prodlinesId as $key => $value) {
+//                    $urlOpt['productline'] = $value;
+//                    $url = $this->url($urlOpt);
+//                    $tmp = strtolower($prodlines[$key]);
+//                    if ($key < 1)
+//                        $tmp = ucfirst($tmp);
+//                    array_push($list['prodline'], $this->link($url, $tmp));
+//                    $urlOpt['productline'] = null;
+//                }
+//            }
+//            if ($collId) {
+//                foreach ($collId as $key => $value) {
+//                    $urlOpt['collection'] = $value;
+//                    $url = $this->url($urlOpt);
+//                    array_push($list['collection'], $this->link($url, strtolower($coll[$key])));
+//                    $urlOpt['collection'] = null;
+//                }
+//            }
+            if ($this->data['listKeywords']) {
+                $keywords = explode(',', $this->data['listKeywords']);
+                foreach ($keywords as $key => $value) {
+//                    $urlOpt['spec'] = $key;
+//                    $urlOpt['collection'] = 'all';
+//                    $url = $this->url($urlOpt);
+                    array_push($list['keywords'], $value);
+                }
+            }
+            ?>
+            <?php // echo implode(', ', $list['prodline']); ?> 
+            <?php //echo implode(', ', $list['collection']); ?> 
+            <?php echo implode(', ', $list['keywords']); ?>
+
+        </div>
+    </div>
+    <?php /* ?>
+      <div class="dataRight">
+      <p class="links lowRez">
+      <?php $config = Zend_Registry::get('config'); ?>
+      <?php
+      $dimsLow = $config->imageslibrary->image->original->maxWidth;
+      $dimsLow .= 'x';
+      $dimsLow .= $config->imageslibrary->image->original->maxHeight;
+      $dimsLow .= '_';
+      ?>
+      <?php
+      echo $this->link(
+      $urlDownload . $dimsLow . $img . '&amp;pid=' . $id, $this->getClientText('download_lowrez'), array('class' => 'fontUnivers24')
+      );
+      ?>
+      </p>
+      <?php
+      $dimsHi = $config->imageslibrary->image->highres->maxWidth;
+      $dimsHi .= 'x';
+      $dimsHi .= $config->imageslibrary->image->highres->maxHeight;
+      $dimsHi .= '_';
+      ?>
+      <p class="links highRez">
+      <?php
+      echo $this->link(
+      $urlDownload . $dimsHi . $img . '&amp;pid=' . $id, $this->getClientText('download_highrez'), array('class' => 'fontUnivers24')
+      );
+      ?>
+      </p>
+      <p class="links print">
+      <?php echo $this->link('javascript:window.print()', $this->getClientText('share_print_text'), array('class' => 'fontUnivers24')); ?>
+      </p>
+      <!-- AddThis Button BEGIN -->
+      <p class="share">
+      <?php
+      echo $this->link(
+      $urlDownload . $dimsHi . $img . '&amp;pid=' . $id, $this->getClientText('share_share_text'), array('class' => 'fontUnivers24 addthis_button_compact')
+      );
+      ?>
+
+      <script type="text/javascript">
+      var addthis_config = {
+      "data_track_addressbar": true,
+      "services_compact": "email,linkedin,facebook,twitter,print"
+      };
+      var addthis_share = {"email_template": 'template_<?php echo $this->languageSuffix; ?>'};
+      </script>
+      <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-511527ca219c19c4"></script>
+      <!-- AddThis Button END -->
+      </p>
+      </div>
+      <?php */ ?>
+</section>
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function() {
+<?php /* ?>
+  var linkback = $('.linkback')
+  if (linkback.length)
+  $('#bread-crumb-logiflex').remove();
+  else
+  $('#bread-crumb-logiflex').show();
+
+  $("div.containerTop").hover(function() {
+
+  $('.paginationControl').css('visibility', 'visible');
+  },
+  function() {
+  $('.paginationControl').css('visibility', 'hidden');
+  }
+  );
+
+  $("div.containerTop").mousemove(
+  function() {
+
+  $('.paginationControl').css('visibility', 'visible');
+  });
+
+  $("div.paginationControl").hover(
+  function() {
+
+  $('.paginationControl').css('visibility', 'visible');
+  });
+
+  $("p.links").click(function() {
+  document.location.href = ($(this).parent().find("a").attr('href'));
+  });
+
+  $("p.share").click(function() {
+  document.location.href = ($(this).parent().find("a").attr('href'));
+  });
+
+  var previousP = $("div#pagination-previous a");
+  var nextP = $("div#pagination-next a");
+  if (nextP.length == 0) {
+  $("div#pagination-next").hide();
+  }
+  if (previousP.length == 0) {
+  $("div#pagination-previous").hide();
+  }
+  <?php */ ?>
+        if (Modernizr.history) {
+            $('#imageslibraryBack').click(function(e) {
+                e.preventDefault();
+                history.go(-1);
+            })
+        }
+        else
+            $('#imageslibraryBack').hide();
+    });
+    //]]>
+</script>

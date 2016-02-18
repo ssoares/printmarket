@@ -1,0 +1,7 @@
+<section class="news list">
+    <?php echo $this->showBlockTitle('h2', array('class' => 'news-title')); ?>
+    <?php
+    if(isset($this->mylist))
+        echo($this->mylist->render());
+    ?>
+</section>

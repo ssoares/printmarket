@@ -1,0 +1,43 @@
+<?php
+$article = $this->article;
+$linkToArticle = $this->baseUrl() . '/' . $this->detailsPage . "/"
+    . $this->dateStringUrl . "/" . $this->parutionValURL . "/"
+    . $article['NA_ValUrl'];
+?>
+<article class="newsletter-top-news newsletter-news">
+    <div class="newsletter-news-image image-placeholder">
+        <?php
+        if($article['NA_ImageSrc']){
+            echo  $this->moduleImage('newsletter', $article['NA_ReleaseID'] .
+             "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'medium',
+             array('class' => 'news-article-image-image'));
+        }
+        else{
+            $imgPath = Zend_Registry::get('absolute_web_root') . "/themes/default/images/common/img-infolettre.png";
+            echo $this->image($imgPath, array('alt' => $article['NA_ImageAlt']));
+        }
+        ?>
+    </div>
+    <header>
+        <h2 class="newsletter-news-title"><?php echo($article['NA_Title']);?></h2>
+    </header>
+    <p class="newsletter-top-news-content">
+        <?php
+        $text = Cible_FunctionsGeneral::truncateString($article['NA_Resume'], 350);
+        echo $this->decorateImage($text);
+        ?>
+    </p>
+    <div class="newsletter-top-news-more newsletter-more">
+    <?php if ($article['NA_TextLink'] == 1) :?>
+        <a class="next-button news-article-next-button" href="<?php echo $linkToArticle ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+            <?php echo($this->getClientText('see_details_newsletter_text')); ?>
+        </a>
+        <?php elseif ($article['NA_TextLink'] == 2) :?>
+        <div>
+            <a href="<?php echo $article['NA_URL']; ?>" target="_blank" class="next-button news-article-next-button">
+                <?php echo($this->getClientText('see_details_newsletter_text')); ?>&nbsp;
+            </a>
+        </div>
+    <?php endif;?>
+    </div>
+</article>

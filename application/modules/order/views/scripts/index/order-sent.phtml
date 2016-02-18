@@ -1,0 +1,12 @@
+<div id="cart" class="block">
+<?php echo $this->partial('partials/stepTopLine.phtml', array('step' => $this->step)); ?>
+    <p id="confirmation">
+        <?php echo $this->getClientText('quoteRequest_confirmation_text'); ?>
+    </p>
+    <?php echo $this->html; ?>
+    <p id="linkHome">
+        <a href="<?php echo $this->absolute_web_root; ?>">
+            <?php echo $this->getClientText('back_home_link_text'); ?>
+        </a>
+    </p>
+</div>

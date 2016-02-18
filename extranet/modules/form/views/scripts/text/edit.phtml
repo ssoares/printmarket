@@ -1,0 +1,18 @@
+<?php
+    if( $this->isXmlHttpRequest ){
+
+            if( $this->success ){
+?>
+            <div id="result">
+                <span id="action" style="display: none">editImage</span>
+                <span id="success" style="display: none">true</span>
+                <span id="imageID" style="display: none"><?php echo $this->textID ?></span>
+                <span id="imageDescription" style="display: none"><?php echo $this->text?></span>
+            </div>
+<?php   }
+        else{
+?>          <div id="container_middle_full">
+                <?php  echo($this->form); ?>
+            </div>
+<?php   }
+    }

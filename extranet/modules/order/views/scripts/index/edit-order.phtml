@@ -1,0 +1,14 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+'pageTitle' => $this->getCibleText('header_samples_quote_request_edit_text'),
+'pageDescription' => $this->getCibleText('header_samples_quote_request_edit_description'),
+'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+        <?php echo $this->render; ?>
+    </div>
+</div>

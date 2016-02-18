@@ -1,0 +1,37 @@
+<table id="consultations">
+    <thead>
+        <tr>
+            <th class="borders first"><?php echo $this->getCibleText('newsletter_statistic_releases_label'); ?></th>
+            <th class="borders"><?php echo $this->getCibleText('newsletter_statistic_totalsend_label'); ?></th>
+            <th class="borders"><?php echo $this->getCibleText('newsletter_statistic_opened_label'); ?></th>
+            <th class="borders"><?php echo $this->getCibleText('newsletter_statistic_totalread_label'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->consultation as $key => $value): ?>
+            <?php if (!empty($key)): ?>
+        <tr id="nl-<?php echo $key; ?>">
+            <td class="borders first"><?php echo $value['NR_Title']; ?></td>
+            <td class="borders center">
+                <span class="sendTo modalDetails" title="<?php echo $this->getCibleText('newsletter_statistic_reciplist_title'); ?> <?php echo $value['NR_Title']; ?>">
+                    <?php echo $value['NR_SendTo']; ?>
+                </span>
+                / <?php echo $value['NR_TargetedTotal']; ?>
+            </td>
+            <td class="borders center">
+                <span class="opened modalDetails" title="<?php echo $this->getCibleText('newsletter_statistic_openedlist_title'); ?> <?php echo $value['NR_Title']; ?>">
+                    <?php echo $val = (!empty($value['opened'])) ? $value['opened'] : 0; ?>
+                </span>
+            </td>
+            <td class="borders center bold last">
+                <span class="totArtRead" title="<?php echo $this->getCibleText('newsletter_statistic_showdetails_title'); ?>">
+                <?php echo $val = (!empty($value['details'])) ? $value['details'] : 0; ?>
+                </span>
+            </td>
+        </tr>
+            <?php endif; ?>
+        <?php
+        endforeach;
+        ?>
+    </tbody>
+</table>

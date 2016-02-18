@@ -1,0 +1,76 @@
+<?php $random = rand(0, 1000000); ?>
+<?php
+$imagesData = $this->imagesData;
+?>
+<div data-magnificcontainer="<?php echo $random ?>" class="imageslibrary slidelist module block <?php echo ($this->effect == "scrollVert") ? 'verticalslider' : 'horizontalslider' ?>">
+    <div class="imageslibrary-container">
+        <nav class='imageslibrary-nav'>
+            <div class="imageslibrary-prev" id="leftCycle-<?php echo $random; ?>">prev</div>
+            <div class="imageslibrary-next" id="rightCycle-<?php echo $random; ?>">next</div>
+        </nav>
+        <div class="imageslibrary-slidelist" id="slideshow-<?php echo $random; ?>">
+            <div class="imageslibrary-slidelist-group">
+            <?php
+            $imgID = 1;
+            $imgPerSlides = $this->view->nbRelated;
+            $nbImg = count($imagesData);
+            ?>
+            <?php foreach ($imagesData as $index => $image):?>
+            <?php
+            $url = $this->view->baseUrl() . $image['link'];
+            $title = $image['PI_Name'];
+            ?>
+                <figure class="imageslibrary-slide-container <?php echo ''; ?> col-lg-3">
+                <?php
+                    $imageSFull = '';
+                    $img = $this->clientImage('logo.png', array('class' => 'imageslibrary-slide-image'));
+                    if (!empty($image['P_Photo'])){
+                    $img = $this->moduleImage('catalog',
+                        'products/' . $image['P_ID'],
+                        $image['P_Photo'],
+                        'thumb',
+                        array('class' => 'imageslibrary-slide-image'));
+                    $imageSFull = $this->moduleImage('catalog',
+                        'products/' . $image['P_ID'],
+                        $image['P_Photo'], 'original',
+                        array('getSource' => 'true'));
+                    }
+                    echo $this->view->link($url, $img, array('title' => $title, 'class' => 'imageslibrary-slide'));
+            ?>
+                    <figcaption class="imageslibrary-slide-label1"><?php echo $title; ?></figcaption>
+                    <?php if (!empty($image['PI_Description'])): ?>
+                    <figcaption class="imageslibrary-slide-description">
+                    <?php echo Cible_FunctionsGeneral::truncateString(strip_tags($image['PI_Description']), 150); ?>
+                    </figcaption>
+                <?php endif; ?>
+                </figure>
+            <?php if ($imgID % $imgPerSlides == 0 && $nbImg > $imgID): ?>
+            </div>
+            <div class="imageslibrary-slidelist-group">
+            <?php endif; ?>
+            <?php $imgID++; ?>
+    <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+</div>
+<?php // $this->placeholder('footerScript')->captureStart();  ?>
+<?php if ($nbImg > $imgPerSlides): ?>
+    <script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function() {
+        var $slideshow = $('#slideshow-<?php echo $random; ?>');
+        $slideshow.cycle({
+            fx: "scrollHorz",
+            prev : '#leftCycle-<?php echo $random; ?>',
+            next : '#rightCycle-<?php echo $random; ?>',
+            slides : "> div",
+            swipe: true,
+            timeout: 0,
+            log: false
+            });
+    }).resize();
+    //]]>
+    </script>
+<?php endif; ?>
+<?php // $this->placeholder('footerScript')->captureEnd();  ?>

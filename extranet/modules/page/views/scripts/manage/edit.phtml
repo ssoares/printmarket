@@ -1,0 +1,53 @@
+<?php $this->inlineScript()->captureStart() ?>
+
+    function fillInControllerName(){
+        if( $('#PI_PageIndex').val() == '')
+            $('#PI_PageIndex').val( noaccent($('#PI_PageTitle').val()) );
+    }
+
+    function noaccent(str) {
+      var temp = str.replace(/[àâä]/gi,"a")
+      temp = temp.replace(/[éèêë]/gi,"e")
+      temp = temp.replace(/[îï]/gi,"i")
+      temp = temp.replace(/[ôö]/gi,"o")
+      temp = temp.replace(/[ùûü]/gi,"u")
+      temp = temp.replace(/[ç]/gi,"c")
+      temp = temp.replace(/[']/gi,"-")
+      temp = temp.replace(/[,]/gi,"")
+      temp = temp.replace(/["]/gi,"-")
+      temp = temp.replace(/ /gi,"-")
+      return temp.toLowerCase();
+    }
+
+<?php $this->inlineScript()->captureEnd() ?>
+
+<?php echo $this->inlineScript() ?>
+
+<?php
+//exit;
+if( $this->isXmlHttpRequest ){
+    if( $this->success ){
+        ?>
+
+            <div id="result">
+                Votre page "<?php echo $this->pageTitle ?>" à été modifié avec succès.
+                <span id="pageID" style="display: none"><?php echo $this->pageID ?></span>
+                <span id="pageTitle" style="display: none"><?php echo $this->pageTitle ?></span>
+                <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                <span id="pageOnline" style="display: none"><?php echo $this->pageOnline; ?></span>
+                <span id="pageLangID"><?php echo $this->currentEditLanguage ?></span>
+            </div>
+
+        <?php
+    } else {
+
+        echo $this->form;
+
+    }
+} else {
+
+    echo $this->form;
+
+}
+
+?>

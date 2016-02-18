@@ -1,0 +1,202 @@
+<?php $this->headScript()->appendFile($this->baseUrl() .'/js/tinymce/tinymce.min.js') ?>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+    //Translation needed for the extranet in js file.
+    var defaultTitle            = '<?php echo $this->getCibleText('form_section_defaultTitle');?>';
+    var editTextZoneTitle       = "<?php echo $this->getCibleText('form_popup_textzone_edit_title') ?>";
+    var editTextZoneDescription = "<?php echo $this->getCibleText('form_popup_textzone_edit_description') ?>";
+    var deletePageBreakAlert    = '<?php echo $this->getCibleText('form_section_pageBreak_alert'); ?>';
+    var sectionPageBreakAlert   = '<?php echo $this->getCibleText('form_section_pageBreak_alert'); ?>';
+    var labelCSS                = '<?php echo $this->labelColor; ?>';
+    
+    /****************************************/
+    /*********** ELEMENT CONTAINER **********/
+    /****************************************/
+    var baseUrl = "<?php echo $this->baseUrl() ?>";
+    var el = $('#element_container');
+    var elFirstPosition = $('#headerZone').offset().top + 30 ;
+    defaultProperties.init(
+        baseUrl,
+        defaultTitle,
+        editTextZoneTitle,
+        editTextZoneDescription,
+        deletePageBreakAlert,
+        sectionPageBreakAlert,
+        el,
+        elFirstPosition
+    );
+    // Manage the element container position on scroll
+    $(window).scroll(function(){
+        moveToolBox.init($(this));
+    });
+    
+    // Load the section and related data on window loading event
+    $(window).load(function(){
+        var formId = $('#Form').attr('formid');
+        var langId = $('#langSelector').val();
+
+        $.getJSON(
+            baseUrl + "/form/section/show/",
+            {
+                'id' : formId,
+                'langID' : langId
+            },
+            function(data){
+                $('#form_drop_zone').append(data['html']);
+                
+                formElement.init(
+                    editTextZoneTitle,
+                    editTextZoneDescription);
+                    
+                pageBreak.init(
+                    baseUrl,
+                    deletePageBreakAlert,
+                    sectionPageBreakAlert);
+            }
+        );
+            
+        $('dt').each(function(){
+            if ($(this).html() == "&nbsp;")
+            {
+                $(this).remove();
+            }
+        });
+    
+        moveToolBox.init($(this));
+    });
+    
+    moveTr.init();
+    
+    /****************************************/
+    /**************** SECTION ***************/
+    /****************************************/
+    $("a[class$=_delete_link]").live('click', function(event){
+        event.preventDefault();
+        var confirmMsg = "<?php echo $this->getCibleText('form_section_deleteSection_confirm')?>";
+        // Suppression d'une section
+        deletelink.init(event.target, confirmMsg);
+    });
+
+    $("input.delete").live('click', function(event){
+        event.preventDefault();
+        var confirmMsg = "<?php echo $this->getCibleText('form_section_deleteSection_confirm')?>";
+        // Suppression d'une section
+        deletelink.init(event.target, confirmMsg);
+
+        return false;
+    });
+
+    $("input.addLine").live('click', function(){
+       newOptionLine.add($(this));
+       return false;
+    });
+
+    $(".section_options_link").live('click', function(event){
+        event.preventDefault();
+        displayForm.click($(this));
+        return false;
+    });
+    $(".section_title").live('click', function(event){
+        event.preventDefault();
+        displayForm.click($(this));
+        return false;
+    });
+
+    $('form.params input').live('keypress', function(e) {
+        if(e.keyCode == 13) {
+            e.preventDefault();
+            $(this).nextAll('input:first').focus();
+            displayForm.click($(this));
+            return false;
+    }
+});
+    $('div.section input').live('blur', function(event){
+        event.preventDefault();
+        var parent = $(this).parents('tr');
+        var test   = $(this).attr('id');
+        if (parent.length == 0 && test != 'addLine' && this.type != 'button')
+        {
+            if (this.type == "text")
+                updateParam.init($(this), event);
+
+        }else{
+            if (this.type == "text")
+                updateOptionParam.init($(this), event);
+
+        }
+        $(this).die();
+        return false;
+    });
+
+    $('div.section input').live('click', function(event){
+        var parent = $(this).parents('tr');
+        var test   = $(this).attr('id');
+        if (parent.length == 0 && test != 'addLine' && this.type != 'button')
+        {
+            if ((this.type == "checkbox" || this.type == "radio"))
+                updateParam.init($(this), event);
+        }else{
+            if ((this.type == "checkbox" || this.type == "radio"))
+                updateOptionParam.init($(this), event);
+        }
+        $(this).die();
+        return false;
+    });
+
+    $('div.center textarea').live('blur', function(event){
+        updateParam.init($(this), event);
+        return false;
+    });
+
+    $("li.element_section").draggable({
+        connectToSortable: '#form_drop_zone',
+        cursor: 'move',
+        cursorAt: { top: 25, left: 25 },
+        revert: 'invalid',
+        helper: 'clone'
+    });
+
+    $("li.element_breakpage").draggable({
+        connectToSortable: '.breakpage_drop_zone',
+        cursor: 'move',
+        cursorAt: { top: 25, left: 25 },
+        revert: 'invalid',
+        helper: 'clone'
+    });
+
+    $("li.element").draggable({
+        connectToSortable: '.section_drop_zone',
+        cursor: 'move',
+        cursorAt: { top: 25, left: 25 },
+        revert: 'invalid',
+        helper: 'clone'
+    });
+
+    $('table tr').draggable({
+        connectToSortable: '.select_options_drop_zone',
+        cursor: 'move',
+        cursorAt: { top: 25, left: 25 },
+        revert: 'invalid'
+       
+    });
+
+
+    $("a[class$=edit_link]").live('click', function (event){
+        event.preventDefault();
+
+        var link = $(this).attr('href');
+        textEditor.open(link, $(this));
+    });
+    $("div.previewText").live('click', function (event){
+        event.preventDefault();
+
+        var link = $(this).parents().find("a[class$=edit_link]").attr('href');
+        textEditor.open(link, $(this));
+
+    });
+    //Load initial section drag and drop behaviour
+    formUI.init();
+});
+</script>

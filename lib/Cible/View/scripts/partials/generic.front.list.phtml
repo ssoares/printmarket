@@ -1,0 +1,246 @@
+<?php
+    $_viewscript = $this->viewscript ? $this->viewscript : 'partials/generic.paginator.phtml';
+    $fc = Zend_Controller_Front::getInstance();
+    $request = $this->view->request;
+    $params = $request->getParams();
+    $defaults = array_slice($params, 0, 3);
+    $defaults['page'] = isset($params['page']) ? $params['page'] : null;
+    $defaults['perPage'] = isset($params['perPage']) ? $params['perPage'] : null;
+    $defaults['order'] = isset($params['order']) ? $params['order'] : null;
+    $defaults['order-direction'] = isset($params['order-direction']) ? $params['order-direction'] : null;
+    $resetSearchUrl = $this->view->url($defaults, null, true);
+//    $params['perPage'] = null;
+//    $perPageLink = $this->view->url($params);
+?>
+
+<?php if( $this->disable_export_to_excel != 'true' || !empty($this->commands)  ): ?>
+    <div id="action_panel" class="list_action_panel">
+        <?php if( $this->disable_export_to_excel != "true" ): ?>
+            <div class="exporter">
+                <a href="<?php
+                    echo $this->url(
+                            array(
+                                'action'    => $this->to_excel_action,
+                                'actionKey' => $this->actionKey)
+                            ) ?>"
+                  id="export_to_excel" class="export_to_excel"><?php echo $this->getCibleText('export_to_excel') ?>
+                </a>
+            </div>
+        <?php endif; ?>
+        <?php if( $this->enable_print == "true" ): ?>
+            <div class="exporter">
+                <a href="javascript:void();" id="print"><?php echo $this->getClientText('share_print_text') ?></a>
+            </div>
+        <?php endif; ?>
+        <?php if( $this->commands): ?>
+            <ul class="buttons">
+                <?php foreach($this->commands as $command): ?>
+                    <li><?php echo $command ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+<div class="searchable-list">
+    <div class="list">
+        <table cellspacing="0" cellpadding="5" border="0" class="donorsTable">
+            <thead>
+                <tr class="blueHeader">
+                     <?php foreach($this->field_list as $column_key => $column_val): ?>
+
+                        <?php if( !empty( $column_val['width'] ) ): ?>
+                            <th width="<?php echo $column_val['width'] ?>"<?php echo ( $column_key != 'action_panel' ) ? "" : "class=\"without_right_border\"" ?>>
+                        <?php else: ?>
+                            <th>
+                        <?php endif; ?>
+                            <?php
+                            $label = $this->getCibleText("list_column_$column_key");
+                                if( !empty( $column_val['label'] ) ){
+                                    $label = $column_val['label'];
+                                }
+                                if( isset( $column_val['useFormLabel'] ) ){
+                                    $label = $this->getCibleText("form_label_$column_key");
+                                }
+                            ?>
+                            <?php if( $column_key != 'action_panel' ): ?>
+                                <?php
+                                    $_sort_CssClass = '';
+                                    if( $this->order == $column_key && ( $this->order_direction && in_array($this->order_direction, array('ASC','DESC') ) ) ){
+
+                                        $orderlink = $this->order_direction == 'ASC' ? "{$this->url( array('order'=> $column_key, 'order-direction' => 'DESC') )}" : "{$this->url( array('order'=> $column_key, 'order-direction' => 'ASC') )}";
+                                        $_sort_CssClass = $this->order_direction;
+
+                                    } else {
+                                         $orderlink = "{$this->url( array('order'=> $column_key, 'order-direction' => 'ASC') )}";
+                                    }
+
+                                    if(substr($orderlink, -1) != '/')
+                                        $orderlink .= '/';
+                                ?>
+                                <h3><a class="<?php echo $_sort_CssClass ?>" href="<?php echo $orderlink ?>">
+                                    <?php echo $label; ?>
+                                </a></h3>
+                            <?php else: ?>
+                                <?php echo '<h3>'.$label.'</h3>'; ?>
+                            <?php endif; ?>
+                            </th>
+                     <?php endforeach; ?>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if (count($this->paginator)): ?>
+                <?php
+                    $counter = 0;
+                    foreach ($this->paginator as $item):
+                        $disabled = (isset($item['disabled']))? $item['disabled'] : false;
+                ?>
+                    <tr class="row_list_<?php echo $counter ?> <?php echo $counter%2==0?'odd':'even'; ?>">
+                        <?php foreach(array_keys( $this->field_list ) as $field): ?>
+                                <?php if( $field != 'action_panel' ): ?>
+
+                                    <td>
+                                        <?php
+                                        if(!empty($this->field_list[$field]['postProcess']))
+                                        {
+                                            switch($this->field_list[$field]['postProcess']['type'])
+                                            {
+                                                case 'dictionnary':
+                                                    echo $this->getCibleText($this->field_list[$field]['postProcess']['prefix'] . $item[$field]);
+                                                break;
+                                                case 'retrieveById':
+                                                    $obj = $this->field_list[$field]['postProcess']['object'];
+                                                    $methode = $this->field_list[$field]['postProcess']['callMethod'];
+                                                    echo $obj->setId($item[$field])->$methode();
+                                                break;
+                                                case 'yesNo':
+                                                    if (!$disabled){
+                                                        $val = empty($item[$field])?0:$item[$field];
+                                                        echo $this->getCibleText('label_online_' . $val);
+                                                    }
+                                                break;
+
+                                                default:;
+                                            }
+                                        }else{
+                                            echo $item[$field];
+                                        }
+                                        ?>
+                                    </td>
+                                <?php else: ?>
+                                    <td class="without_right_border">
+                                        <?php if( $this->action_links && !$disabled): ?>
+                                                <ul style="list-style: none; margin: 0px; padding: 0px;">
+                                                    <?php foreach($this->action_links as $key => $value): ?>
+                                                        <?php
+                                                            if( !empty($value['findReplace']) ){
+
+                                                                if( isset($value['findReplace']['search']) && isset($value['findReplace']['replace']) ){
+                                                                    $value['url'] = str_replace($value['findReplace']['search'], $item[ $value['findReplace']['replace'] ], $value['url']);
+                                                                }
+                                                                else if( count($value['findReplace']) > 0 ){
+                                                                    foreach($value['findReplace'] as $operation)
+                                                                           $value['url'] = str_replace($operation['search'], $item[ $operation['replace'] ], $value['url']);
+                                                                }
+                                                            }
+                                                        ?>
+
+                                                        <li><a class="action_<?php echo $key ?>" href="<?php echo $value['url'] ?>"><?php echo $value['label'] ?></a></li>
+
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                        <?php else: ?>
+                                            &nbsp;
+                                        <?php endif; ?>
+                                    </td>
+                                <?php endif; ?>
+                         <?php endforeach; ?>
+                    </tr>
+                <?php
+                        $counter++;
+                        if($counter == 2)
+                            $counter = 0;
+                    endforeach;
+                ?>
+            <?php else: ?>
+                <tr class="row_list_empty">
+                    <td class="without_right_border_empty" colspan="<?php echo count($this->field_list) ?>">
+                        <?php echo $this->getCibleText('news_no_news') ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+    <?php echo $this->paginationControl($this->paginator,'sliding', $_viewscript); ?>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    $('#print').click(function(){
+        $('div.list').printElement();
+    });
+    //]]>
+    $('#search').keypress(function(e){
+        if( e.which == 13 ){
+            $('#filteredSearch').click();
+        }
+    });
+
+    $('a.show-actions-dialog').click(function(e){
+
+
+        var relativeParent = $(this).offsetParent();
+        var offset = relativeParent.offset();
+
+        var offsetLeft = e.pageX - offset.left;
+        var offsetTop = e.pageY - offset.top;
+
+        var dialog = $(this).next('div');
+
+        if(dialog.css('display') == 'block'){
+            dialog.slideUp('fast');
+        } else {
+            $('.searchable-list .actions-dialog').each(function(){
+                var _current_dialog = $(this);
+
+                if( _current_dialog.css('diplay') != 'none')
+                    _current_dialog.slideUp('fast');
+            });
+
+            dialog.css({
+                left: offsetLeft - dialog.width() - 10,
+                top: offsetTop
+            });
+
+            dialog.slideDown('fast');
+        }
+
+    });
+    function search(){
+        var filters_str = '';
+         $('div.searchable-list:first').find('div.filters select, div.filters input').each(function(){
+            var objFilter = $(this);
+
+            if( objFilter){
+
+                var filter_name = objFilter.attr('id');
+
+                if(objFilter.val() != ''){
+                    filters_str += filter_name + '/' + objFilter.val() + '/';
+                }
+            }
+
+         });
+         if( $('#search').val() != '')
+            filters_str += 'searchfor/' + $('#search').val();
+
+         window.location.href = '<?php echo $resetSearchUrl ?>/' + filters_str;
+    }
+
+    function emptySearch(elem){
+        elem.val('');
+        $('#filteredSearch').click();
+    }
+</script>

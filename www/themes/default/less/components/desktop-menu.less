@@ -1,0 +1,334 @@
+@import "../mixins/color-brightness.less";
+@import "../mixins/prefixed.less";
+
+@import "../variables/custom-colors.less";
+
+
+//la barre de menu principal
+.site-menu-principal {
+    font-size:0;
+    vertical-align:middle; 
+    margin:0;
+    line-height:24px;
+    background:none;
+    border:0;
+    padding-top:(@header-line-height - @header-menu-line-height) / 2;
+    padding-bottom:(@header-line-height - @header-menu-line-height) / 2;
+    &.navbar-default .navbar-nav {
+        display:inline;
+        float:none;
+        vertical-align:middle;
+
+        &:before, &:after {
+            display:none;
+        }
+        //les éléments de menu
+        & > li {
+            float:none;
+            display:inline-block;
+            .responsive-font(@font-size-base); 
+            margin:0 0 0 @grid-gutter-width * 2;
+            @media @mq-tablet {
+                margin:0 @grid-gutter-width * 2 0 0;
+            }
+            @media @mq-phone {
+                display:block;
+                text-align:center;
+                margin:0;
+            }
+            & > a {
+                &:after {
+                    .responsive-font(@font-size-base + 8);
+                    vertical-align: middle;
+                    position:relative;
+                    top:-4px;
+                }
+                color:@text-color;
+                line-height:40px;
+                padding:0 0 0 0;
+                display:block;
+                position:relative;
+            }
+        }
+        //lorsque l'élément est survolé ou active
+        & > .active > a, 
+        & > li:hover > a, 
+            & > .with-dropdown-toggle:hover > a,
+            & > .active > a:focus { 
+            background:none;
+            &:before {
+                content:"";
+                height:7px;
+                position:absolute;
+                bottom:0;
+                left:0;
+                width:100%;  
+                background:@brand-primary;
+                @media @mq-phone {
+                    display:none;
+                }
+            }
+            @media @mq-phone {
+                color:@brand-primary;
+            }
+        }
+        .with-dropdown-toggle {
+            &.open {
+                & > a, 
+                & > a:hover, 
+                    & > a:focus {
+                    background:@brand-black;
+                    color:@brand-grey;
+                }
+            }
+            & > a {
+                &:after { 
+                    content:"";
+                    margin:0 4px;
+                    .caret-down(4px);
+                }
+            }
+        }
+        .dropdown-menu {
+            border-radius:0;
+            background:@brand-primary;
+            text-align:left;
+            box-shadow:none;
+            border:0;
+            .dropdown-menu {
+                margin-left:0;
+                @media @mq-phone {
+                    position:relative;
+                    left:0;
+                }
+            }
+            & > li {
+                padding:0 14px;
+                .responsive-font(@font-size-base);  
+                & > a {
+                    line-height:43px;
+                    padding:0;
+                    .color-brightness(@brand-primary);                 
+                }
+                & + li {
+                    a { 
+                        border-top:1px solid lighten(@brand-primary,19.8%);
+                    }
+                }
+            }
+            & > li 
+            & > li.active > a,
+            & > li:hover > a {
+                background:none;
+                color:@brand-grey;
+            }
+            @media @mq-phone {
+                border-top:1px solid @brand-white;
+                border-bottom:1px solid @brand-white;    
+                padding:@grid-gutter-width / 2;
+                margin:0 @grid-gutter-width / 2;
+                width:auto;
+            }
+        }
+    }
+
+    @media @mq-phone {
+        padding:0;
+    }
+    @media @print {
+        display:none;
+    }
+}
+
+
+.aside-menu-secondaire {
+    padding:0;
+    margin:0 -@grid-gutter-width / 2;
+    .nav-stacked { 
+        li { 
+            ul {
+                display:none;
+            }
+            &.active {
+                ul {
+                    display:block;
+                }
+            }
+            a {
+                border-radius:0;
+                display:block;
+                padding:7px 0;
+                text-transform:uppercase;
+                background:none;
+                color:@text-color;
+                .responsive-font(@font-size-base + 2);
+            }
+            &.active > a,
+            &:hover > a {
+                background:none;
+                color:@brand-primary;
+                text-decoration:none;
+            }
+            ul {
+                list-style:none;
+                padding:0;
+                margin:14px 0;
+                li {                    
+                    a {
+                        padding:0px 12px;
+                        margin:2px 0;
+                        .responsive-font(@font-size-base + 2);
+                        text-transform:none;
+                        color:@text-color-inverted;
+                        background:@brand-grey;
+                        display:inline-block;
+                        width: 100%;
+                    }
+                    &:hover > a {
+                        background:@brand-grey;
+                        color:@text-color-inverted;
+                    }
+                    &.active > a,
+                    & > a:hover {
+                        color:@brand-primary;
+                        background:none;
+                    }
+                }
+                li+li {
+                    border-top:0;
+                }
+            }
+        }
+    }
+    @media @mq-phone {        
+        display:none;
+    } 
+}
+.site-footer-menu {
+    list-style:none;
+    padding:0;
+    li {
+        a {
+            font-style:normal;
+            .font-weight('normal','sans-serif');
+            .responsive-font(@font-size-base);
+            text-transform:uppercase;
+            padding-bottom:9px;
+            color:@brand-grey;
+            display:block;
+        }
+        &:hover a, &.active a {            
+            color:@brand-primary;
+            text-decoration:none;
+        }
+        @media @mq-tablet {
+            display:block;
+        }
+        @media @mq-phone {
+            display:block;
+        }
+    }
+}
+.site-footer-reseaux  {
+    text-align:right;
+    ul { 
+        padding:0;
+        display: inline-block;
+        .font-0();
+        margin-left:-12px;
+        li {
+            display: inline-block;
+            line-height: 30px;
+            margin:0 12px;
+            @media @mq-desktop {
+                margin:0 9px;
+            }
+            @media @mq-tablet {
+                margin:0 6px;
+            }
+            @media @mq-phone {
+                margin:0 4px;
+            }
+            a {
+                color:@brand-white;
+                &:hover {
+                    text-decoration:none;
+                }
+                &:after {
+                    .responsive-font(@font-size-base * 2);
+                    @media @mq-desktop { 
+                        .responsive-font(@font-size-base * 1.5);
+                    }
+                    @media @mq-tablet { 
+                        .responsive-font(@font-size-base * 2);
+                    }
+                    @media @mq-phone { 
+                        .responsive-font(@font-size-base * 2);
+                    }
+                }
+            }
+        }
+        @media @mq-tablet {
+            display:block;
+            margin-top:16px;
+            margin-left:-4px;
+        }
+        @media @mq-phone {
+            display:block;
+            margin-top:16px;
+        }
+    }
+    @media @mq-tablet {
+        text-align:left;
+    }
+    @media @mq-phone {
+        text-align:left;
+    }
+}
+.site-footer-reseaux {
+    ul { 
+        li {
+            .foreach(@custom-colors, {
+                @name: e('color-@{value}' );
+                @class-name: e('@{value}');
+                a.icon-@{class-name}:hover:after {
+                    color:@@name;
+                }
+            }); 
+        }
+    }
+}
+.site-footer-copyright {
+    ul { 
+        padding:0;
+        margin:6px 0 0 0;
+        display:inline-block;
+        vertical-align:middle;
+        @media @mq-tablet { 
+            display: block;
+            padding: 0;
+        }
+        @media @mq-phone { 
+            display: block;
+            padding: 0;
+        }
+        li {
+            &:before {
+                content:"|";
+                width:36px;
+                margin-right:2px;
+                text-align:center;
+                display:inline-block;
+                @media @mq-tablet {
+                    display:none;
+                }
+                @media @mq-phone {
+                    display:none;
+                }
+            }
+            a {
+                color:@brand-white;
+            }
+        }
+    }
+}

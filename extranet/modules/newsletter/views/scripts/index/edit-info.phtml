@@ -1,0 +1,25 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_newsletter_text'),
+    'pageDescription' => $this->getCibleText('header_edit_newsletter_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var sent = <?php echo $this->sent; ?>;
+        if( sent== 1 || sent == 2){
+            $("input#NR_Date").attr('readonly', 'readonly');
+            $("input#NR_Date").removeClass("hasDatepicker");
+            $("input#NR_Date").removeAttr('jquery.params');
+            $("input#NR_Date").css("opacity","0.5");
+            $( "#ui-datepicker-div" ).remove();
+        }
+     });
+</script>

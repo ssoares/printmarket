@@ -1,0 +1,116 @@
+<style type="text/css">
+    table{border: 2px solid #ccc; border-collapse: collapse; border-spacing: 0}
+    .logo{width: 150px; text-align: center;}
+    .header{height: 70px; font-weight: bold; }
+    .receipt-number{}
+    .forceCenter{width: 70px;}
+    .borderRight{border-right: 1px solid black}
+    .half{width: 200px}
+    .bold{font-weight: bold;}
+    .bgColor{background-color: #CCC;}
+    /*.borderR{border: 1px solid #ccc; }*/
+    /*.borderL{border: 1px solid #ccc;}*/
+</style>
+<?php $data = $this->data; ?>
+<?php $address = $data['DO_TypeDonor'] == 23 && isset($data['companiesDonor']) ?
+    $data['companiesDonor'] : $data['donor']; ?>
+<?php $invoiceNumber = !empty($data['DTR_InvoiceNumber']) ?
+    $data['DTR_InvoiceNumber'] : $data['DO_Number'];
+$config = Zend_Registry::get('config');
+$logo = (bool)$config->info->alternative ? $config->altLogo->src : $config->clientLogo->src;
+?>
+<?php $info = $this->info; ?>
+<table cellpadding="10" cellspacing="-1" border="0" >
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td rowspan="2" class="half" align="center">
+            <span style=""><?php echo str_repeat('&nbsp;<br/>', 1); ?></span>
+            <?php $imgSrc = Zend_Registry::get('fullDocumentRoot') . trim($this->locateFile($logo , null, 'front'), '/'); ?>
+            <?php echo $this->image($imgSrc, array('direct' => true, ' class' => "logo")); ?></td>
+        <td class="header half" align="">
+            <span style="font-size: 18px;"><?php echo str_repeat('&nbsp;<br/>', 1); ?></span>
+            <?php echo $this->getCibleText('donation_receipt_official'); ?>
+        </td>
+    </tr>
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td class="receipt-number"><?php echo $this->getCibleText('donation_receipt_receiptNum'); ?>
+            <?php
+            $num = 'R-' . $invoiceNumber;
+            if (!empty($data['index'])){
+                $num .= '-' . $data['index'];
+            }
+            echo $num;
+            ?>
+        </td>
+    </tr>
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td class="half"></td>
+        <td class="half"></td>
+    </tr>
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td class="half bold borderRight" style="font-size: 16px;" align=""><?php echo ($this->getCibleText('donation_receipt_beneficiary')); ?></td>
+        <td class="half bold" style="font-size: 16px;" align=""><?php echo ($this->getCibleText('form_label_DO_DonorId')); ?></td>
+    </tr>
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td class="half bold" class="borderRight"><p><?php echo $info['registredName']; ?></p>
+            <p><?php echo $this->getCibleText('donation_receipt_OrgNumber', null,array('replace' => array('##NUMFONDATION##' => $info['registredNumber']))); ?></p>
+            <p><?php echo $info['address1']; ?></p>
+            <?php if (!empty($info['address2'])): ?>
+            <p><?php echo $info['address2']; ?></p>
+            <?php endif; ?>
+            <?php if (!empty($info['address3'])): ?>
+            <p><?php echo $info['address3']?></p>
+            <?php endif; ?>
+            <?php if (!empty($info['country'])): ?>
+            <p><?php echo $info['country']; ?></p>
+            <?php endif; ?>
+        </td>
+                <?php $name = !empty($address['AI_Name']) ? $address['AI_Name'] : $data['GP_FirstName'] . ' ' . $data['GP_LastName']; ?>
+        <td class="half"><p><?php echo $name; ?></p>
+            <p><?php echo $address['AI_FirstAddress']; ?></p>
+            <?php if (!empty($address['AI_SecondAddress'])): ?>
+            <p><?php echo $address['AI_SecondAddress']; ?></p>
+            <?php endif; ?>
+            <p><?php echo $address['A_CityTextValue']; ?>, <?php echo $address['state']; ?>&nbsp;&nbsp;<?php echo $address['A_ZipCode']; ?></p>
+            <?php if (!empty($address['country'])): ?>
+            <p><?php echo $address['country']; ?></p>
+            <?php endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td class="half"></td>
+        <td class="half"></td>
+    </tr>
+    <tr class="bgColor" width="">
+        <!--<td class="forceCenter"></td>-->
+        <td class="half borderL" align=""><?php echo $this->getCibleText('donation_receipt_dateDonation'); ?></td>
+        <td class="half borderR"><?php echo $data['dateDon'] ?></td>
+    </tr>
+    <tr class="bgColor">
+        <!--<td class="forceCenter"></td>-->
+        <td class="half borderL" align=""><?php echo $this->getCibleText('donation_receipt_amount'); ?></td>
+        <td class="half borderR" align=""><span style="font-size: 12px;"><?php echo str_repeat('&nbsp;<br/>', 1); ?></span>
+            <?php echo Zend_Locale_Format::toNumber($data['DO_Amount']); ?>&nbsp;$</td>
+    </tr>
+    <tr class="bgColor">
+        <!--<td class="forceCenter"></td>-->
+        <td class="half borderL" align=""><?php echo $this->getCibleText('donation_receipt_dateIssued'); ?></td>
+        <td class="half borderR" align=""><?php echo $data['dateDon']; ?></td>
+    </tr>
+    <tr class="bgColor">
+        <!--<td class="forceCenter"></td>-->
+        <td class="half borderL" align=""><?php echo $this->getCibleText('donation_receipt_loacationIssued'); ?></td>
+        <td class="half borderR" align=""><?php echo $info['address3']; ?></td>
+    </tr>
+    <tr>
+        <!--<td class="forceCenter"></td>-->
+        <td colspan="2" align=""><?php echo $this->getCibleText('donation_receipt_CRA'); ?>
+            <?php echo $this->getCibleText('donation_receipt_CRA_link'); ?>
+        </td>
+    </tr>
+</table>

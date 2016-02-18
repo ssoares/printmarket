@@ -1,0 +1,102 @@
+<section class='news homepagelist module block'>
+    <?php
+    echo $this->showBlockTitle('h2', array('class' => 'news-title'));
+
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+    if ($this->news) :
+        $count = 1;
+        ?>
+        <div class="news-article-list">
+            <?php
+            foreach ($this->news as $news) :
+                $date_string_url = Cible_FunctionsGeneral::dateToString($news['ND_Date'], Cible_FunctionsGeneral::DATE_SQL, '-');
+                $date_string = Cible_FunctionsGeneral::dateToString($news['ND_Date'], Cible_FunctionsGeneral::DATE_LONG, '.');
+                $href = $this->baseUrl() . $this->details_page . "/" ;
+                $href .= $date_string_url . "/" . $news['NI_ValUrl'];
+                ?>
+                <article class="news-article">
+                <?php if ($this->params['6']): ?>
+                    <?php
+                    if (!empty($news['NI_ImageSrc'])) {
+                        $normal = $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'medium', array('class' => 'news-article-image-image img-responsive'));
+                        $large = $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'original', array(
+                            'getSource' => true,
+                        ));
+                        echo $this->link($large, $normal, array('class' => 'news-article-image-link prettyPhoto'));
+                    }
+                    ?>
+                <?php endif; ?>
+                    <header class='news-article-header content'>
+                        <h1 class="news-article-title">
+                            <?php echo $news['NI_Title']; ?>
+                        </h1>
+                        <?php if ($this->params['5']): ?>
+                            <div class="news-article-date date">
+                                <?php echo $date_string; ?>
+                            </div>
+                        <?php endif; ?>
+                    </header>
+                    <div class="news-article-content content">
+                        <?php
+                        if ($this->params['3'] && !empty($news['NI_Brief'])) {
+                            // Show brief text
+                            $text = Cible_FunctionsGeneral::html2text($news['NI_Brief']);
+                            $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                        } else {
+                            // If not, show long text
+                            $text = Cible_FunctionsGeneral::html2text($news['NI_Text']);
+                            $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                        }
+                        ?>
+                        <p class="news-article-brief">
+                            <?php // echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text')));  ?>
+                            <?php echo $text; ?>
+                        </p>
+                        <div class="news-article-navigation">
+                            <?php
+                            echo $this->link(
+                                    $href, $this->getClientText('see_details_news_text'), array(
+                                'title' => $this->getClientText('see_details_news_text'),
+                                'class' => 'link-button news-article-link-button'
+                                    )
+                            );
+                            ?>
+                        </div>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            <span class='news-home-navigation'>
+                <?php
+                echo $this->link(
+                     $this->listall_page, $this->getClientText('see_all_news_text'),
+                    array(
+                    'class' => 'link-button news-link-button',
+                    'title' => $this->getClientText('see_all_news_text')
+                        )
+                );
+                ?>
+            </span>
+        </div>
+    <?php else: ?>
+        <div class="news-no-article">
+            <?php if ($this->otherData): ?>
+                <?php $options = array('type' => 'page', 'message' => $this->getClientText('empty_data_disclaimer')); ?>
+                <p><?php echo $this->languageSwitcher($options); ?></p>
+            <?php else: ?>
+                <p><?php echo $this->getCibleText('news_no_news') ?></p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php $this->placeholder('footerScript')->captureStart(); ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function() {
+            $('article.news-article').click(function() {
+                window.location.href = $(this).find('a').attr('href');
+            });
+        });
+        //]]>
+    </script>
+    <?php $this->placeholder('footerScript')->captureEnd(); ?>
+</section>

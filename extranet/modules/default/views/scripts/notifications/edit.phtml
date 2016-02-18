@@ -1,0 +1,19 @@
+<?php
+
+if (!empty($this->category))
+    $headerText = str_replace('##CATEGORY##', $this->category, $this->getCibleText('header_edit_'.$this->cleaction.'_text'));
+else
+    $headerText = $this->getCibleText('header_edit_'.$this->cleaction.'_text');
+
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $headerText,
+    'pageDescription' => $this->getCibleText('header_edit_'.$this->cleaction.'_description'),
+    'breadcrumb' => ''
+));
+;
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>        
+    </div>                    
+</div>

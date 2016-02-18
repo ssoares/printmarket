@@ -1,0 +1,35 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+'pageTitle' => $this->getCibleText('header_quote_request_delete_text'),
+'pageDescription' => $this->getCibleText('header_quote_request_delete_description'),
+'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php
+    if ($this->quoteDetails):
+?> 
+        <p><?php echo str_replace(
+                '##QUOTEREQUESTID##',
+                $this->params['ID'],
+                $this->getClientText('quote_requests_delete_confirmation_message')) ?>
+        </p>
+         <form action="" method="post">
+            <div>
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+<?php
+    else:
+?>      <p>Aucun enregistrement pour cet ID.</p>
+        <a href="<?php echo ($this->return); ?>">Retour</a>
+
+<?php
+    endif;
+?>
+        
+    </div>
+</div>

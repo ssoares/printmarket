@@ -1,0 +1,34 @@
+.pagination {
+    text-align:center;
+    white-space:nowrap;
+    &.pagination-first {
+        .pagination-link {
+            visibility:hidden;
+            & ~ .pagination-link {
+                visibility:visible;
+            } 
+        }
+    }
+    &.pagination-last {
+        .pagination-link {
+            visibility:visible;
+            & ~ .pagination-link {
+                visibility:hidden;
+            } 
+        }
+    }
+}
+.pagination-number {
+    .responsive-font((@font-size-base + 9) * @mobile-divider-text);
+    display:inline-block;
+    vertical-align:middle;
+    line-height:50px * @mobile-divider-text;
+    margin:0 12px * @mobile-divider-text;
+    color:@brand-primary;
+    .font-weight('light', 'sans-serif');
+    @media @mq-small-mobile {
+        .responsive-font((@font-size-base + 9) * @mobile-divider);
+        line-height:50px * @mobile-divider;
+        margin:0 12px * @mobile-divider;
+    }
+}

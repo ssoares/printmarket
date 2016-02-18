@@ -1,0 +1,18 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_administrator_text'),
+    'pageDescription' => $this->getCibleText('header_edit_administrator_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>
+</div>
+
+<?php
+    //echo $this->action('associate', 'administrator', 'default', array('administratorID' => $this->administratorID));
+?>
+<?php echo $this->partial('partials/jsManageDefaultSiteList.phtml'); ?>

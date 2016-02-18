@@ -1,0 +1,205 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_newsletter_statistic_title'),
+    'pageDescription' => $this->getCibleText('header_newsletter_statistic_description'),
+    'breadcrumb' => ''
+));
+$total = $this->data['details']['in_queue'];
+?>
+
+<div id="default_form">
+    <?php if (!$this->noData): ?>
+    <fieldset id="summary" class="statFieldset">
+        <legend><?php echo $this->data['details']['name']; ?></legend>
+        <?php
+        $options['replace'] = array(
+            '##CREATEDATE##' => Cible_FunctionsGeneral::dateToString($this->data['details']['created_on']),
+            '##STARTDATE##' => Cible_FunctionsGeneral::dateToString($this->data['details']['scheduled_on']),
+            '##NBRECIPIENTS##' => Zend_Locale_Format::toNumber($total),
+        );
+        ?>
+        <h2><?php echo $this->getCibleText('newsletter_stats_dates_recipients',
+            null, $options); ?></h2>
+        <div id="summaryContainer" class="">
+            <div>
+                <p>
+                    <?php
+                    $opt['replace'] = array(
+                        '##NBOPENED##' => Zend_Locale_Format::toNumber($this->data['opened']['unique']),
+                        '##RATIO##' => round($this->data['opened']['unique'] * 100 / $total,
+                            2)
+                    );
+                    echo $this->getCibleText('newsletter_summary_opened', null,
+                        $opt);
+                    ?>
+                </p>
+                <p>
+                    <?php
+                    $opt['replace'] = array(
+                        '##NBCLICK##' => Zend_Locale_Format::toNumber($this->data['clickthru']['unique']),
+                        '##RATIO##' => round($this->data['clickthru']['unique'] * 100 / $this->data['opened']['unique'],
+                            2)
+                    );
+                    echo $this->getCibleText('newsletter_summary_clickthru',
+                        null, $opt);
+                    ?>
+                </p>
+                <p>
+                    <?php
+                    $opt['replace'] = array(
+                        '##TOTALBOUNCE##' => Zend_Locale_Format::toNumber($this->data['bounce']['unique']),
+                        '##TOTALPERM##' => Zend_Locale_Format::toNumber($this->data['bounce_hb']['unique']),
+                        '##RATIO##' => round($this->data['bounce']['unique'] * 100 / $total,
+                            2)
+                    );
+                    echo $this->getCibleText('newsletter_summary_bounce', null,
+                        $opt);
+                    ?>
+                </p>
+                <p>
+<?php
+                $opt['replace'] = array(
+    '##TOTSPAM##' => Zend_Locale_Format::toNumber($this->data['spam']['unique']),
+    '##RATIO##' => round($this->data['spam']['unique'] * 100 / $total, 2)
+                    );
+                echo $this->getCibleText('newsletter_summary_spam', null, $opt);
+                ?>
+                </p>
+                <p>
+<?php
+                $opt['replace'] = array(
+    '##TOTUNSUB##' => Zend_Locale_Format::toNumber($this->data['unsubscribe']),
+    '##RATIO##' => round($this->data['unsubscribe'] * 100 / $total, 2)
+                    );
+                echo $this->getCibleText('newsletter_summary_unsubscribe', null, $opt);
+                ?>
+                </p>
+            </div>
+            <div style="padding-top: 10px;">
+                <table class="full-width">
+                    <thead>
+                    <th><?php echo $this->getCibleText('newsletter_summary_link'); ?></th>
+                    <th class="center"><?php echo $this->actionLabels['clickthru'][0]; ?></th>
+                    <th><?php echo $this->getCibleText('newsletter_summary_rate'); ?></th>
+                    </thead>
+                    <tbody>
+                        <?php foreach($this->linksInfo as $id => $link): ?>
+    <?php $rateLink = round($link['unique_rate'], 2); ?>
+                            <tr class="borders <?php echo $id % 2 == 0 ? 'row_list_1' : 'row_list_0'; ?>">
+                                <td style="width: 75%"><?php echo $link['link_to']; ?></td>
+                                <td style="width: 15%" class="center"><strong><?php echo $link['unique']; ?></strong></td>
+                                <td style="width: 15%"><strong><?php echo $rateLink; ?></strong>&nbsp;%</td>
+                            </tr>
+<?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </fieldset>
+    <fieldset id="reports" class="statFieldset">
+        <legend><?php echo $this->getCibleText('newsletter_statistic_reports_label'); ?></legend>
+        <div id="filters" class="container">
+            <table id="filtersTable">
+                <tbody>
+                    <tr>
+                        <td class="left">
+                            <div class="container_control-panel-part">
+                            <p id="releasesFilter">
+                                <span class=""><?php echo $this->getCibleText('newsletter_statistic_releases_label'); ?></span>
+                                <?php
+//                                $this->data['newsletters'][0] = $this->getCibleText('newsletter_statistic_allreleases_label');
+                                echo $this->formSelect('releases',
+                                    $this->releaseId, array(),
+                                    $this->data['newsletters']);
+                                ?>
+                            </p>
+                            </div>
+                        </td>
+                        <td class="middle">
+                            <div class="container_control-panel-part">
+                            <p class="mainLabel">
+                            <?php echo $this->getCibleText('newsletter_statistic_datefilter_label'); ?>
+                            </p>
+
+                            <label for="startDate"><?php echo $this->getCibleText('newsletter_statistic_startdate_label'); ?> </label>
+                            <?php
+                            echo $this->datePicker(
+                                "startDate",
+                                Cible_FunctionsGeneral::dateToString($this->data['details']['scheduled_on'],
+                                    Cible_FunctionsGeneral::DATE_NUM, '-'),
+                                array(
+                                'defaultDate' => '+7',
+//                                    'minDate' => '+7',
+                                'dateFormat' => 'dd-mm-yy'
+                                )
+                            );
+                            ?>
+                            <br />
+
+                            <label for="startDate"><?php echo $this->getCibleText('newsletter_statistic_enddate_label'); ?></label>
+                            <?php
+                            echo $this->datePicker(
+                                "endDate",                                 '',
+                                array(
+//                                    'defaultDate' => '+14',
+//                                    'minDate' => '+7',
+                                'dateFormat' => 'dd-mm-yy'
+                                )
+                            );
+                            ?>
+                            <a id="dateFilter" href="#" class="button">Filtrer</a>
+                            <a id="clearDate" href="#" class="button">Annuler</a>
+                            </div>
+                        </td>
+                        <td class="right">
+                            <div class="container_control-panel-part">
+                            <p><?php echo $this->getCibleText('form_paginator_filters_label'); ?></p>
+<?php foreach($this->filters as $action => $value): ?>
+
+                                <p style="display:none;" class="tab-filters <?php echo 'tab-' . $action . 'Filter'; ?>">
+            <?php echo $this->formLabel($action . 'Filters',
+                $this->actionLabels[$action][0]); ?><br />
+            <?php echo $this->formSelect($action . 'Filters',
+                0, array(), $value); ?>
+        <?php endforeach; ?>
+                            </p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        $path = $this->baseUrl() . '/' . $this->params['module'] . '/' . $this->params['controller'] . '/ajax';
+        $path .= '/releaseId/' . $this->releaseId;
+        foreach($this->actionLabels as $action => $value)
+        {
+            if(is_array($value))
+            {
+                $title = $value[0];
+                unset($value[0]);
+            }
+            else
+            {
+                $title = $value;
+            }
+            $this->tabPane("tabContainer", $this->templates[$action],
+                array('title' => $title, 'id' => 'tab-' . $action, 'contentUrl' => $path . '/report/' . $action));
+        }
+
+        echo $this->tabContainer(
+            'tabContainer',                 array('selected' => 0),
+            array('class' => 'start', 'width' => '300')
+        );
+        ?>
+    </fieldset>
+<?php else: ?>
+    <br /> <?php echo $this->getCibleText('newsletter_no_newsletter'); ?>
+<?php endif; ?>
+</div>
+<input type="hidden" value="<?php echo $this->url(array('releaseId' => null)); ?>" id="url"/>
+<div style="z-index: 100000; display: none; height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.2); color: rgb(153, 153, 153); line-height: 50px; text-align: center; position: absolute; top: 0; left: 0;" id="fadebg">
+    <div id="loading" style="display: none; position: absolute; background-color: #fff; width: 150px; height: 50px; text-align: center; border: 5px solid #777; line-height: 50px;"><?php echo $this->image($this->locateFile('loading.gif'), array('style' => 'vertical-align:middle;')); ?></div>
+</div>
+<?php echo $this->partial('partials/jsStatistic.phtml', array('view' => $this)); ?>

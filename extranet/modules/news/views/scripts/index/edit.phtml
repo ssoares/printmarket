@@ -1,0 +1,140 @@
+<script>
+    $(document).ready(function() {
+        $("#ImageSrc_preview").load(function(){
+            var imageUrl = $("#imageUrl").val();
+            if($(this).attr('src') != imageUrl){
+                $("#isNewImage").val('true');
+            }
+        });
+        $.ajaxSetup ({
+            // Disable caching of AJAX responses
+            cache: false
+        });
+    });
+</script>
+<input type="hidden" id="imageUrl" value="<?php echo($this->imageUrl) ?>"/>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_news_text'),
+    'pageDescription' => $this->getCibleText('header_edit_news_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>
+</div>
+<div id="boxes"></div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(window).load(function () {
+            $('table#TD_DraftText_tbl').height(600);
+            $('td.mceIframeContainer').height(600);
+            $('td.mceIframeContainer').find('iframe').height(600);
+        });
+    var module = '<?php echo $this->current_module; ?>';
+    var showCrop = '<?php echo $this->showCrop; ?>';
+    var imgField = '#ImageSrc';
+    if(showCrop == 1){
+        var splitST = $(imgField).val();
+        if(splitST.length > 0){
+           $('.trigger_crop').show();
+        }
+        $(imgField+ '_preview').load(function(){
+            var splitST = $(this).val();
+            if(splitST.length > 0){
+               $('.trigger_crop').show();
+            }else{
+                $('.trigger_crop').hide();
+            }
+        });
+
+        $('.trigger_crop').click(function(e){
+            var imageScr = $(imgField).val();
+            var ImageSrc_original = $(imgField + '_original').val();
+
+            if(imageScr!=""){
+                var dialogJ = $('#boxes');
+                if(ImageSrc_original!=""){
+                    var pathYN = '/' + module + '/index/cropeditimage/new/Y/newsID/';
+                    var myArray = ImageSrc_original.split('/');
+                    imageScr = myArray[myArray.length-1];
+                }else{
+                    var pathYN = '/' + module + '/index/cropeditimage/new/N/newsID/';
+                    var myArray = imageScr.split('/');
+                    imageScr = myArray[myArray.length-1];
+                }
+
+                $('#cropImage').val(imageScr);
+                $.get('<?php echo $this->baseUrl() ?>' + pathYN + <?php echo $this->newsID; ?> +'/image/' + imageScr,{},function(html){
+                    var winW = 960;
+                    if ($(window).width() < 960){
+                        winW = $(window).width() - 60;
+                    }
+                    var winH = $(window).height() - 60;
+                    if (winH > 750){
+                        winH = 750;
+                    }
+                    dialogJ.html('');
+                    dialogJ.append(html);
+                    dialogJ.dialog({
+                        'modal':true,
+                        width:winW,
+                        height:winH,
+                        buttons:{
+                            '<?php echo $this->getCibleText('button_cancel'); ?>':function(){$(this).dialog("close");
+                            $('.imgareaselect-outer').css('visibility','hidden');
+                                    $('.imgareaselect-selection').parent().css('visibility','hidden');
+                                },
+                            '<?php echo $this->getCibleText('crop'); ?>':function(){
+                                $.post(
+                                '<?php echo $this->baseUrl() ?>/' + module + '/index/cropimage/',
+                                {
+                                    newsID:'<?php echo $this->newsID; ?>',
+                                    image: imageScr,
+                                    ImageSrc: $('form#imageCropForm input#ImageSrc').attr('value')  ,
+                                    ImageDestination: $('form#imageCropForm input#ImageDestination').attr('value'),
+                                    x1: $('form#imageCropForm input#x1').attr('value'),
+                                    x2: $('form#imageCropForm input#x2').attr('value'),
+                                    y1: $('form#imageCropForm input#y1').attr('value'),
+                                    y2: $('form#imageCropForm input#y2').attr('value'),
+                                    w: $('form#imageCropForm input#w').attr('value'),
+                                    h: $('form#imageCropForm input#h').attr('value'),
+                                    rh: $('form#imageCropForm input#rh').attr('value'),
+                                    rw: $('form#imageCropForm input#rw').attr('value'),
+                                    maxWShow: $('form#imageCropForm input#maxWShow').attr('value'),
+                                    maxHShow: $('form#imageCropForm input#maxHShow').attr('value'),
+                                    maxWPreShow: $('form#imageCropForm input#maxWPreShow').attr('value'),
+                                    maxHPreShow: $('form#imageCropForm input#maxHPreShow').attr('value'),
+                                    realHShow: $('form#imageCropForm input#realHShow').attr('value'),
+                                    realWShow: $('form#imageCropForm input#realWShow').attr('value'),
+                                    sizeXWanted: $('form#imageCropForm input#sizeXWanted').attr('value'),
+                                    sizeYWanted: $('form#imageCropForm input#sizeYWanted').attr('value'),
+                                    returnPage: $('form#imageCropForm input#returnPage').attr('value')
+                                },
+                                function(data){
+                                    dialogJ.dialog("close");
+                                    $('.imgareaselect-outer').css('visibility','hidden');
+                                    $('.imgareaselect-selection').parent().css('visibility','hidden');
+                                    if($('#ImageSrc_original').val()==""){
+                                        var prePath = "<?php echo $this->baseUrl() ?>/../data/images/' + module + '/<?php echo $this->newsID; ?>/";
+                                        $("#ImageSrc_preview").attr("src", prePath + "<?php echo $this->originalWidth; ?>x<?php echo $this->originalHeight; ?>_" + $(imgField).val() + "?timestamp=" + new Date().getTime());
+                                        //alert($('#ImageSrc_preview').attr("src"));
+                                    }
+                                    else{
+                                    $("#ImageSrc_preview").attr("src", $('#ImageSrc_original').val() + "?timestamp=" + new Date().getTime());
+                                    }
+                                    $("#ImageSrc_preview").attr("width","<?php echo $this->thumbWidth; ?>");
+                                    $("#ImageSrc_preview").attr("height","<?php echo $this->thumbHeight; ?>");
+                                })
+                            }
+                        }
+                    });
+                })
+            }
+        });
+    }
+    });
+</script>

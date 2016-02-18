@@ -1,0 +1,37 @@
+<style>
+    #container{
+    }
+    #currentRecipient-container{
+        float: left;
+        width:49%;
+    }
+    
+    #newRecipient-container{
+        float: right;
+        width:49%;
+    }
+    
+    #verticalSeparator{
+    }
+    
+    .container-title{
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        padding-bottom: 15px;    
+    }
+</style>
+
+<div id="container_middle_full">
+    <div id="container">
+        <div id="currentRecipient-container">
+            <div class="container-title">Destinataires actuels (<?php echo($this->memberCount); ?>)</div>
+            <div><?php echo($this->htmltable); ?></div>
+        </div>    
+        <div id="newRecipient-container">
+            <div class="container-title">Création de la liste d'envoi</div>
+            <div><a href="<?php echo($this->addRecipientLink); ?>">Ajouter un destinataire à l'infolettre</a></div>
+        </div>    
+        <div id="verticalSeparator"> | </div>
+    </div>
+</div>

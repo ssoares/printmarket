@@ -1,0 +1,13 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_list_events_text_default'),
+    'pageDescription' => $this->getCibleText('header_list_events_description_default'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->mylist->render()); ?>        
+    </div>                    
+</div>

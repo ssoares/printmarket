@@ -1,0 +1,403 @@
+<?php
+$_viewscript = $this->viewscript ? $this->viewscript : 'partials/generic.paginator.phtml';
+$fc = Zend_Controller_Front::getInstance();
+$_request = $fc->getRequest();
+
+$current_module = $_request->getModuleName();
+$current_controller = $_request->getControllerName();
+$current_action = $_request->getActionName();
+
+$params = array(
+    'module',
+    'controller',
+    'action',
+    'searchfor',
+    'order',
+    'order-direction',
+    'perPage',
+    'page'
+);
+$config = Zend_Registry::get('config');
+
+// Strip the filters
+foreach ($this->filters as $key => $filter)
+{
+    if (!in_array($key, $params))
+        array_push($params, $key);
+}
+
+$_params = '';
+foreach ($_request->getParams() as $key => $val)
+{
+    if (!in_array($key, $params))
+        $_params .= "$key/$val/";
+}
+
+$params = array(
+    'module',
+    'controller',
+    'action',
+    'perPage',
+    'page'
+);
+$_perPageLink = '';
+
+foreach ($_request->getParams() as $key => $val)
+{
+    if (!in_array($key, $params))
+        $_perPageLink .= "$key/$val/";
+}
+
+$defaultRoute = '';
+if ($current_module != 'default')
+    $defaultRoute .= "$current_module/";
+
+$defaultRoute .= "$current_controller/$current_action/";
+$list_all_link_url = $this->baseUrl();
+if (substr($list_all_link_url, -1) != '/')
+    $list_all_link_url .= '/';
+
+$per_page_link = addslashes($list_all_link_url . $defaultRoute . $_perPageLink);
+$list_all_link_url .= $defaultRoute . $_params;
+
+$search_url = $list_all_link_url;
+if ($_request->getParam('order'))
+    $search_url .= 'order/' . $_request->getParam('order') . '/';
+
+if ($_request->getParam('order-direction'))
+    $search_url .= 'order-direction/' . $_request->getParam('order-direction') . '/';
+?>
+
+<?php $this->jQuery()->onLoadcaptureStart(); ?>
+
+$('#search').keypress(function(e){
+if( e.which == 13 ){
+$('#filteredSearch').click();
+}
+});
+
+$('a.show-actions-dialog').click(function(e){
+
+var relativeParent = $(this).offsetParent();
+var offset = relativeParent.offset();
+
+var offsetLeft = e.pageX - offset.left;
+var offsetTop = e.pageY - offset.top;
+
+var dialog = $(this).next('div');
+
+if(dialog.css('display') == 'block'){
+dialog.slideUp('fast');
+} else {
+$('.searchable-list .actions-dialog').each(function(){
+var _current_dialog = $(this);
+
+if( _current_dialog.css('diplay') != 'none')
+_current_dialog.slideUp('fast');
+});
+
+dialog.css({
+left: offsetLeft - dialog.width() - 10,
+top: offsetTop
+});
+
+dialog.slideDown('fast');
+}
+
+});
+
+<?php $this->jQuery()->onLoadcaptureEnd(); ?>
+
+<?php $this->headScript()->captureStart(); ?>
+
+function search(){
+var filters_str = '';
+$('div.searchable-list:first').find('div.filters select').each(function(){
+var objFilter = $(this);
+
+if( objFilter){
+
+var filter_name = objFilter.attr('id');
+
+if(objFilter.val() != ''){
+filters_str += filter_name + '/' + objFilter.val() + '/';
+}
+}
+
+});
+if( $('#search').val() != '')
+filters_str += 'searchfor/' + $('#search').val();
+
+window.location.href = '<?php echo $search_url ?>' + filters_str;
+}
+
+function emptySearch(){
+$('#search').val('');
+$('#filteredSearch').click();
+
+}
+
+<?php $this->headScript()->captureEnd(); ?>
+
+<?php if ($this->disable_export_to_excel != 'true' || !empty($this->commands)): ?>
+
+    <div id="action_panel" class="list_action_panel">
+        <?php if ($this->disable_export_to_excel != "true"): ?>
+
+            <div class="exporter">
+                <a href="<?php echo $this->url(array('action' => $this->to_excel_action)) ?>" id="export_to_excel" class="export_to_excel"><?php echo $this->getCibleText('export_to_excel') ?></a>
+            </div>
+
+        <?php endif; ?>
+
+        <?php if ($this->commands): ?>
+
+            <ul class="buttons">
+
+                <?php foreach ($this->commands as $command): ?>
+
+                    <li><?php echo $command ?></li>
+
+                <?php endforeach; ?>
+
+            </ul>
+
+        <?php endif; ?>
+
+    </div>
+
+<?php endif; ?>
+
+<div class="searchable-list">
+
+    <table class="search-filters" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="search_count">
+                <div class="search_total_count">
+                    <p class="search_result_items_found"><?php echo str_replace('%ITEM_COUNT%', $this->paginator->getTotalItemCount(), $this->getCibleText('search_result_items_found')) ?></p>
+                    <p><a href="<?php echo $list_all_link_url ?>" class="search_list_all_items"><?php echo $this->getCibleText('search_list_all_items') ?></a></p>
+                </div>
+            </td>
+            <td class="search-filters">
+                <div class="filters">
+
+                    <div class="search-filters-label">
+                        <label for="search" style="font-size: 16px;"><?php echo $this->getCibleText('form_paginator_searchbox_label') ?></label>
+                    </div>
+
+                    <div class="search-filters-content">
+                        <div class="search">
+                            <a href="javascript:emptySearch();"><img src="<?php echo $this->baseUrl() ?>/icons/search_cancel.gif" ailgn="middle" border="0" /></a><?php echo $this->formText('search', $_request->getParam('searchfor')) ?>
+                        </div>
+                    </div>
+
+                    <?php if (count($this->filters) > 0): ?>
+                        <div class="search-filters-label">
+                            <label style="font-size: 16px;"><?php echo $this->getCibleText('form_paginator_filters_label') ?></label>
+                        </div>
+
+                        <div class="search-filters-content">
+                            <ul>
+
+                                <?php
+                                $counter = 0;
+                                foreach ($this->filters as $key => $filter):
+                                    ?>
+
+                                    <?php
+                                    $current_filter_val = $_request->getParam($key);
+
+                                    $default_value = !empty($current_filter_val) ? $current_filter_val : $filter['default_value'];
+                                    ?>
+                                    <li <?php echo ($counter == 1 ? "class=\"last_right\"" : "") ?>>
+                                        <?php echo $this->formSelect($key, $default_value, null, $filter['choices'], array('class' => 'filters')) ?>
+                                        <?php echo $this->formHidden("{$key}_associatedTo", "{$filter['associatedTo']}") ?>
+                                        <?php $current_view_url[$key] = null; ?>
+                                    </li>
+
+                                    <?php
+                                    $counter++;
+                                    if ($counter == 2)
+                                        $counter = 0;
+                                endforeach;
+                                ?>
+
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="search-buttons">
+
+                        <?php
+                        echo $this->formButton('filteredSearch', $this->getCibleText("button_search_label"), array(
+                            'onclick' => 'javascript:search()',
+                            'onmouseover' => "this.setAttribute('class', 'loginButtonOver')",
+                            'onmouseout' => "this.setAttribute('class', 'loginButton')",
+                            'class' => "loginButton"
+                        ))
+                        ?>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="items_per_page">
+        <?php echo $this->getCibleText("form_list_items_per_page_start") ?>&nbsp;&nbsp;
+        <?php
+        $perPageChoices = array(
+            '10' => '10',
+            '25' => '25',
+            '50' => '50',
+            'all' => $this->getCibleText('button_all')
+        );
+
+        echo $this->formSelect('perPageSelector', $_request->getParam('perPage'), array('class' => 'select_items_per_page', 'onchange' => "window.location.href='{$per_page_link}perPage/' + this.value;"), $perPageChoices)
+        ?>
+        &nbsp;&nbsp;<?php echo $this->getCibleText("form_list_items_per_page_end") ?>
+    </div>
+
+    <div id="form_panel" class="list">
+        <?php if (count($this->paginator)): ?>
+            <input type="checkbox" value="1" id="selectAll" name="selectAll">
+            <label class="optional label_after_checkbox" for="addToList"><?php echo $this->getCibleText('select_all'); ?></label> |
+            <?php echo $this->link('#', $this->getCibleText('edit_select_all'), array('id' => 'edit-list')); ?>
+            <br />
+            <br />
+            <?php $i = 1; ?>
+            <?php foreach ($this->paginator as $item): ?>
+                <?php $i == 0 ? $i = 1 : $i = 0; ?>
+                    <?php
+                    $id = $item[$this->field_list['idField']];
+                    $img = $item[$this->field_list['filenameField']];
+                    ?>
+                <div class="image" style="display: inline-block; padding: 5px;">
+                    <?php
+                    $id = $item[$this->field_list['idField']];
+                    $img = $item[$this->field_list['filenameField']];
+
+
+
+                    echo $this->moduleImage(
+                        $this->moduleName, $id, $img, $this->field_list['format'], array('class' => '')
+                    );
+                    ?>
+                    <ul style="list-style: none; margin: 0px; padding: 0px;">
+                        <?php $classLast = ''; ?>
+                        <?php $count = 1; ?>
+                        <?php foreach ($this->action_links as $key => $value): ?>
+                            <?php
+
+
+                            if ($count == count($this->action_links))
+                                $classLast = ' last';
+                            if (!empty($value['findReplace']))
+                            {
+                                if (isset($value['findReplace']['search']) && isset($value['findReplace']['replace']))
+                                {
+                                    $value['url'] = str_replace($value['findReplace']['search'], $item[$value['findReplace']['replace']], $value['url']);
+                                }
+                                elseif (count($value['findReplace']) > 0)
+                                {
+                                    foreach ($value['findReplace'] as $operation)
+                                        $value['url'] = str_replace($operation['search'], $item[$operation['replace']], $value['url']);
+                                }
+                            }
+                            ?>
+                            <li class="<?php echo $classLast; ?>">
+                                <?php if ($count == 1): ?>
+                                    <input type="hidden" id="urlPost" value="<?php echo $value['url'] ?>" />
+                                    <a id="listLink" href="<?php echo $value['url'] ?>" style="display: none;"></a>
+                                <?php endif; ?>
+                                <?php if ($key == 'edit-list'): ?>
+                                    <span class="label_after_checkbox action_<?php echo $key ?>">
+                                        <input type="checkbox" value="<?php echo $item['IL_ID'] ?>" id="addToList-<?php echo $item['IL_ID'] ?>" name="addToList">
+                                        <label class="optional label_after_checkbox" for="addToList"><?php echo $value['label'] ?></label>
+                                    </span>
+                                <?php else: ?>
+                                    <a class="action_<?php echo $key ?>" href="<?php echo $value['url'] ?>"><?php echo $value['label'] ?></a>
+                                <?php endif; ?>
+                            </li>
+                            <?php $count++; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endforeach; ?>
+            <?php
+        else:
+            echo $this->getCibleText('search_empty_recordset');
+        endif;
+        ?>
+    </div>
+    <?php echo $this->paginationControl($this->paginator, 'sliding', $_viewscript); ?>
+</div>
+<div id="alertListEmpty" style="display: none;" title="<?php echo $this->getCibleText('alert_list_empty_title') ?>">
+    <?php echo $this->getCibleText('alert_list_empty_text'); ?>
+</div>
+<?php
+$idsList = array();
+if (!empty($_SESSION['idsList']))
+    $idsList = $_SESSION['idsList'];
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        var checkboxSelect = $('input[id^=addToList-]');
+        $('#selectAll').click(function() {
+            var list = new Array();
+            var data = {'idsList': 0};
+            var url = $('#urlPost').val();
+            if ($(this).is(':checked'))
+            {
+                $('input[id^=addToList-]').attr('checked', 'checked');
+                checkboxSelect.each(function() {
+                    if ($(this).is(':checked'))
+                        list.push($(this).val());
+                });
+            }
+            else
+            {
+                $('input[id^=addToList-]').removeAttr('checked');
+            }
+
+            data.idsList = list;
+            $.post(url, data, function(success) {
+            }, 'json');
+        });
+
+        $('#edit-list').click(function(e) {
+            if ($(this).attr('href') === '#')
+                e.preventDefault();
+
+            var list = new Array();
+            var data = {'idsList': 0};
+            var url = $('#urlPost').val();
+            checkboxSelect.each(function() {
+                if ($(this).is(':checked'))
+                    list.push($(this).val());
+            });
+
+            data.idsList = list;
+            if (list.length > 0)
+                $.post(url, data, function(success) {
+                    if (success)
+                        $(location).attr('href', url + '/redirect/1');
+                }, 'json');
+            else
+                $('#alertListEmpty').dialog();
+
+        });
+
+        var nbChecked = 0;
+        var idsList = <?php echo json_encode($idsList); ?>;
+        $.each(idsList, function(i, id) {
+            $('input[id^=addToList-' + id + ']').attr('checked', 'checked');
+            nbChecked = i + 1;
+        });
+        var nbCheckbox = checkboxSelect.length;
+        if (nbCheckbox === nbChecked)
+            $('#selectAll').attr('checked', 'checked');
+
+    });
+    //]]>
+</script>

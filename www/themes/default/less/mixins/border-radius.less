@@ -1,0 +1,29 @@
+@import "behavior-pie.less";
+
+.border-radius(@radius) when (default()) {
+    border-radius:@radius;
+    .behavior-pie();
+    -pie-poll:true;
+    //zoom:1;
+}
+.border-radius-android-fix(@radius) when (default()) {
+    border-top-left-radius:@radius; 
+    border-top-right-radius:@radius; 
+    border-bottom-left-radius:@radius; 
+    border-bottom-right-radius:@radius; 
+}
+.border-radius(@radius) when(@radius = 0) {
+    border-radius:0;
+}
+.border-radius(@top-left, @top-right, @bottom-right, @bottom-left) when (default()) {
+    border-radius:@top-left @top-right @bottom-right @bottom-left;
+    .behavior-pie();
+    -pie-poll:true;
+    //zoom:1;
+}
+.border-radius-android-fix(@top-left, @top-right, @bottom-right, @bottom-left) when (default()) {
+    border-top-left-radius:@top-left; 
+    border-top-right-radius:@top-right; 
+    border-bottom-left-radius:@bottom-left; 
+    border-bottom-right-radius:@bottom-right; 
+}

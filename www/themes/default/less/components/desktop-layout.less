@@ -1,0 +1,190 @@
+///**
+//* style de layout ici
+//**/
+html, body {
+    height:100%;
+}
+.site-wrap {
+    overflow:hidden;
+    min-height: 100%;
+}
+.site-main {
+    position:relative;
+    background:@brand-white;
+    padding:42px 0 0 0;
+    @media @mq-phone {
+        border:0;
+    }
+}
+.site-container {
+    position: relative;
+}
+.site-main-home-zone-1 {
+    @padding-main-zone-1: 100% / 24 + 1%;
+    padding:0 @padding-main-zone-1 20px @padding-main-zone-1;
+    margin:0 auto;
+    border-bottom:1px solid @brand-grey;
+    @media @mq-phone {
+        padding-bottom:0;
+        margin:0 @grid-gutter-width / 2 20px @grid-gutter-width / 2;
+    }
+}
+.site-main-home-zone-2 {
+    margin:82px 0 60px 0;
+    @media @mq-phone {
+        margin:10px @grid-gutter-width / 2 10px @grid-gutter-width / 2;
+    }
+}
+.site-main-home-zone-3 {
+    margin:82px 0 60px 0;
+    @media @mq-phone {
+        margin:10px @grid-gutter-width / 2 10px @grid-gutter-width / 2;
+    }
+}
+.margin-top{
+    margin-top: 120px;
+    @media @mq-phone {
+        margin-top:-40px;
+    }
+}
+@media @print {
+    .site-menu-principal, .site-footer, .site-banner,.site-header-top,.site-main-aside {
+        display:none;
+    }
+    .site-logo, .site-baseline {
+        float:none;
+        display:block;
+        margin:0;
+        padding:0;
+        text-align:left;
+        width:auto;
+    }
+}
+///**
+//* style de la bannière
+//**/
+.site-banner {
+    margin:-42px -15px 40px -15px;
+    position:relative;
+    img {
+        min-width:100%;
+    }
+    .common &, .contact &  {
+        overflow:hidden;
+        position:relative;
+        background:@brand-primary url(../../images/backgrounds/site-banner-text-background.jpg) center;
+        margin-bottom:28px;
+        @media @print {
+            display:none;
+        }
+        img {
+            position: absolute;
+            top: -9999px;
+            bottom: -9999px;
+            left: -9999px;
+            right: -9999px;
+            margin: auto;
+        }
+        .site-banner-content {
+            padding:80px 0;
+            position:relative;
+            @media @mq-phone {
+                text-align:center;
+            }
+        }
+    }
+    .banners {
+        background:url('../../images/backgrounds/site-banner-banners-background.jpg') repeat-x;
+    }
+    .text {
+        .blue-zone;//défini plus bas
+    }
+}
+.site-header-banner {
+    @media @print {
+        .container;
+        padding-bottom:32px;
+        border-bottom:3px solid @brand-grey-light;
+    }
+}
+//***
+// Style de la zone grise de l'accueil
+//***//
+.site-home-grey {
+    background:@brand-grey;
+    .make-row();
+    padding:50px 0 35px 0;
+}
+.site-home-grey-container {
+    padding:0 @grid-gutter-width * 0.5;
+    @media @mq-phone {
+        padding:0 @grid-gutter-width * 1.5;
+    }
+}
+//***
+//Style de la zone du bas qui a un set d'ordis à droite
+//**/
+.site-home-bottom {
+    position:relative;
+    overflow:hidden;
+}
+.site-main-home-zone-6 {
+    position:relative;
+    margin:110px 0 80px 0;
+    &:after {//l'image en bas avec les ordis à droite
+             content:"";
+             .import-sprite('computer-set');
+             position:absolute;
+             left:100%;
+             top:0;
+             @media @mq-desktop {
+                 .import-sprite-only('computer-set-desktop');
+             }
+             @media @mq-tablet {
+                 display:none;
+             }
+             @media @mq-phone {
+                 display:none;
+             }
+    }
+}
+
+//**
+//Style de la zone d'aside dans les pages de contenu
+//**/
+.site-main-aside {
+    margin-top:48px - 10px;
+}
+//*
+// Zones dans le template common
+//*/
+.site-common-zone-1  {
+    margin-bottom:40px;
+}
+.site-common-zone-2 {
+}
+.site-common-zone-3 {
+    margin-top:70px;
+}
+//*
+//Zones dans le template contact
+//*/
+.site-contact-zone-3 {
+    height:480px;
+    position:relative;
+    border-top:14px solid @brand-primary;
+    iframe {
+        width: 100% !important;
+        height: 480px !important;
+    }
+}
+//*
+//Style générique pour les zones bleues
+//*/
+.blue-zone {
+    background:@brand-primary url(../../images/backgrounds/site-banner-text-background.jpg) center;
+    .make-row();
+    padding:74px 50px;
+    text-align:center;
+
+}

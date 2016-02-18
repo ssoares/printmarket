@@ -1,0 +1,77 @@
+<?php
+$url            = $this->baseUrl() . '/' . 'cart/index/ajax/';
+$config         = Zend_Registry::get('config');
+$module         = $this->current_module;
+$keywords       = $this->keywords;
+$languageSuffix = $this->languageSuffix;
+$langId         = Zend_Registry::get('languageID');
+?>
+<div class="new-list-products-container">
+    <?php
+    $noNewProduct = true;
+    $firstProduct = true;
+    foreach ($this->productsList as $product){  
+        if($product['P_New']=='1'){            
+            $noNewProduct = false;
+            if($firstProduct==false){
+            ?>
+                <div class="nouveauteCoeur">&nbsp;</div>
+            <?php
+            }
+            $firstProduct = false;
+        ?>
+            <div class="new-product-image">
+                <?php
+                $controllerName = $this->request->getParam('controller');               
+                echo $this->link(
+                        $this->BaseUrl() . '/'
+                       . Cible_FunctionsPages::getPageNameByID(25) . '/'
+                        //. $controllerName . '/'
+                        . $product['CCI_ValUrl'] . '/'
+                        . $product['SCI_ValUrl'] .'/'
+                        . $product['PI_ValUrl'],
+                        $this->moduleImage(
+                            'catalog',
+                            'products/' . $product['P_ID'],
+                            $product['P_Photo'],
+                            'thumb',
+                        array(
+                            'class'=>'',
+                            'alt'=>$product['PI_Name'],
+                            'useSize' => false,
+                            'prettyPhoto'=>array('size' => '')
+                            )
+                        )
+                     ); ?>
+            </div>
+            <div class="new-product-name">
+                <?php
+                    if (!empty($product['PI_Name']))
+                        echo $this->link(
+                        $this->BaseUrl() . '/'
+                       . Cible_FunctionsPages::getPageNameByID(25) . '/'
+                       // . $controllerName . '/'
+                        . $product['CCI_ValUrl'] . '/'
+                        . $product['SCI_ValUrl'] .'/'
+                        . $product['PI_ValUrl'],
+                        $product['PI_Name']
+                     );
+                    else
+                        echo '&nbsp;';
+                ?>
+            </div>                   
+        <?php
+        }
+    }
+    if($noNewProduct==true){
+    ?>
+        <div class="new-product-name">
+            <?php echo $this->getClientText('products_no_product') ?>
+        </div>       
+        <?php
+    } 
+    ?>
+</div>
+        
+            
+   

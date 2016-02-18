@@ -1,0 +1,9 @@
+<?php
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+        'pageTitle' => $this->getCibleText('header_import_newsletter_members'),
+        'pageDescription' => $this->getCibleText('header_import_newsletter_description'),
+        'breadcrumb' => ''
+    ));
+
+    echo $this->form;  
+?>

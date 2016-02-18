@@ -1,0 +1,28 @@
+//editor only
+#tinymce.mce-content-body { 
+}
+//back-end and front-end
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .front-end {
+    [class*="icon-"] {
+        &:after { 
+            .import-icon-base();
+            vertical-align:middle;
+        }
+    }
+    .foreach(@custom-content-icons, {
+        @name: e('icon-@{value}');
+        @class-name: e('@{value}');
+        .icon-@{class-name} {
+            .font-0();
+            &:after { 
+                .import-icon-content(@@name);
+            }
+        }
+    }); 
+}
+//back-end and content
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content {     
+    [class*="icon-"], .icon {
+        font-size:inherit;
+    }
+}

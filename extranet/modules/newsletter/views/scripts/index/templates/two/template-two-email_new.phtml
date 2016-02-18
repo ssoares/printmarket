@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+        <base href="<?php echo Zend_Registry::get('absolute_web_root'); ?>" />
+        <style type="text/css">
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+
+            }
+            table td a,
+            table td a:hover,
+            table td a:visited,
+            #container a,
+            #container a:hover,
+            #container a:visited{
+                color: #9DB54B;
+                text-decoration: underline;
+
+            }
+            table td p{
+                margin: 0;
+            }
+            table td p.artTitle{
+                margin-bottom: 5px;
+            }
+            ul li{
+                margin-left: 0px;
+
+            }
+            ul{
+                margin-top: 0;
+                padding-left: 1px;
+            }
+            ul li{
+                padding: 0px;
+            }
+
+            table{
+                font-family: arial;
+                font-size: 13px;
+            }
+
+        </style>
+    </head>
+    <?php
+    $date_string = $this->dateString;
+    $date_string_url = $this->parutionDate;
+    $titleParution = $this->newsletterTitle;
+    $NR_ModelID = $this->NR_ModelID;
+
+    $tplFirstZone = 'partials/articles/tplOneArticleFirst.phtml';
+    $tplZones = 'partials/articles/tplOneArticles.phtml';
+
+    $absolute_web_root = Zend_Registry::get('absolute_web_root');
+    $themeImgPath = $absolute_web_root . "/themes/default/images/common/";
+    $imgHeader = 'header.jpg';
+
+    if (isset($this->imageHeader))
+        $sourceHeader = $this->imageHeader;
+    else
+        $sourceHeader = $themeImgPath . "header-{$this->moduleId}-{$this->newsletterID}-{$this->memberId}.jpg";
+
+    $imageFleche = $themeImgPath . "linkReadMore.jpg";
+    $imgHeaderBottom = $themeImgPath . "roundBottom.jpg";
+    $btnPlus = $themeImgPath . "btnPlus.jpg";
+    $dotLineLargeShort = $themeImgPath . 'dotLineLargeShort.jpg';
+    $dotLineLargeLong = $themeImgPath . 'dotLineLargeLong.jpg';
+    $dotLineSmallShort = $themeImgPath . 'grayDottedLine.jpg';
+    $dotLineSmallLong = $themeImgPath . 'dotLineSmallLong.jpg';
+
+    $subscribeLink = $this->subscribeLink . '/uid/' . $this->memberId . '/newsletterID/' . $this->newsletterID;
+    $unsubscribeLink = $this->unsubscribeLink . '/uid/' . $this->memberId . '/newsletterID/' . $this->newsletterID;
+    $countA = $countB = 0;
+
+    foreach ($this->articles as $article)
+    {
+        if ($article['NA_ZoneID'] == 1)
+            $countA++;
+        if ($article['NA_ZoneID'] == 2)
+            $countB++;
+        $articles[$article['NA_ZoneID']][] = $article;
+    }
+    ?>
+    <body>
+        <!--    Links and intro-->
+        <table width="600">
+            <tr>
+                <td style="height:20px;">
+                    &nbsp;
+                    <p>
+                        <a href="<?php echo Zend_Registry::get('absolute_web_root') . '/' . $this->details_page_mobile . "/" . $date_string_url . "/" . $this->parutionValURL; ?>" target="_blank">
+                            <span style="">
+                                <span style="font-size: small;">
+                                    <span style="color: #86a30d;">
+                                        <?php echo($this->getCibleText('newsletter_see_mobile_version')); ?>
+                                    </span>
+                                </span>
+                            </span>
+                        </a>
+                    </p>
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+        <!--    Email content-->
+        <table cellpadding="0" cellspacing="0" width="600" style="font-size:13px;font-family:arial;color:#000000;">
+            <!--     header img-->
+
+            <tr>
+                <td colspan="3">
+                    <?php
+                    echo $this->intro;
+                    ?>
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <img src="<?php echo $sourceHeader ?>" alt="" border="0" width="600" height="113">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <?php
+                    foreach ($articles[6] as $article)
+                    {
+                        echo strip_tags($article['NA_Resume'], '<a><img>');
+                    }
+                    ?>
+                </td>
+
+            </tr>
+            <!--    Title and date-->
+            <tr>
+                <td height="47" style="background-color: #9DB54B;padding-left: 17px;padding-top: 11px;padding-bottom: 11px;"  colspan="3">
+                    <div style="font-family:arial;font-size:20px;color:#FFFFFF;">
+                        <?php echo $titleParution; ?>
+                    </div>
+                    <div style="font-family:Georgia;font-size:13px;color:#FFFFFF;">
+                        <?php //echo $date_string; ?>
+                    </div>
+                </td>
+            </tr>
+            <!--     Deco-->
+            <tr>
+                <td height="49" style="text-align: right;padding: 0"  colspan="3">
+                    <img src="<?php echo $imgHeaderBottom; ?>" />
+                </td>
+            </tr>
+            <tr>
+                <!--        Articles 1-->
+                <td style="padding-bottom:20px;padding-top:0px;" valign="top" colspan="3">
+                    <?php
+                    echo $this->partial(
+                        $tplFirstZone, array(
+                        'articles' => $articles1,
+                        'dotLineLargeShort' => $dotLineLargeShort,
+                        'dotLineLargeLong' => $dotLineLargeLong,
+                        'btnPlus' => $btnPlus,
+                        'newsletterID' => $this->newsletterID,
+                        )
+                    );
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <!--            articles 2 3-->
+                <td style="padding-bottom:20px;padding-top:12px;" valign="top" width="264">
+                    <?php
+                    echo $this->partial(
+                        $tplZones, array(
+                        'articles' => $articles2,
+                        'dotLineSmallShort' => $dotLineSmallShort,
+                        'dotLineSmallLong' => $dotLineSmallLong,
+                        'btnPlus' => $btnPlus,
+                        'newsletterID' => $this->newsletterID,
+                        )
+                    );
+                    ?>
+                </td>
+                <td width="15">&nbsp;</td>
+                <td width="264" valign="top" style="padding-bottom:20px;padding-top:12px;">
+                    <?php
+                    echo $this->partial(
+                        $tplZones, array(
+                        'articles' => $articles3,
+                        'dotLineSmallShort' => $dotLineSmallShort,
+                        'dotLineSmallLong' => $dotLineSmallLong,
+                        'btnPlus' => $btnPlus,
+                        'newsletterID' => $this->newsletterID,
+                        )
+                    );
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <!--            articles 4 5 -->
+                <td width="264" valign="top">
+                    <?php
+                    echo $this->partial(
+                        $tplZones, array(
+                        'articles' => $articles4,
+                        'dotLineSmallShort' => $dotLineSmallShort,
+                        'dotLineSmallLong' => $dotLineSmallLong,
+                        'btnPlus' => $btnPlus,
+                        'newsletterID' => $this->newsletterID,
+                        )
+                    );
+                    ?>
+                <td width="15">&nbsp;</td>
+                <td style="" width="264" valign="top">
+                    <?php
+                    echo $this->partial(
+                        $tplZones, array(
+                        'articles' => $articles5,
+                        'dotLineSmallShort' => $dotLineSmallShort,
+                        'dotLineSmallLong' => $dotLineSmallLong,
+                        'btnPlus' => $btnPlus,
+                        'newsletterID' => $this->newsletterID,
+                        )
+                    );
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-top:12px;padding-left:18px;background-color: #EBEFF3; text-transform: uppercase; padding-bottom: 12px; " colspan="3">
+                    <a style="text-decoration:none;color:#000000;font-size:11px;font-family: arial;font-weight: bold;" href="<?php echo Zend_Registry::get('absolute_web_root') . $subscribeLink; ?>">
+                        <?php echo($this->getCibleText('newsletter_button_subscribe', $this->languageRelease)); ?>
+                    </a>
+                    <span style="padding-left:25px;">&nbsp;</span>
+                    <a style="text-decoration:none;color:#000000;font-size:11px;font-family: arial;font-weight: bold" href="<?php echo Zend_Registry::get('absolute_web_root') . $unsubscribeLink; ?>">
+                        <?php echo($this->getCibleText('newsletter_button_unsubscribe', $this->languageRelease)); ?>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

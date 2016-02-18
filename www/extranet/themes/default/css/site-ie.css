@@ -1,0 +1,24 @@
+/* Version SVN: $Id: site-ie.css 722 2011-12-06 16:19:39Z freynolds $*/
+div.floatRight p.textzone{
+    right: 140px;
+}
+
+.option_label_2{
+    top:5px;
+    position: relative;
+}
+.option_label_3{
+    top: 5px;
+    position: relative;
+}
+
+.url_text_input{
+    top: -70px;
+    left: 150px;
+    position: relative;
+    width: 200px;
+}
+
+#topBanner_titre{
+    width: 140px;
+}

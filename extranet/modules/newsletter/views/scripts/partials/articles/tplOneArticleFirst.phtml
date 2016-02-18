@@ -1,0 +1,97 @@
+<?php
+$x = 1;
+// Liste des styles à composer
+$fontfamily='font-family:Arial,Helvetica,sans-serif;line-height:normal;';
+$fontsize='font-size:16px;';
+$colortext='color:#404040;';
+$colorlink='color:#888888;';
+$underline='text-decoration:underline;';
+$nounderline='text-decoration:none;';
+$colorTitre='color:#1E59CA;';
+$formatageTitre=$fontfamily.$colorTitre.'font-size:23px;font-weight:bold;text-align:center;';
+$formatageSlogan=$fontfamily.$colorTitre.'font-size:28px;font-weight:bold;text-align:center;';
+$attributsImage=array('border'=>'0','style'=>'display:block;');
+$spacer='font-size:1px;line-height:1px;-webkit-text-size-adjust:none;';
+
+foreach ($this->articles as $article):
+    if (!empty($article['NA_ImageSrc']))
+    {
+        $config = Zend_Registry::get('config')->toArray();
+        $mediumMaxHeight = $config['newsletter']['image']['medium']['maxHeight'];
+        $mediumMaxWidth = $config['newsletter']['image']['medium']['maxWidth'];
+        $imgPath = Zend_Registry::get('absolute_web_root') . $this->currentSite . "/data/images/newsletter/"
+            . $this->newsletterID.'/'.$article['NA_ID'].'/'
+            . $mediumMaxWidth . 'x' . $mediumMaxHeight . '_' . $article['NA_ImageSrc'];
+    }
+    $tmpSrc = Zend_Registry::get('absolute_web_root') . $this->currentSite . '/data/images/';
+    $padding = "";
+    if ($x > 1) $padding = 'style="margin-top:20px;"';
+    $articleLink = '';
+    if ($article['NA_TextLink'] == 1)
+        $articleLink = Zend_Registry::get('absolute_web_root') . $this->details_page . "/" . $this->dateStringUrl . "/" . $this->parutionValUrl . "/" . $article['NA_ValUrl'] . '-uid-' . $this->memberId;
+    elseif ($article['NA_TextLink'] == 2)
+        $articleLink = $article['NA_URL'];
+    ?>
+
+    <table border="0" cellpadding="0" cellspacing="0" width="615">
+            <?php if (!empty($article['NA_ImageSrc'])): ?>
+            <tr>
+                <td valign="top" style="text-align:center;">
+                    <?php $show = true; ?>
+                    <?php $img = $this->image($imgPath, array('style' => 'display:block;margin-left:auto;margin-right:auto;', 'alt' => $article['NA_ImageAlt'])); ?>
+                    <?php
+                    if (!empty($articleLink)):
+                        $link = $this->link($articleLink, $img);
+                        echo $link;
+                    else:
+                        echo $img;
+                    endif;
+                    ?>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <tr>
+                <td bgcolor="#1e59ca" style="background-color:#1e59ca;">
+                    <table cellpadding="0" cellspacing="0" border="0" width="615">
+                        <tr>
+                            <td style="<?php echo $spacer; ?>" colspan="3" height="35"></td>
+                        </tr>
+                        <tr>
+                            <td width="20"></td>
+                            <td style="<?php echo $fontfamily; ?>font-size:26px;color:#FFF;font-weight:bold;text-align:center;"><?php echo($article['NA_Title']); ?></td>
+                            <td width="20"></td>
+                        </tr>
+                        <tr>
+                            <td style="<?php echo $spacer; ?>" colspan="3" height="35"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr><td style="<?php echo $spacer; ?>" height="28"></td></tr>
+            <tr>
+                <td>
+                    <?php
+                    if ($article['NA_Resume']){
+                        $search = array('src="/data/images/', '##uid##');
+                        $replace = array('src="' . $tmpSrc, $this->memberId);
+                        echo str_replace($search, $replace, $article['NA_Resume']);
+                    }
+                    ?>
+                </td>
+            </tr>
+            <tr><td style="<?php echo $spacer; ?>" height="15"></td></tr>
+            <tr>
+                <td style="text-align:center;">
+                    <?php
+                    if (!empty($articleLink)):
+                        $imgLink = $this->image($this->locateFile('btn-ensavoirplus.gif', $this->repertoireLangueImages,'front'), array('direct' => true, 'alt' => $this->getClientText('see_details_news_text')));
+                        $link = $this->link($articleLink, $imgLink, array('style' => 'color:#fff;text-decoration:none;', 'title' => $this->getClientText('see_details_news_text')));
+                    ?>
+                    <?php echo $link; ?>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr><td style="<?php echo $spacer; ?>" height="20"></td></tr>
+    </table>
+    <?php $x++; ?>
+<?php endforeach; ?>

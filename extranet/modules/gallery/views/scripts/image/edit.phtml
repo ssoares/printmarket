@@ -1,0 +1,51 @@
+<script>
+    $(document).ready(function() {
+        $("#ImageSrc_preview").load(function(){
+            var imageUrl = $("#imageUrl").val();
+            if($(this).attr('src') != imageUrl){
+                $("#isNewImage").val('true');
+            }
+        });    
+    });
+</script>
+<input type="hidden" id="imageUrl" value="<?php echo($this->imageUrl) ?>"/>
+
+<?php
+    if( $this->isXmlHttpRequest ){
+
+        if($this->deleted){
+            if($this->success){
+?>              <div id="result">
+                    <span id="action" style="display: none">deleteImage</span>
+                    <span id="success" style="display: none">true</span>
+                    <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                    <span id="imageID" style="display: none"><?php echo $this->imageID ?></span>
+                </div>
+<?php       }
+            else{
+?>              <p>Cette image n'existe plus dans le système</p>
+                <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                    <div>
+                        <input type="submit" id="delete" name="delete" value="OK" />
+                    </div>
+                </form>
+<?php       }
+        }
+        elseif( $this->success ){
+?>          <div id="result">
+                <span id="action" style="display: none">editImage</span>
+                <span id="success" style="display: none">true</span>
+                <span id="imageID" style="display: none"><?php echo $this->imageID ?></span>
+                <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                <span id="imageTitle" style="display: none"><?php echo $this->imageTitle ?></span>
+                <span id="imageDescription" style="display: none"><?php echo $this->imageDescription ?></span>
+                <span id="thumbName" style="display: none"><?php echo $this->thumbName ?></span>
+                <span id="galleryID" style="display: none"><?php echo $this->galleryID ?></span>                
+            </div>
+<?php   }
+        else{
+?>          <div id="container_middle_full">
+                <?php  echo($this->form); ?>
+            </div>
+<?php   }
+    }

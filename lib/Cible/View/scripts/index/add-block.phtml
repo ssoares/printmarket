@@ -1,0 +1,67 @@
+<?php echo $this->headScript()->appendFile($this->locateFile('manageRefValues.js', null, 'back'));; ?>
+<?php echo $this->headLink()->appendStylesheet($this->locateFile('references.css'), 'all'); ?>
+<?php if($this->success): ?>
+      <div id="result" style="display: none">
+        <span id="action">add</span>
+        <span id="block_id"><?php echo $this->blockID ?></span>
+      </div>
+<?php else: ?>
+
+    <?php
+        if($this->isXmlHttpRequest)
+            $this->inlineScript()->captureStart();
+        else
+            $this->headScript()->captureStart();
+    ?>
+
+    $(function() {
+        $('#B_ZoneID').change(function(){
+            var link = '<?php echo $this->url(array('action'=>'list-positions')) ?>' + '/zoneID/' + this.value;
+            $.getJSON( link , function(data){
+                var total = data.length;
+
+                var position_select = $('#B_Position');
+                position_select.empty();
+
+                if( total == 0 )
+                    position_select.append("<option value='1'>Première position</option>");
+                else
+                {
+                    var i = 0;
+
+                    $.each(data, function(i, item){
+
+                        if( i == 0 ){
+
+                            position_select.append("<option value='1'>Première position</option>");
+                            position_select.append("<option value='" + parseInt( parseInt(item['B_Position']) + 1 ) + "'>"+item['BI_BlockTitle']+"</option>");
+
+                        } else {
+
+                            position_select.append("<option value='" + parseInt( parseInt(item['B_Position']) + 1 ) + "'>"+item['BI_BlockTitle']+"</option>");
+
+                        }
+
+                        i++;
+                    });
+                }
+
+            });
+        }).change();
+    });
+    <?php
+        if($this->isXmlHttpRequest)
+            $this->inlineScript()->captureEnd();
+        else
+            $this->headScript()->captureEnd();
+    ?>
+
+    <?php if($this->isXmlHttpRequest)
+            echo $this->inlineScript();
+    ?>
+    <?php
+        $page_title = str_replace('%BLOCK_TYPE%', $this->moduleName, $this->getCibleText('block_title_add_block'));
+
+        echo $this->form;
+    ?>
+<?php endif; ?>

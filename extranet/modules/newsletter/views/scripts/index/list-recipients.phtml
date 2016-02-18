@@ -1,0 +1,11 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_list_newsletter_recipient_text'),
+    'pageDescription' => $this->getCibleText('header_list_newsletter_recipient_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form_no_position">
+    <div id="form_panel"><?php $this->mylist->render(); ?></div>                    
+</div>

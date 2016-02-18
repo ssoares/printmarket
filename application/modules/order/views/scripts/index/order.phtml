@@ -1,0 +1,44 @@
+<div id="cart" class="block">
+    <?php echo $this->partial('partials/stepTopLine.phtml', 'cart', array('step' => $this->step)); ?>
+    <div id="explication-text">
+    <?php if($this->message): ?>
+        <div id="alertPayment" style="color:red; font-weight: bold;">
+            <?php echo $this->getClientText('card_payment_error_message') ?>
+        </div>
+    <?php endif;?>
+    </div>
+    <?php echo $this->form;?>
+    <?php echo $this->partial('partials/cartNavigationLinks.phtml', 'cart',
+                array(
+                    'urlBack'  => $this->urlBack,
+                    'nextStep' => $this->nextStep,
+                    'step'     => $this->step,
+                'customNext'=> 'customNext',
+                    'moreClass'=> 'stepTwoBottom'
+                    )
+                );
+    ?>
+</div>
+<?php echo $this->partial("partials/autocomplete.phtml");  ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(window).load(function(){
+        var testBtn = $("input[class^=subscribeButton]").length;
+        if( testBtn < 2 && $('div#qr-login form').length)
+        {
+            $("div.stepTwoBottom").addClass("bottom");
+        }
+
+        $('#paymentMeans').change(function(){
+            if($(this).val() == 'cod')
+                $(this).parent().append('<?php echo str_replace('##CODVAL##',sprintf('%.2f',$this->CODFees),$this->getClientText('alert_cod_fee_amount')); ?>');
+        });
+
+
+    });
+    if($('#alertPayment').length)
+        {
+            $('#alertPayment').delay('3000').fadeOut('slow');
+        }
+//]]>
+</script>

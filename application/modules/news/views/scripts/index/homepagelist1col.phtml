@@ -1,0 +1,94 @@
+<div class="block homeNews">
+<?php echo $this->showBlockTitle('h2'); ?>
+    <?php
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+    if ($this->news) :
+        $count = 1;
+        foreach ($this->news as $news) :
+            $date = new Zend_Date($news['ND_Date'], null, $langSuffix);
+            $date_string_url = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SQL, '-');
+            $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_NUM, '.');
+            $href = $this->baseUrl() . '/' . $this->details_page . "/" . $date_string_url . "/" . $news['NI_ValUrl'];
+            ?>
+            <div class="news news1col">
+                <?php  if (!empty($news['NI_ImageSrc'])) : ?>
+                        <?php
+                        echo $this->link($href,
+                            $this->newsImage(
+                                $news['ND_ID'],
+                                $news['NI_ImageSrc'],
+                                'thumb',
+                                array(
+                                    'class' => 'photo',
+                                    'border' => '0',
+                                    'max-width' => '283px'
+                                )
+                           )
+                        );
+                        ?>
+                <?php  endif; ?>
+                <div class="text">
+                    <h3 class="news_title">
+                        <?php // echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text'))); ?>
+                        <?php echo $news['NI_Title']; ?>
+                    </h3>
+                    <?php if ($this->params['5']): ?>
+                        <p class="date"><?php echo $date_string; ?></p>
+                    <?php endif; ?>
+                    <?php
+                    if ($this->params['3'] && !empty($news['NI_Brief']))
+                    {
+                        // Show brief text
+                        $text = Cible_FunctionsGeneral::html2text($news['NI_Brief']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 150);
+                    }
+                    else
+                    {
+                        // If not, show long text
+                        $text = Cible_FunctionsGeneral::html2text($news['NI_Text']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 150);
+                    }
+                    ?>
+                    <p class="briefText">
+                        <?php // echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text'))); ?>
+                        <?php echo $text; ?>
+                    </p>
+                    <span class="suite_arrow">
+                        <?php echo $this->link($href, $this->getClientText('see_details_news_text'), array('title' => $this->getClientText('see_details_news_text'))); ?>
+                    </span>
+                </div>
+            </div>
+            <?php $count++; ?>
+        <?php endforeach; ?>
+        <span class="suite_arrow viewMore column1">
+            <?php
+            echo $this->link(
+                $this->baseUrl() . '/' . $this->listall_page,
+                $this->getClientText('see_all_news_text'),
+                array(
+                    'class' => 'news_view_all',
+                    'title' => $this->getClientText('see_all_news_text')
+                    )
+                );
+            ?>
+        </span>
+    <?php else: ?>
+        <div class="news_brief_home_page">
+        <?php if ($this->otherData): ?>
+            <?php $options = array('type' => 'page', 'message' =>$this->getClientText('empty_data_disclaimer')); ?>
+            <p><?php echo $this->languageSwitcher($options); ?></p>
+        <?php else: ?>
+            <p><?php echo $this->getCibleText('news_no_news') ?></p>
+        <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        $('.news').click(function(){
+            window.location.href = $(this).find('a').attr('href');
+        });
+    });
+    //]]>
+</script>

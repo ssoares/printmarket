@@ -1,0 +1,30 @@
+<?php
+$interval = $this->interval;
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_import_catalog_text_default'),
+    'pageDescription' => str_replace(
+            '%INTERVAL%',
+            $interval,
+            $this->getCibleText('header_import_catalog_description_default')
+        ),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <p>
+            <?php echo $this->getCibleText('import_total_file_rapport') . $this->nbFilesTotal; ?>
+        </p>
+        <p>
+            <?php if (isset($this->statLines)): ?>
+            <?php foreach ($this->statLines as $fileName => $data):?>
+        <p> <strong><?php echo $this->getCibleText('list_column_FI_ID') .": " . $fileName; ?></strong> </p>
+            <?php echo $this->getCibleText('import_total_lines_updated') . $data['updated']; ?>
+        <br />
+            <?php echo $this->getCibleText('import_total_lines_inserted') . $data['inserted']; ?>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,120 @@
+<dt>
+    <?= $this->formLabel($this->element->getName(), $this->element->getLabel()); ?>
+</dt>
+
+<?php
+    $values = $this->element->getValue();
+
+
+    $datePickers = array();
+?>
+
+    <dd id="<?php echo $this->element->getName() ?>_placeholder">
+    <ul id="<?php echo $this->element->getName() ?>_ranges" class="dateRangePicker">
+<?php
+
+    if( !empty($values) ):
+
+        $values = is_array($values) ? $values : array($values);
+    ?>
+
+        <?php foreach( $values as $_key => $_value ): ?>
+
+        <?php $_index = $_key; ?>
+
+            <li id="<?php echo $this->element->getName() . '_' . $_index ?>">
+
+            <?php
+            $earlier_error_class = '';
+            array_push($datePickers, $this->element->getName() . '_' . $_index .'_from');
+            array_push($datePickers, $this->element->getName() . '_' . $_index .'_to');
+
+            $_value['to'] = empty( $_value['to'] ) && Zend_Date::isDate($_value['from'], 'YY-mm-dd') ? $_value['from'] : $_value['to'];
+
+            if( preg_match('/^\d{4}-\d{2}-\d{2}$/', $_value['from']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_value['to']) ){
+
+                $from_date = new Zend_Date($_value['from'], 'YY-mm-dd');
+                $to_date = new Zend_Date($_value['to'], 'YY-mm-dd');
+
+                $earlier_error_class = $to_date->isEarlier($from_date) ? ' invalid_earlier_end_date' : '';
+
+            }
+
+            $from_class = !Zend_Date::isDate($_value['from'], 'YY-mm-dd')  ? ' invalid_daterange_date' : '';
+            $to_class = !Zend_Date::isDate($_value['to'], 'YY-mm-dd') ? ' invalid_daterange_date' : '';
+
+            ?>
+
+            <?php echo $this->datePicker(
+                $this->element->getName() . "[$_index][from]",
+                $_value['from'],
+                array('defaultDate' => $_value['from']),
+                array(
+                    'id'=> $this->element->getName() . '_' . $_index .'_from',
+                    'class' => $this->element->getName() . '_from ' . $from_class
+                )
+            ); ?>
+
+            @
+
+            <?php echo $this->datePicker(
+                $this->element->getName() . "[$_index][to]",
+                $_value['to'],
+                array('defaultDate' => $_value['to']),
+                array(
+                    'id'=> $this->element->getName() . '_' . $_index .'_to',
+                    'class' => $this->element->getName() . '_to ' . $to_class . $earlier_error_class
+                )
+            ); ?>
+
+            &nbsp;<img class="action_icon" alt="Supprimer" src="<?php echo $this->baseUrl() ?>/icons/button_cancel_16x16.png" onclick="removeRange('<?php echo $this->element->getName() . '_' . $_index ?>');" align="absMiddle" />
+
+            </li>
+
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+    </ul>
+
+<?php echo $this->link("javascript:addRange('{$this->element->getName()}', '{$this->baseUrl()}');", 'Ajouter une plage') ?>
+<?php $this->headScript()->appendFile($this->baseUrl() . '/js/dateRangePicker.js') ?>
+
+<?php $this->headScript()->captureStart() ?>
+
+$(document).ready(function() {
+
+
+   <?php foreach( $datePickers as $picker ): ?>
+    $('#<?php echo $picker ?>').mask('9999-99-99');
+   <?php endforeach; ?>
+
+});
+
+<?php $this->headScript()->captureEnd() ?>
+
+<?php
+    $_error_messages = $this->element->getErrorMessages();
+    $_messages = $this->element->getMessages();
+
+    if( !empty($_error_messages) || !empty($_messages) ):
+?>
+
+    <ul class="errors">
+
+        <?php foreach( $_messages as $_message ): ?>
+
+            <li><?php echo $_message ?></li>
+
+        <?php endforeach; ?>
+
+        <?php foreach( $_error_messages as $_message ): ?>
+
+            <li><?php echo $_message ?></li>
+
+        <?php endforeach; ?>
+
+    </ul>
+
+<?php endif; ?>
+
+    </dd>

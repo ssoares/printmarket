@@ -1,0 +1,10 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    //'pageTitle' => 'Gestion de la structure des pages',
+    //'pageDescription' => 'Sur cette page, vous pouvez gérer la structure des pages en y ajoutant les blocs désirés. Pour ajouter un bloc, faites glisser l\'icône vers l\'endroit désiré.'
+    'pageTitle' => $this->getCibleText('dashboard_administration_website_page_structure'),
+    'pageDescription' => 'TODO'
+));                
+?>
+
+<div><?php echo $this->getTreeView('manage'); ?></div>      

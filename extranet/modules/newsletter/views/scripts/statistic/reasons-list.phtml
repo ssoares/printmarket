@@ -1,0 +1,26 @@
+<?php $total = (!empty($this->data[0])) ? $this->data[0]['unsubscribe'] : 0; ?>
+<?php unset($this->data[0]['unsubscribe']); ?>
+<table id="detailsReasons">
+    <thead>
+        <tr>
+            <th class="sorting"><?php echo $this->getCibleText('form_label_unsubscribe_reason'); ?></th>
+            <th class="sorting center"><?php echo $this->getCibleText('newsletter_statistic_total_label'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->data as $key => $value): ?>
+            <?php foreach ($value as $reason => $val): ?>
+                <tr id="nl-<?php echo $key; ?>">
+                    <td class="first"><?php echo $reason; ?></td>
+                    <td class="borders center last"><?php echo $val; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+        <tr class="">
+            <th class="bold borders first"><?php echo $this->getCibleText('newsletter_statistic_total_label'); ?></th>
+            <th class="borders center bold"><?php echo $total; ?></th>
+        </tr>
+    </tfoot>
+</table>

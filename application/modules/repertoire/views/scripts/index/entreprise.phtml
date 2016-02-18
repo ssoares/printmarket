@@ -1,0 +1,122 @@
+<div class="block">
+    <div class="repertoire">
+        <?php
+        if($this->repertoire)
+        {
+            foreach($this->repertoire as $repertoire)
+            {
+                $this->headTitle($repertoire['RD_Nom']);                
+                ?>
+                <div class="repertoire-zone-photo">
+                    <?php
+                    if(!empty($repertoire['RI_ImageSrc']))
+                    {          
+                        $_config = Zend_Registry::get('config');
+                        $_image = "{$_config->repertoire->image->thumb->maxWidth}x{$_config->repertoire->image->thumb->maxHeight}_{$repertoire['RI_ImageSrc']}";                        
+                        $_style = ' style="background-image:url(' . $this->absolute_web_root . '/data/images/repertoire/' . $repertoire['RD_ID'] . '/' . $_image . ');"';
+                    }
+                    else
+                        $_style = '';
+                        
+                    ?>
+                        <div class="repertoire_photo_container" <?php echo $_style ?> >                        
+                            <?php
+                            echo $this->clientImage("pix.gif", array('class' => 'transparent-image'));
+                            ?>                          
+                        </div>
+                        
+                        <div class="share-icon-zone">
+                            <?php
+                            $field = "RD_SharedAccount1";
+                            $alt = "Facebook";
+                            $icon = "rep_icon_facebook.png";
+
+                            if($repertoire[$field])
+                                echo $this->link($repertoire[$field], $this->clientImage($icon, array('alt' => $alt, 'class' => 'rep-icon_share')), array('target' => '_blank'));
+                            else
+                                echo $this->clientImage("disable_" . $icon, array('alt' => $alt, 'class' => 'rep-icon_share-disabled'));
+                            
+                            $field = "RD_SharedAccount2";
+                            $alt = "Twitter";
+                            $icon = "rep_icon_twitter.png";
+
+                            if($repertoire[$field])
+                                echo $this->link($repertoire[$field], $this->clientImage($icon, array('alt' => $alt, 'class' => 'rep-icon_share')), array('target' => '_blank'));
+                            else
+                                echo $this->clientImage("disable_" . $icon, array('alt' => $alt, 'class' => 'rep-icon_share-disabled'));
+                            
+                            $field = "RD_SharedAccount3";
+                            $alt = "Linkedin";
+                            $icon = "rep_icon_linkedin.png";
+
+                            if($repertoire[$field])
+                                echo $this->link($repertoire[$field], $this->clientImage($icon, array('alt' => $alt, 'class' => 'rep-icon_share')), array('target' => '_blank'));
+                            else
+                                echo $this->clientImage("disable_" . $icon, array('alt' => $alt, 'class' => 'rep-icon_share-disabled'));
+                            
+                            $field = "RD_Email";
+                            $alt = "Courriel";
+                            $icon = "rep_icon_mail.png";
+
+                            if($repertoire[$field])
+                                echo $this->link("mailto:" . $repertoire[$field], $this->clientImage($icon, array('alt' => $alt, 'class' => 'rep-icon_share')), array('target' => '_blank'));
+                            else
+                                echo $this->clientImage("disable_" . $icon, array('alt' => $alt, 'class' => 'rep-icon_share-disabled'));                            
+                            
+                            ?>
+                        </div>
+                        
+                    </div>                    
+                    <div class="repertoire_text_container_detail">
+                        <p class="repertoire_title">
+                            <?php echo $repertoire['RD_Nom'] ?>
+                        </p>
+
+                        <p class="repertoire_subtitle">
+                            <?php echo $repertoire['RI_Secteur'] ?>
+                        </p>
+
+                        <p class="repertoire_info">
+                            <?php echo $repertoire['RI_Secteur'] ?>
+                        </p>
+                        <div class="repertoire_long_text">                            
+                            <?php
+                                echo $repertoire['RI_Text'];
+                            ?>
+                        </div>
+                        
+                    </div>
+        
+                    <div class="clear"></div>
+                    
+                    <div class="btn-lire-suite-large">
+                        <?php 
+                            if($this->pagePrecedente==''){
+                                $backLink = $this->baseUrl() . '/' . $this->listall_page;
+                            }
+                            else{
+                                $backLink = $this->pagePrecedente;
+                            }
+                            ?>
+                            <a href="<?php echo $backLink ?>" title="<?php echo $this->getClientText('see_all_repertoire_text') ?>">
+                            <?php echo $this->getClientText('see_all_repertoire_text') ?>
+                        </a>
+                    </div>
+                    <div class="clear"></div>
+                
+                <?php
+            }
+        }
+        else
+        {
+         ?>
+            <div>
+                <p>
+                    <?php echo $this->getCibleText('repertoire_no_repertoire'); ?>
+                </p>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
+</div>

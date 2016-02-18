@@ -1,0 +1,446 @@
+/* Version SVN: $Id: moduleForm.css 1841 2016-01-13 19:21:26Z ssoares $*/
+/*
+    Document   : moduleForm
+    Created on : 2010-05-14, 16:58:59
+    Author     : soaser
+    Description:
+    Purpose of the stylesheet follows.
+*/
+/********************
+*** Header zone *****
+*********************/
+div#form_header{
+    display: block;
+}
+div#form_header div#headerZone {
+    display: inline-block;
+    width: 921px;
+}
+
+div#form_header div#headerZone #currentTitle{
+    margin: 5px;
+    font-weight: bold;
+    font-size: 1.5em;
+    line-height: 120%;
+    cursor: pointer;
+}
+
+div#form_header div#headerZone #newTitle{
+    display: none;
+    width: 250px;
+    margin: 5px;
+}
+div#form_header div#button_zone {
+    display: inline-block;
+    height: 19px;
+    margin: 5px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: top;
+    width: 25px;
+}
+
+div#form_header div#langSwitcher {
+    display: inline;
+    float: left;
+    margin: 5px;
+    padding-top: 5px;
+    width: 25px;
+    text-align: center;
+}
+
+div#form_header div#button_zone img {
+    padding: 5px 2px 0 2px;
+    cursor: pointer;
+}
+
+div#form_panel div#form_sections {
+    display: block;
+    width: 960px;
+    float: left;
+}
+
+/**********************
+**** Elements zone ****
+***********************/
+#element_container{
+    border:1px solid black;
+    width:150px;
+    height:500px;
+    padding: 0px 10px 10px 0px;
+    position:absolute;
+    float: left;
+    background-color: #ffffff;
+}
+
+.element_group_title{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 10px 0px;
+}
+
+/*
+.element_item{
+    width:50px;
+    height:50px;
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+    float: left;
+    margin-left: 15px;
+    margin-bottom: 15px;
+
+}
+*/
+
+#all_form_container{
+    border: 1px solid black;
+    margin-left: 160px;
+    min-height: 500px;
+    padding: 10px;
+    padding-bottom: 0px;
+    width: 800px;
+}
+
+#all_form_container #form_drop_zone{
+    height: 100%;
+}
+
+
+.section{
+    border: 1px solid blue;
+    padding: 10px;
+    margin-bottom: 10px;
+    min-height: 100px;
+}
+.section div img{
+    position: relative;
+    float: left;
+}
+
+div.drop_zone{
+    margin:15px 0 0 60px;
+    width:670px;
+}
+.section_title{
+    margin:0 0 0 60px;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1.5em;
+    position: relative;
+    top: 0;
+    width: 400px;
+}
+
+/*****************************/
+/* SECTION */
+/*****************************/
+/*.section_drop_zone {min-height: 50px}*/
+
+form.params {
+    width: 450px;
+    margin: 0 0 -5px 60px;
+    position: relative;
+    top: 0;
+}
+
+form.params input{
+    width: 25px;
+    text-align: center;
+    display: inline;
+}
+
+form.params input#FSI_Title{
+    width: 150px;
+    text-align: left;
+}
+
+.section_drop_zone,
+.breakpage_drop_zone,
+#elements,
+#form_drop_zone { list-style-type: none; margin: 0; padding: 0; padding-left:10px; }
+
+#form_drop_zone{
+    min-height: 300px;
+}
+#form_panel #form_drop_zone form input{vertical-align: inherit}
+.section_drop_zone{
+    /*background-color: red;*/
+/*    min-height: 300px;*/
+/*    line-height:60px;*/
+}
+
+.section_drop_zone li.ui-state-default,
+.breakpage_drop_zone li.ui-state-default,
+#elements li.ui-state-default{ background: none; }
+
+.section_drop_zone li,
+.breakpage_drop_zone li,
+#elements li { margin: 2px 2px 2px 2px; font-size: 1.2em; }
+
+#elements li {
+    padding: 0 0 2px 0;
+    border: none;
+    height: 80px;
+    width: 54px;
+    display: inline;
+    text-align: center;
+}
+.place-holder { min-height: 60px; line-height: 60px; border: solid 1px #65A8C9; background-color: #D3E7EF !important; }
+
+#elements .elementLeft{
+    margin-right:10px;
+    float:left;
+}
+#elements .marginLeft{
+    float:right;
+}
+#elements p{
+    line-height: 12px;
+    font-size: 0.75em;
+    margin: 0;
+    text-align: left;
+}
+#elements p.titleIcon{
+    text-align: center;
+}
+
+#clone{
+    display: none;
+}
+/*****************************/
+
+.model{
+    display:none;
+}
+
+.breakpage{
+    cursor:move;
+    border: 0px;
+    border-top: 2px dashed black;
+    height:10px;
+    margin-bottom: 10px;
+}
+
+.sortableLink{
+    float: left;
+    cursor: move;
+    width: 55px;
+    height: 55px;
+}
+
+.floatRight{
+    float: right;
+    position: relative;
+    display: inline;
+}
+
+div.floatRight p.links{
+    line-height:25px;
+    margin:0;
+    float: left;
+}
+.element{
+    border:1px solid green;
+    padding: 5px;
+}
+
+.hidden{
+    display: none;
+}
+.emptyZone{
+    width: 55px;
+    height: 70px;
+}
+
+div.header p.title
+{
+    float:left;
+    font-size:1.3em;
+    height: 30px;
+    margin:-2px 5px 0;
+    width:250px;
+
+}
+div.header p.title span.description
+{
+    float:left;
+    font-size:0.7em;
+    font-style:italic;
+    height:30px;
+    margin:5px 10px;
+    width:450px;
+}
+
+div.header img{
+    position: relative;
+    float: left;
+    padding-top: 2px;
+}
+div.center {
+    padding-top: 5px;
+}
+div.center span{
+    height:20px;
+    padding:5px;
+    width:450px;
+}
+
+div.center textarea, #FN_Email {
+    border: 3px solid #cccccc;
+    height: 50px;
+    margin: 5px 0 0 25px;
+    overflow: auto;
+    padding: 5px;
+    width: 500px;
+}
+
+div.center form.qParam {
+    line-height: 25px;
+    margin-left: 30px;
+}
+
+div.center .previewText p {
+    line-height: 25px;
+    margin: 0;
+}
+
+div.center form.qParam input{
+    margin: 6px 0 0 30px;
+}
+div.center form.qParam .zoneLbl{
+    color:CadetBlue;
+    font-weight:bold;
+    margin: 5px 0 0 -25px;
+}
+div.center form.qParam .lineParam{
+    border:none;
+    margin:0;
+    position:relative;
+    display: block;
+    width: 250px;
+    line-height: 25px;
+}
+
+div.center form.qParam .lineParam .nameParam{
+    float: left;
+    margin:0;
+    width: 155px;
+}
+
+div.center form.qParam .lineParam .valueParam{
+    float: left;
+    margin:0;
+    width: 70px;
+}
+div.center form.qParam .lineParam .valueParam .text{
+    border: 1px solid #cccccc;
+    text-align: right;
+    width: 40px;
+}
+
+div.center form.qParam table, div.center form.qParam table td,
+div.center form.qParam table th{
+    border: 1px solid #cccccc;
+    border-collapse: collapse;
+    text-align: center;
+    width: 585px;
+    padding: 0;
+}
+
+div.center form.qParam table td#FRO_Seq{
+    cursor: move;
+}
+
+div.center form.qParam table .move{
+    width: 10%;
+}
+
+div.center form.qParam table .default{
+    text-align: center;
+    width: 10%;
+}
+
+div.center form.qParam table .details{
+    width: 10%;
+}
+
+div.center form.qParam table .value{
+    width: 60%;
+}
+
+div.center form.qParam table .action{
+    width: 10%;
+}
+
+div.center form.qParam table input.optionValue{
+    border: none;
+    border-bottom: 1px solid #65A8C9;
+    background-color: transparent;
+    margin: 0 0 0 5px;
+    width: 95%;
+
+}
+
+div.center form.qParam table input.radio{
+    border: none;
+    background-color: transparent;
+    margin: 0 0 0 5px;
+}
+
+div.center form.qParam table input.delete{
+    border: 0;
+    background-color: transparent;
+    background-image: url('../../../icons/button_remove_16x16.png');
+    height: 16px;
+    margin: 0 0 0 5px;
+    width: 16px;
+    text-align: center;
+}
+
+div.center form.qParam table input.move{
+    border: thin solid #cccccc;
+    background-color: transparent;
+    margin: 0 0 0 5px;
+    width: 23px;
+}
+
+div.center form.qParam input.addLine{
+    border: thin solid #cccccc;
+    background-color: transparent;
+    margin: 0 0 5px 0;
+    text-align: center;
+}
+.label_after_checkbox{
+    min-width: 100px;
+}
+
+.after_checkbox{
+    margin: 0 0 0 25px;
+    width : 250px;
+}
+#FRO_Seq {
+    background: #e6e6e6 url('../images/icon-fleche-16x16.png') no-repeat center center;
+}
+/*Style for form element tile*/
+div.floatRight p.textzone{
+    position: relative;
+    float: left;
+    line-height: 50px;
+    margin: 0;
+    right: 58px;
+}
+
+dd.formRecipientsEmail{
+    clear: left;
+}
+
+#form_panel #form_drop_zone form.params input{
+    vertical-align: bottom;
+}
+form.params label.after_checkbox{
+    display: inline !important;
+    margin: 0;
+}

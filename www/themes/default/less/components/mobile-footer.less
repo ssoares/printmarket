@@ -1,0 +1,34 @@
+.site-footer {
+    padding: 10px @mobile-gutter-width * @mobile-divider 30px @mobile-gutter-width * @mobile-divider;
+    .responsive-font((@font-size-base + 1) * @mobile-divider-text);    
+    @media @mq-large-mobile {
+        max-width:@container-tablet;
+        margin:0 auto;
+    }
+} 
+.site-footer-site {
+    float:left;
+    width:50%;
+    line-height:20px * @mobile-divider-text;
+    padding:25px * @mobile-divider-text 6px 25px * @mobile-divider-text 0;
+    .box-sizing(border-box);
+}
+.site-footer-edith {    
+    float:left;
+    width:50%;
+    line-height:40px * @mobile-divider-text;
+    padding:15px * @mobile-divider-text 0 15px * @mobile-divider-text 6px;
+    .box-sizing(border-box);
+    a { 
+        height:46px * @mobile-divider-text;
+        display:inline-block;
+        img {
+            vertical-align:middle;
+            margin:0 6px * @mobile-divider-text;
+            height:100%;
+        }
+    }
+}
+.site-footer-copyright {
+    clear:both;
+}

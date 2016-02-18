@@ -1,0 +1,109 @@
+/* Version SVN: $Id: print.css 426 2011-03-24 13:19:50Z ssoares $*/
+table{
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: normal;
+    color: #646567!important;
+    width: 100%;
+}
+
+table td{
+    vertical-align: top;
+}
+
+.list table{
+    border: solid 1px #b6b7b8;
+}
+
+.list table thead td{
+    background-color: #e9e9ea;
+    border-bottom: solid 1px #b6b7b8;
+    border-right: solid 1px #c4c4c4;
+    color: #66a8c9;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: normal;
+    margin: 2px 0px;
+    padding: 5px 3px;
+    line-height: 25px;
+}
+.list table thead td a{
+    text-decoration: none;
+}
+
+.list table td{
+    /*border-bottom: solid 1px white;*/
+    border-right: solid 1px #b6b7b8;
+    border-left: solid 1px #b6b7b8;
+    border-bottom: solid 1px #E9E9EA;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: normal;
+    color: #646567;
+    margin: 2px 0px;
+    padding: 5px 3px;
+    line-height: 16px;
+}
+
+.list table thead td.without_right_border   {
+    margin: 2px 0px;
+    padding: 5px 3px;
+    line-height: 16px;
+}
+
+.list table td.without_right_border {
+    display: none;
+}
+
+.row_list_1 {
+    background-color: #E9E9EA;
+    line-height: 16px;
+}
+.row_list_0 {
+    background-color: white;
+    line-height: 16px;
+}
+form fieldset label,
+form fieldset input,
+form fieldset select{
+    font-size: 16px !important;
+}
+form fieldset#fieldset-patientFormLeft1 label.optional{
+    font-size: 11px !important;
+}
+#topBanner{
+    display: none;
+}
+#topMenu{
+    display: none;
+}
+
+#topInfo{
+    display: none;
+}
+#superGreyLine{
+    display: none;
+}
+form dl fieldset#fieldset-actions{
+    display: none;
+}
+input{
+    border:none;
+}
+textarea{
+    border: none;
+}
+#fieldset-Maladie select{
+    margin-top: 10px;
+}
+#patientFormLeft1_1-PostalCode{
+    width: 60px;
+    padding-right: 5px;
+    
+}
+@page { size:portrait;
+        margin-top:1.7cm;
+        margin-bottom:1.4cm;
+        margin-left:0.8cm;
+        margin-right:0.8cm
+}

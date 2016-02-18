@@ -1,0 +1,153 @@
+/*
+    Document   : products
+    Created on : 2013-01-02, 11:34:42
+    Author     : ssoares
+    Description:
+        Purpose of the stylesheet follows.
+*/
+#fieldset-productFormLeftBis,
+#fieldset-productFormLeft{
+    float: left;
+    padding-right: 20px;
+    width: 330px;
+}
+#fieldset-productFormLeft dd.form_title_inline{
+/*    margin-top: 15px;*/
+}
+#fieldset-productFormLeftBis{clear:left;margin-top: -25px;}
+#fieldset-productFormLeft dd.marginTop30{
+    margin-top: 50px;
+    width: 940px
+}
+#fieldset-productFormRight{
+    float: left;
+    height: 160px;
+    margin: 0 10px 0 0;
+    padding-right: 4px;
+    text-align: left;
+    width: 140px;
+
+}
+#P_Photo_preview{max-width: 140px;}
+#fieldset-productFormBottom{
+    clear: both;
+    width: 100%;
+
+}
+fieldset.fieldsetBorder{
+    border: 1px solid #5A9CBE;
+    padding: 15px 20px 5px 20px;
+}
+#additionalImg{
+    float: right;
+    min-height: 250px;
+    padding-top: 39px;
+    width: 410px;
+}
+#additionalImg #moreImg{
+    float: left;
+    margin-top: -17px ;
+}
+#additionalImg dl{
+    display: inline-block !important;
+    margin: 5px 6px 0 0;
+    max-width: 200px;
+    text-align: center;
+}
+#additionalImg dl dd{
+    margin: 0;
+}
+#additionalImg .imgPreview {
+    margin-bottom: 5px;
+}
+#additionalImg dl input[type=image]{
+    max-height: 83px;
+    max-width: 90px;
+}
+
+.left{float: left;margin-right: 15px;}
+.numeric.integer{max-width: 47px;}
+/*
+    Document   : products
+    Created on : 2013-01-02, 11:34:42
+    Author     : ssoares
+    Description:
+        Purpose of the stylesheet follows.
+*/
+#fieldset-productFormLeft{
+    /*width: 300px;*/
+}
+#fieldset-productFormLeft dd.form_title_inline{
+/*    margin-top: 15px;*/
+}
+
+#fieldset-productFormLeft dd.marginTop30{
+    margin-top: 50px;
+    width: 940px
+}
+fieldset.fieldsetBorder{
+    border: 1px solid #5A9CBE;
+    padding: 15px 20px 5px 20px;
+}
+#additionalImg{
+    padding-top: 39px;
+}
+#additionalImg #moreImg{
+    float: left;
+    margin-top: -17px ;
+}
+#additionalImg dl{
+    float: left;
+    margin: 5px 6px 0 0;
+    max-width: 200px;
+    text-align: center;
+}
+#additionalImg dl dd{
+    margin: 0;
+}
+#additionalImg dl input[type=image]{
+    max-height: 83px;
+    max-width: 90px;
+}
+/* Style our le formulaire des SKU */
+#fieldset-formItemPrices.smallFieldsetBorder{
+    border: 1px solid #5A9CBE;
+    padding: 15px 0px 5px 20px;
+    width: 260px;
+    margin: -20px 0  0 9px;
+    color: #5a9cbe;
+}
+#fieldset-formItemPrices dd{
+    color: #5a9cbe;
+    margin: 10px 0 0 0;
+}
+#fieldset-formItemPrices dd.form_title_inline{
+    display: inline;
+    padding: 0 0px 0 35px;
+}
+
+#fieldset-formItemPrices dd.left{
+    padding-left: 80px;
+}
+
+#fieldset-formItemPrices dd.inputColLeft{
+    float: left;
+    padding-left: 0px;
+    width: 145px;
+}
+#fieldset-formItemPrices dd.inputColLeft label,
+#fieldset-formItemPrices dd.inputColRight label{
+    display: inline-block;
+    width: 42px;
+}
+#fieldset-formItemPrices dd.inputColRight label{
+    display: inline-block;
+    width: 142px;
+}
+#fieldset-formItemPrices dd.inputColLeft input,
+#fieldset-formItemPrices dd.inputColRight input{
+    margin-left: 33px;
+    display: inline;
+    text-align: right;
+    padding-right: 2px;
+}

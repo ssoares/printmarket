@@ -1,0 +1,52 @@
+<?php
+$langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+$date = new Zend_Date($this->parution_date, null, $langSuffix);
+$date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG_NO_DAY, '.');
+$date_string_url = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SQL, '-');
+?>
+<section class="newsletter details article module">
+    <?php
+    if ($this->articles) {
+        foreach ($this->articles as $article) {
+            $linkToArticle = $this->baseUrl() . '/' . $this->details_page . "/" . $date_string_url . "/" . $this->parutionValURL . "/" . $article['NA_ValUrl'];
+        ?>
+        <article class="newsletter-top-news newsletter-news">
+            <?php
+            $this->headMeta()->appendProperty('og:title', $article['NA_Title']);
+            $this->headTitle($this->parution_title);
+            $this->headTitle($article['NA_Title']);
+            $this->pageTitle($article['NA_Title']);
+            ?>
+            <div class="imageLeft col-md-4">
+                <?php
+                if($article['NA_ImageSrc']){
+                    echo  $this->moduleImage('newsletter', $article['NA_ReleaseID'] .
+                     "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'medium',
+                     array('class' => 'news-article-image-image'));
+                }
+                else{
+                    $imgPath = Zend_Registry::get('absolute_web_root') . "/themes/default/images/common/img-infolettre.png";
+                    echo $this->image($imgPath, array('alt' => $article['NA_ImageAlt']));
+                }
+                ?>
+            </div>
+            <div class="col-md-8">
+                <?php
+                if ($article['NA_Text']) {
+                    echo $article['NA_Text'];
+                }
+                ?>
+                <nav class="newsletter-options">
+                    <div class="newsletter-details-article-return">
+                        <a class="next-button-inverted news-article-next-button" href="<?php echo $this->baseUrl() . '/' . $this->back_to_release . "/" . $date_string_url . "/" . $this->parutionURL ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+                            <?php echo($this->getCibleText('newsletter_button_return_to_newsletter')); ?>
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </article>
+    <?php
+        }
+    }
+    ?>
+</section>

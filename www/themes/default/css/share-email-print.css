@@ -1,0 +1,139 @@
+/* Version SVN: $Id: share-email-print.css 426 2011-03-24 13:19:50Z ssoares $*/
+
+ul#share {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+ul#share li {    
+    margin: 0px;
+    padding: 0px;
+    line-height: 32px;
+    border-bottom: solid 1px #fff;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: normal;
+    color: #727678;
+}
+ul#share li.share-link    {
+    background-image: url("../images/common/toolbar-share.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+ul#share li.email-link    {
+    background-image: url("../images/common/toolbar-email.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+ul#share li.print-link    {
+    background-image: url("../images/common/toolbar-print.png") !important;
+    background-repeat: no-repeat !important;
+    background-position: left top !important;
+}
+
+ul#share li.print-link a.addthis_button_print    {    
+    height: 32px !important;
+}
+ul#share li a {
+    padding-left: 39px;
+}
+ul#share li a:hover   {
+    color: #E4222E;
+}
+
+ul#share li.email-link a.addthis_button_email span    {
+    display: none;
+}
+/* START : Styles in the AddThis Email popup */ 
+div#at16pt  {
+    margin: 0px;                   
+    /*margin-bottom: 30px;*/
+}
+div#at16pm,
+div#at16pc  {
+    /*height: 300px !important;
+    overflow: auto !important;*/
+}
+div#at16pc  {
+    /*padding-top: 10px;*/
+}
+div#at_email    {
+    margin-top: 10px !important;
+}
+div#at_email div#at_head a#at_use_addr, 
+a#at16pit  {
+    font-size: 11px !important;
+    color: #E4222E !important;
+    text-decoration: none !important;
+}
+div#at_email div#at_head a#at_use_addr:hover, 
+a#at16pit:hover    {
+    color: #727678 !important;
+}
+div#at_email input#at_from   {
+    font-family: Arial !important;
+    font-size: 11px !important;
+    color: #727678 !important;
+    height: 22px !important;
+    width: 278px !important;    
+}
+div#at_email textarea#at_to,
+div#at_email textarea#at_msg   {
+    font-family: Arial !important;
+    font-size: 11px !important;
+    color: #727678 !important;
+    overflow: auto !important;
+    width: 278px !important;
+    
+    height: 50px !important;
+}
+span#at16ptc   {
+    font-family: Arial !important;
+    font-weight: bold !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+}
+a#at16ptx    {
+    font-family: Arial !important;
+    font-weight: bold !important;
+    font-size: 11px !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    color: #727678 !important;    
+}
+a#at16ptx:hover {
+    color: #E4222E !important;
+}
+div#ateml small   {
+    font-size: 10px !important;    
+}
+div#addthis-pop-email-btns .atbtn {
+    font-weight: normal !important;
+    color: #727678 !important;
+    border: solid 1px #B5B5B5 !important; 
+}
+div#addthis-pop-email-btns .atbtn:hover {
+    color: #E4222E !important;
+    border: solid 1px #B5B5B5 !important;
+}
+div#at16pf  {
+    display: none !important;
+}
+div#at16pf a#at-logo    {
+    display: none !important;
+}
+div#at16sas a   {
+    display: none !important;
+}
+
+div#at_error    {
+    background-color: #E4222E !important;
+}
+div#at_success  {
+    background-color: #009900 !important;
+}
+div#at_success a    {
+    display: none !important;
+}
+/* END : Styles in the AddThis Email popup */

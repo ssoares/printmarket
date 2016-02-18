@@ -1,0 +1,31 @@
+<?php
+$config = Zend_Registry::get('config');
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_'.$this->cleaction.'_text'),
+    'pageDescription' => $this->getCibleText('header_add_'.$this->cleaction.'_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+       <?php echo $this->form; ?>
+    </div>
+</div>
+
+<?php if (isset($this->moreImg)): ?>
+<script type="text/javascript">
+//<![CDATA[
+var wwwPath = '<?php echo Zend_Registry::get('www_root') ?>';
+$(document).ready(function(){
+    $().manageImg({
+        baseUrl: "<?php echo $this->BaseUrl() ?>",
+        imgList: <?php echo $this->moreImg ?>,
+        imagesPath: "<?php echo $this->imagesPath ?>",
+        nbImgLimit: "<?php echo $config->catalog->nbThumb?>",
+    });
+});
+//]]>
+</script>
+<?php endif; ?>
+<?php echo $this->partial("partials/formatField.phtml", array('locale' => $this->locale)); ?>

@@ -1,0 +1,35 @@
+<?php if ($this->pageCount > 1): ?>
+
+    <?php
+    // images
+    //$_first_img = $this->first_link_image ? $this->first_link_image : $this->image("{$this->baseUrl()}/icons/paging_first.png", array('border'=> 0));
+    $_prev_img = $this->prev_link_image ? $this->prev_link_image : $this->image("{$this->baseUrl()}/icons/paging_prev.png", array('border' => 0));
+
+    $_next_img = $this->next_link_image ? $this->next_link_image : $this->image("{$this->baseUrl()}/icons/paging_next.png", array('border' => 0));
+    //$_last_img = $this->last_link_image ? $this->last_link_image : $this->image("{$this->baseUrl()}/icons/paging_last.png", array('border'=> 0));
+    if ($this->current == 1)
+        $news_navigation_class = 'pagination-first';
+    else if ($this->pageCount == $this->current)
+        $news_navigation_class = 'pagination-last';
+    else
+        $news_navigation_class = '';
+
+    if (isset($this->previous))
+        $link_previous = $this->url(array('page' => $this->previous));
+    else
+        $link_previous = '#';
+    
+    if (isset($this->next))
+        $link_next = $this->url(array('page' => $this->next));
+    else
+        $link_next = '#';
+    ?>
+    <div class="module-pagination pagination <?php echo $news_navigation_class ?>">
+        <!-- Numbered page links -->
+        <a href="<?php echo $link_previous; ?>" class="pagination-link news-article-link news-article-link-border">Page précédente</a>
+        <span class="pagination-number">
+           <?php echo $this->current . '/' . $this->pageCount ?>
+        </span>
+        <a href="<?php echo $link_next; ?>" class="pagination-link news-article-link news-article-link-border news-article-link-border-inverted">Page suivante</a>
+    </div>
+<?php endif; ?>

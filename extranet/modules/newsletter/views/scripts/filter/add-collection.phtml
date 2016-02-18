@@ -1,0 +1,14 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_newsletter_filter_collection_text'),
+    'pageDescription' => $this->getCibleText('header_add_newsletter_filter_collection_description'),
+    'breadcrumb' => ''
+));                
+
+echo($this->partial('partials/filters.add-update.phtml', array(
+    'form'=>$this->form,
+    'filterOptionsData'=>$this->filterOptionsData,
+    'filterSetArray'=>$this->filterSetArray
+)));
+
+

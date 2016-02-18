@@ -1,0 +1,80 @@
+<div id="action_panel" class="list_action_panel add_images">
+    <ul class="buttons">
+        <li id="addTab">
+            <a class="action_submit add" href="<?php echo $this->baseUrl() ?>/page/manage/addbackground">
+                <?php echo $this->getCibleText('add_image_background'); ?>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="returnToTreeList">
+    <a href="<?php echo $this->baseUrl() ?>/page/manage/structure/site/s">
+        <?php echo $this->getCibleText('returnToTreeList'); ?>
+    </a>
+</div>
+<?php
+    $imagePath = $this->imageFolder . "background/";
+    foreach($this->imageFiles as $imageFiles){
+    ?>
+        <div class="imagesFilesManage">
+            <div class="imagesText"> 
+                <div class="imagesDelete">
+                    <a href="<?php echo $this->baseUrl() ?>/page/manage/deletebackground/image/<?php echo $imageFiles; ?>">
+                        <?php echo $this->getCibleText('delete'); ?>
+                    </a>
+                </div>
+                 <?php
+                $config = Zend_Registry::get('config')->toArray();
+                $backgroundcrop = $config['image']['background']['crop'];
+                if($backgroundcrop==1){
+                ?>
+                   <div class="imagesCrop">
+                    <a href="<?php echo $this->baseUrl() ?>/page/manage/cropimagebackground/image/<?php echo $imageFiles; ?>">
+                        <?php echo $this->getCibleText('crop'); ?>
+                    </a>
+                </div>
+                <?php
+                }
+                ?>
+                <div class="imagesListPages">
+                    <?php
+                    $pages = $this->Backgroundpages($imageFiles);
+                    $numberOfPages = count($pages);
+                    $pageString = $this->getCibleText('numberOfPages') . $numberOfPages . "\n";
+                    foreach($pages as $page){
+                        $pageString .= "-" . $page['PI_PageTitle'] . "\n";
+                    }
+                    ?>
+                    <input type="hidden" value="<?php echo $pageString; ?>">
+                    <?php if($numberOfPages>1){
+                            echo $numberOfPages . " " . $this->getCibleText('listPages');
+                        }
+                        else{
+                            echo $numberOfPages . " " . $this->getCibleText('listPage');
+                        }
+                    ?>
+                </div>
+            </div>
+            <div class="imagesFile">
+                <a title="" rel="prettyPhoto" href="<?php echo $imagePath . $imageFiles; ?>?timestamp=<?php echo date('Y-m-d H:i:s');?>">
+                    <image src="<?php echo $imagePath . $imageFiles; ?>?timestamp=<?php echo date('Y-m-d H:i:s');?>" width="250" />
+                </a>
+            </div>
+
+        </div>
+    <?php
+    }
+
+?>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+
+    $(".imagesListPages").click(function() {
+        alert($(this).find('input').val());
+    });
+
+
+    });
+</script>

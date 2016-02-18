@@ -1,0 +1,145 @@
+<?php
+switch( Zend_Registry::get('languageID')){
+    case '2':
+        $file = $this->locateFile('ui.datepicker-en.js', 'jquery/localizations');
+        break;
+    default:
+        $file = $this->locateFile('ui.datepicker-fr.js', 'jquery/localizations');
+        break;
+}
+$this->jQuery()->addJavascriptFile($this->locateFile('jquery-ui-timepicker.js', 'jquery'));
+$this->jQuery()->addJavascriptFile($file);
+?>
+<script type="text/javascript">
+//<![CDATA[
+$(function() {
+    $( ".datepicker" ).datepicker({
+        changeYear : true,
+        changeMonth : true,
+        yearRange : 'c-10:c+20',
+        altFormat : 'yy-mm-dd',
+        dateFormat : 'dd-mm-yy',
+        timeFormat :'hh:mm',
+        YearOrdering : 'desc'
+    });
+  });
+$(document).ready(function () {
+    var baseUrl = '<?php echo $this->view->Url(array('action' => 'ajax', 'actionKey' => null)); ?>';
+   $(".selectFilterOption").live('change', function(event){
+        var filterSetId = $(this).parents('.filterSetContent').attr('data-filterSetId');
+        var filter      = $(this).parents('.filter');
+        var filterId    = filter.attr('data-filterId');
+        var filterOption= $(this).val();
+        var actionKey = 'getComparison';
+        var qryString = {actionKey : actionKey, filterOption : filterOption,
+            filterId : filterId, filterSetId : filterSetId};
+
+        $.getJSON(baseUrl, qryString,
+            function(template){
+                var filterValue = filter.children('.tdFilterValue');
+                filterValue.html(template);
+                $( ".datepicker" ).datepicker({
+                    changeYear : true,
+                    changeMonth : true,
+                    yearRange : 'c-10:c',
+//                    altFormat : 'yy-mm-dd',
+                    dateFormat : 'dd-mm-yy',
+                    timeFormat :'hh:mm',
+                    YearOrdering : 'desc'
+                });
+            }
+        );
+    });
+    $(".addFilterSet").click(function(event){
+        event.preventDefault();
+        var target = $('.filterSet');
+        var rows = target.children('.filterSetContent');
+        var lastId = 0;
+        var actionKey = 'getNewFieldset';
+        rows.each(function(){
+            var id = parseInt($(this).attr('data-filterSetId'));
+            if (id > lastId){
+                lastId = id;
+            }
+        });
+        lastId = lastId + 1;
+        var qryString = {actionKey : actionKey,
+            filterId : 1, filterSetId : lastId};
+        $.getJSON(baseUrl, qryString,
+            function(template){
+                target.append(template);
+                if (lastId > 1){
+                    $('.deleteFilterSet').show();
+                }
+            }
+        );
+    });
+    $(".addFilter").live('click',function(event){
+        var el = $(this);
+        var parent = el.parents('.filterSetContent');
+        var target = parent.find('.filterContent table tbody');
+        var rows = target.children('tr');
+        var nbRows = rows.length + 1;
+        var lastId = 0;
+        rows.each(function(){
+            var id = parseInt($(this).attr('data-filterId'));
+            if (id > lastId){
+                lastId = id;
+            }
+        });
+        lastId = lastId + 1;
+        var filterSetId = parent.attr('data-filterSetId');
+        var actionKey = 'getNewRow';
+        var qryString = {actionKey : actionKey,
+            filterId : lastId, filterSetId : filterSetId, nbRows : nbRows};
+        $.getJSON(baseUrl, qryString,
+            function(template){
+                target.append(template);
+            }
+        );
+    });
+    $(".deleteFilterSet").live('click',function(event){
+        event.preventDefault();
+        $(this).parents('.filterSetContent').remove();
+        var target = $('.filterSet .filterSetContent');
+        if (target.length == 1){
+            $('.deleteFilterSet').hide();
+        }
+
+    });
+    $(".deleteFilter").live('click',function(event){
+        event.preventDefault();
+        var el = $(this);
+        var row = el.parents('.filter');
+        var parent = el.parents('.filterSetContent');
+        row.remove();
+
+        var rows = parent.find('.filterContent table tbody tr');
+        var rowClass = 'even';
+        rows.each(function(){
+            var cells = $(this).children('td');
+            cells.each(function(){
+                var c = $(this);
+                c.removeClass('odd even');
+                c.addClass(rowClass);
+            });
+            if(rowClass == 'even'){
+                rowClass = 'odd';
+            }else{
+                rowClass = 'even';
+            }
+        });
+
+    });
+});
+$(window).load(function(){
+    var target = $('.filterSet');
+    var rows = target.children('.filterSetContent');
+    if (rows.length > 1){
+        $('.deleteFilterSet').show();
+    }else{
+        $('.deleteFilterSet').hide();
+    }
+});
+//]]>
+</script>

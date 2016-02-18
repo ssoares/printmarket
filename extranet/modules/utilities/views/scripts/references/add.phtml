@@ -1,0 +1,18 @@
+<?php
+    
+?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_'.$this->cleaction.'_text'),
+    'pageDescription' => $this->getCibleText('header_add_'.$this->cleaction.'_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+       <?php
+        echo $this->form
+        ?>
+    </div>                    
+</div>

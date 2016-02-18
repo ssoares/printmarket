@@ -1,0 +1,20 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText("categories_{$this->module_id}_delete_page_title"),
+    'pageDescription' => $this->getCibleText("categories_categories_{$this->module_id}_delete_page_description"),
+));                
+?>
+
+<?php if ($this->fails):?>
+    <p><?php echo str_replace('%CATEGORY_NAME%', $this->category_name, $this->getCibleText("categories_{$this->module_id}_delete_errror_message")) ?></p>
+    <a href="<?php echo "{$this->baseUrl()}{$this->returnUrl}" ?>"><?php echo $this->getCibleText('list_return_to_list_link') ?></a>
+<?php else: ?>
+    <p><?php echo str_replace('%CATEGORY_NAME%', $this->category_name, $this->getCibleText("categories_{$this->module_id}_delete_message_confirmation")) ?></p>
+    <form action="" method="post">
+        <div>
+            <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+            <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+        </div>
+    </form>
+    
+<?php endif; ?>

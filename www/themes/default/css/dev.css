@@ -1,0 +1,81 @@
+/* Only borders and other element useful pour the development   */
+/* This stylesheet should be removed before the staging uploading   */
+
+/* MAIN CLASSES */
+/***************************************/
+#wrapper{   
+   /* border: 1px solid #009900!important;*/
+    outline: 1px solid #009900 !important;
+}
+
+div#main-content div#content-left   { 
+    outline: solid 1px blue!important;
+    
+}
+
+div#main-content div#content-home,
+div#main-content div#content-right   {   
+    outline: solid 1px green!important;
+}
+
+/* HEADER CLASSES */
+/***************************************/
+div#headerContainer    {
+    outline: solid 1px blue!important;    
+}
+
+div#headerContainer div#headerLeft    {    
+    outline: solid 1px blue!important;
+}
+
+/* MENU CLASSES */
+/***************************************/
+div#top-menu-container    {    
+    outline: solid 1px orange!important;    
+}
+
+div#top-menu-container ul.top-menu li ul    {   
+    outline: solid 1px blue!important;
+}
+
+div#footer-container div#footer-menu-div ul li{   
+    outline: solid 1px #3F2619!important;
+}
+
+div#header-right-top ul.top-menu-top li   {    
+    outline: solid 1px #DC006B!important;
+}
+
+div#footer-container{
+    outline: solid 1px blue !important;
+}
+
+div#footer-container .footer-left{
+    outline: solid 1px red !important;
+}
+
+div#footer-container .footer-right{
+    outline: solid 1px darkorchid !important;
+}
+
+div#headerRightTop{
+    outline: solid 1px darkorchid !important;
+}
+
+div.news_3columns,
+div.news_2columns,
+div.news_1columns{
+    outline: solid 1px #65a3c2 !important;
+}
+
+div.gallery_4columns{
+     outline: solid 1px  !important;
+}
+
+#blockBannerImageFeatured{
+    outline: solid blue 1px  !important;
+}
+
+#blockBannerImageFeatured .imgContainer{
+    outline: solid red 1px  !important;
+}

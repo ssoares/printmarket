@@ -1,0 +1,53 @@
+<div class="article_newsletter">
+    <div class="newsletter_left_web">
+        <div class="infolettre_menu">
+            <div class="newsletter_subscribe newsletter_menu_item">
+                <a class="newsletterMenuItemLink" href="<?php echo $this->subscribeLink; ?>">
+                <?php echo($this->getCibleText('newsletter_button_subscribe'));?><img src="<?php echo Zend_Registry::get('www_root') ?>/themes/default/images/backgrounds/arrow_white.png" alt="" border="0"/>
+                </a>
+            </div>
+            <div class="newsletter_unsubscribe newsletter_menu_item">
+                <a class="newsletterMenuItemLink" href="<?php echo $this->unsubscribeLink; ?>">
+                <?php echo($this->getCibleText('newsletter_button_unsubscribe'));?><img src="<?php echo Zend_Registry::get('www_root') ?>/themes/default/images/backgrounds/arrow_white.png" alt="" border="0"/>
+                </a>
+            </div>
+            <div class="newsletter_archives newsletter_menu_item">
+                <a class="newsletterMenuItemLink" href="<?php echo $this->archivesLink; ?>">
+                <?php echo($this->getCibleText('newsletter_button_archives'));?><img src="<?php echo Zend_Registry::get('www_root') ?>/themes/default/images/backgrounds/arrow_white.png" alt="" border="0"/>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="newsletter_right_web">
+         <div class="newsletter_title">
+            <?php echo($this->getClientText('newsletter_title_reabonnement_text'));?>
+        </div>
+        <div class="newsletter_form">
+            <?php
+                $reinscriptionValidate = $this->reinscriptionValidate;
+                if(!$reinscriptionValidate){
+                    ?>
+                    <div class="">
+                        <p><?php echo($this->getClientText('newsletter_reabonnement_text'));?></p>
+                    </div>
+                <?php
+                    echo($this->getCibleText('newsletter_your_email_address') . ' <strong>' . $this->memberEmail . '</strong>');
+                    echo($this->form);
+                    echo($this->messageConfidentialite);
+                }
+                else{
+                ?>
+                    <div class="text">
+                        <p><?php echo($this->message);?></p>
+                    </div>
+            <?php  } ?>
+            <div class="newsletter_politics_confidentiality">
+                <a href="<?php echo $this->confidentialityPolitics; ?>">
+                <?php
+               // echo $this->getCibleText('text_confidentiality_politcs')
+                ?>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

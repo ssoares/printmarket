@@ -1,0 +1,170 @@
+<?php
+$associationSetID = $this->options[0];
+$fieldPrefix = $this->options[1];
+$dataFieldToDisplay = $this->options[2];
+$associationSetCpt = $this->options[3];
+$associationSetTitle = !empty($this->options[4])?$this->options[4]:$this->getCibleText('form_label_'.$associationSetID.'_associate');
+$associationsData = $this->options[5]['entities'];
+$assocPermissionData = isset($this->options[5]['groups']) ? $this->options[5]['groups'] : array();
+$associationArray = $this->options[6];
+$addLine = $this->options[7];
+$idOffset = $fieldPrefix . 'ID';
+if(count($associationArray) == 0){
+    $associationArray[0] = -1;
+}else{
+    $associationArrayTmp = array();
+    foreach($associationArray as $association){
+        $associationArrayTmp[] = $association;
+    }
+    $associationArray = $associationArrayTmp;
+}
+
+$cptAssociation = count($associationArray);
+?>
+<?php if(!$addLine): ?>
+    <fieldset id="fieldset-<?php echo $associationSetID ?>">
+        <div id="associationSet_<?php echo $associationSetCpt?>" class="associationSetContent" associationSetID="<?php echo $associationSetID; ?>">
+            <div class='associationSetContent_action'>
+                <div class='action'>
+                    <fieldset id='fieldset-actions-association'>
+                        <ul class='actions-buttons'>
+                            <li><button name='addAssociation' id='addAssociation' type='button' class='stdButton addAssociation'>Ajouter</button></li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class='title'><?php echo $associationSetTitle; ?></div>
+            </div>
+            <div class="associationContent">
+                <input type="hidden" id="associationCountID" value="<?php echo $cptAssociation; ?>"/>
+                <input type="hidden" id="associationCount" value="<?php echo $cptAssociation; ?>"/>
+                <table cellpadding="0" cellspacing="0">
+<?php endif; ?>
+            <?php
+            $i = 0;
+            if($addLine){
+                $i = $associationSetCpt - 1;
+                $cptAssociation = $associationSetCpt;
+            }
+            $keyVal = key($associationsData);
+            for($i; $i < $cptAssociation; $i++):
+                $row = $i % 2 ? 'row_odd' : $row = 'row_even';
+                $optionsValues = array();
+            ?>
+                <?php // if(!$addLine): ?>
+                    <tr class="association" associationID="<?php echo $i; ?>">
+                        <td class=" <?php echo $row; ?> entities-cell">
+                <?php // endif; ?>
+                <?php if(count($associationArray) > 0): ?>
+                            <?php if (is_string($keyVal)&& !empty($associationsData[0])):
+                                $optionsValues[-1] = $this->getCibleText('form_select_default_label');
+                                foreach($associationsData as $key => $associationD):
+                                    foreach($associationD as $key => $association):
+                                        $values[] = array($key, $association);
+                                    endforeach;
+                                    $optionsValues[$key][] = $values;
+                                endforeach;
+                            else:
+                                $optionsValues[-1] = $this->getCibleText('form_select_default_label');
+                                foreach($associationsData as $key => $association):
+                                    $val = is_array($association) ? $association[$idOffset] : $key;
+                                    $label = is_array($association) ? $association[$dataFieldToDisplay] : $association;
+                                    $optionsValues[$key] = $label;
+                                endforeach;
+                            endif;
+                            $name = $associationSetID . 'Set[' . $i . '][entities]';
+                            $value = !$addLine ? $associationArray[$i] : $associationArray[0];
+                            echo $this->formSelect($name, $value, array("class" => "entities", 'data-id-group' => $associationSetID . 'Set[' . $i . ']'), $optionsValues);
+                        ?>
+                    <?php endif; ?>
+                        </td>
+                        <td class="default-cell <?php echo $row; ?> label_after_checkbox" title="<?php echo ''; ?>">
+                            <?php
+                            $options = array('class' => 'default-site',
+                                'id' => $associationSetID . 'Set[' . $i . '][default]');
+                            (!$addLine && $associationArray[$i] == $this->default) ? $options['checked'] = 'checked' : $options['checked'] ='';
+                            $value = !$addLine ? $associationArray[$i] : $associationArray[0];
+                            ?>
+                            <?php echo $this->formCheckbox($associationSetID . 'Set[' . $i . '][default]',
+                                $value, $options); ?>
+                            <label class="" for="<?php echo $associationSetID . 'Set[' . $i . '][default]'; ?>"><?php echo $this->getCibleText('form_label_EU_DefaultSite'); ?></label>
+                        </td>
+                        <?php
+                        $dataGroup = '';
+                        if (!empty($this->groups)):
+                            $dataGroup = json_encode($this->groups[$i]);
+                        endif;
+                        ?>
+                        <td class="groups-container <?php echo $row; ?>" style="" data-groups-data='<?php echo $dataGroup; ?>' title="<?php echo ''; ?>">
+                        </td>
+                    <?php if(!$addLine): ?>
+                        <td class="tdAssociationAction <?php echo $row; ?>">
+                    <?php if(count($associationArray) > 0): ?>
+                            <div class='action'>
+                                <fieldset id='fieldset-actions-association'>
+                                    <ul class='actions-buttons'>
+                                        <li><button name='deleteAssociation' id='deleteAssociation' type='button' class='stdButton delAssociation'>Supprimer</button></li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+                    <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+    <?php endfor; ?>
+
+<?php if(!$addLine): ?>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+<?php endif;?>
+
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+    $('.entities').change(function(){
+        var el = $(this);
+        var row = el.parents('tr:first');
+        var target = row.find('.groups-container');
+        var recoverValues = target.attr('data-groups-data') || {};
+        var defaultChbx = row.children('.default-cell').children('.default-site');
+        var base = el.attr('data-id-group');
+        var grp = base + '[groups][]';
+        var firstValue = el.attr('data-previous-value');
+
+        defaultChbx.val(el.val());
+        var obj = $.parseJSON(recoverValues) || {};
+        $.getJSON('',{associationAction : 'getGroups', entity : el.val()},
+            function(data){
+                if (el.val() != firstValue){
+                    target.html('');
+                    $.each(data.groups, function(id, value){
+                        var labelFor = base + '-' + id;
+                        var spanCell = $('<span class="spancell label_after_checkbox"></span>');
+                        var checkbox = $('<input type="checkbox" />');
+                        var label = $('<label><label/>');
+                        var tmp = value.label.split('||');
+                        label.text(tmp[0]).attr({title : tmp[1], 'for': labelFor});
+                        var attributes = {name: grp, title:tmp[1], id:labelFor};
+                        if (value.active || $.inArray(id, obj) > -1){
+                            attributes.checked = true;
+                        }
+                        checkbox.val(id).attr(attributes);
+                        checkbox.appendTo(spanCell);
+                        label.appendTo(spanCell);
+                        spanCell.appendTo(target);
+                    });
+                    el.attr('data-previous-value', el.val())
+                }
+            })
+    }).change();
+    $('.default-site').click(function () {
+        var ele = $(this).parents('table:first').find(':checkbox.default-site');
+        if ($(':checked.default-site').length) {
+          ele.attr('checked', false);
+        }
+        $(this).attr('checked', true);
+    });
+});
+//]]>
+</script>

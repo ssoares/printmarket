@@ -1,0 +1,149 @@
+<?php
+    
+?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_'.$this->cleaction.'_video_text'),
+    'pageDescription' => $this->getCibleText('header_'.$this->cleaction.'_video_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+       <?php
+       echo $this->form;      
+       ?>
+    </div>                    
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {    
+    
+        $('input#VI_MP4_preview').attr('alt', $('input#VI_MP4_original').val());
+        $('input#VI_WEBM_preview').attr('alt', $('input#VI_WEBM_original').val());
+        $('input#VI_OGG_preview').attr('alt', $('input#VI_OGG_original').val());
+        
+        $('#VI_MP4').live('change', function () {  
+            alert('ddd');
+            $('input#VI_MP4_preview').attr('alt', $('input#VI_MP4').val());
+        });
+        
+        $('#foo').bind('click', function() {
+            alert('User clicked on "foo."');
+            });
+               
+        //<input id="VI_MP4" type="hidden" contentid="" pathtmp="../../../../../data/images/videos/tmp" associatedelement="VI_MP4_preview" onchange="document.getElementById('VI_MP4').src = document.getElementById('VI_MP4_preview').value;" value="poster.png" name="VI_MP4">
+        
+        
+        
+        $('#accountDirectorSelect , #statusSelect ,#groupSelect').live('change', function () { 
+        director = $('#accountDirectorSelect').val();
+        status = $('#statusSelect').val();
+        group = $('#groupSelect').val();
+        nameCompany = $('#nameCompany').val();        
+        var baseUrl = '<?php echo $this->baseUrl() ?>';        
+        action = baseUrl + '/quoterequest/index/ajax/director/' + director + '/status/' +  status + '/group/' + group + "/name/" + nameCompany;      
+        var obj = {};
+        $.post(
+            action,
+            obj,
+            function(data){             
+                $('#quoterequest_innerField').html(data);
+            },
+            'json'
+        );
+    });
+   
+    
+        $(".ac_even, .ac_odd").keyup(function() {
+            //alert('aaa');
+        if (e.originalEvent.propertyName == "display") {      
+        }
+        });
+    
+    
+    
+    
+    $('#nameCompany').live('focusin', function () {       
+        if($('#nameCompany').val()!=$('.hiddenCompanyName').val()){            
+            $('.hiddenCompanyName').val($('#nameCompany').val());
+            director = $('#accountDirectorSelect').val();
+            status = $('#statusSelect').val();
+            group = $('#groupSelect').val();   
+            nameCompany = $('#nameCompany').val();
+            var baseUrl = '<?php echo $this->baseUrl() ?>';        
+            action = baseUrl + '/quoterequest/index/ajax/director/' + director + '/status/' +  status + '/group/' + group + "/name/" + nameCompany;
+
+            var obj = {};
+            $.post(
+                action,
+                obj,
+                function(data){
+                  //  alert(data);
+                $('#quoterequest_innerField').html(data);
+            },
+            'json'
+            );
+        }
+    });
+    
+    $('.quoterequestAddClass').live('click', function () {
+        var baseUrl = '<?php echo $this->baseUrl() ?>';
+        action = baseUrl + '/quoterequest/index/soumission/';
+        window.location = action;        
+    });
+    
+    $('#nameCompany').live('change', function () {  
+    
+        if($('#nameCompany').val()!=$('.hiddenCompanyName').val()){
+            $('.hiddenCompanyName').val($('#nameCompany').val());
+            director = $('#accountDirectorSelect').val();
+            status = $('#statusSelect').val();
+            group = $('#groupSelect').val();   
+            nameCompany = $('#nameCompany').val();
+            var baseUrl = '<?php echo $this->baseUrl() ?>';        
+            action = baseUrl + '/quoterequest/index/ajax/director/' + director + '/status/' +  status + '/group/' + group + "/name/" + nameCompany;
+
+            var obj = {};
+            $.post(
+                action,
+                obj,
+                function(data){
+                  //  alert(data);
+                $('#quoterequest_innerField').html(data);
+            },
+            'json'
+            );
+        }
+    });
+
+    $('#nameCompany').live('keyup', function (event) {  
+        if (event.which == 13) {
+             if($('#nameCompany').val()!=$('.hiddenCompanyName').val()){
+                $('.hiddenCompanyName').val($('#nameCompany').val());
+                director = $('#accountDirectorSelect').val();
+                status = $('#statusSelect').val();
+                group = $('#groupSelect').val();   
+                nameCompany = $('#nameCompany').val();
+                var baseUrl = '<?php echo $this->baseUrl() ?>';        
+                action = baseUrl + '/quoterequest/index/ajax/director/' + director + '/status/' +  status + '/group/' + group + "/name/" + nameCompany;
+
+                var obj = {};
+                $.post(
+                    action,
+                    obj,
+                    function(data){
+                      //  alert(data);
+                    $('#quoterequest_innerField').html(data);
+                },
+                'json'
+                );
+            }
+        }
+    }); 
+    
+     
+});
+
+</script>

@@ -1,0 +1,104 @@
+<?php $this->headStyle()->captureStart() ?>
+#message{
+margin-bottom: 20px;
+}
+<?php $this->headStyle()->captureEnd() ?>
+
+<div class="block common-search-result">
+    <?php
+    $searchCount = $this->searchCount;
+
+    $searchPage = $this->searchPage;
+    $searchNews = $this->searchNews;
+    $searchEvents = $this->searchEvents;
+    $searchNewsletters = $this->searchNewsletters;
+    $searchGalleries = $this->searchGalleries;
+    $webRoot = Zend_Registry::get('web_root');
+    $words = $this->words;
+
+    if ($searchCount > 0)
+    {
+        if ($searchCount == 1)
+        {
+    ?>
+    <div id='message'><?php echo($this->getCibleText('search_single_result_text')); ?> "<?php echo($words) ?>"</div>
+    <?php }else{ ?>
+    <div id='message'><?php echo($searchCount) ?><?php echo($this->getCibleText('search_multiple_results_text')); ?>"<?php echo($words) ?>"</div>
+<?php } ?>      <div id='search-result'>
+<?php if (count($searchPage) > 0)
+        {
+?>      <div id='page'>
+            <div class="title">Pages (<?php echo(count($searchPage)); ?>)</div>
+            <ul>
+<?php foreach ($searchPage as $page)
+                {
+?>              <li><a href="<?php echo("$webRoot/{$page['pageIndex']}"); ?>"><?php echo(($page['pageTitle'])); ?></a></li>
+        <?php } ?>      </ul>
+                </div>
+<?php
+            }
+            if (count($searchNews) > 0)
+            {
+?>      <div id='news'>
+            <div class="title"><?php echo($this->getCibleText('news_module_name')); ?> (<?php echo(count($searchNews)); ?>)</div>
+            <ul>
+        <?php foreach ($searchNews as $news)
+                { ?>              <li><a href="<?php echo("$webRoot/{$news['link']}/ID/{$news['contentID']}"); ?>"><?php echo($news['title']); ?></a></li>
+<?php } ?>      </ul>
+                </div>
+                <?
+            }
+            if (count($searchEvents) > 0)
+            {
+                ?>      <div id='events'>
+            <div class="title"><?php echo($this->getCibleText('events_module_name')); ?> (<?php echo(count($searchEvents)); ?>)</div>
+                    <ul>
+        <?php foreach ($searchEvents as $event)
+                { ?>              <li><a href="<?php echo("$webRoot/{$event['link']}/ID/{$event['contentID']}"); ?>"><?php echo($event['title']); ?></a></li>
+<?php }
+?>      </ul>
+        </div>
+                <?
+            }
+            if (count($searchNewsletters) > 0)
+            {
+                ?>      <div id='newsletters'>
+                    <div class="title"><?php echo($this->getCibleText('newsletter_module_name')); ?> (<?php echo(count($searchNewsletters)); ?>)</div>
+                    <ul>
+<?php foreach ($searchNewsletters as $newsletter)
+                {
+?>              <li><a href="<?php echo("$webRoot/{$newsletter['link']}/ID/{$newsletter['contentID']}"); ?>"><?php echo($newsletter['title']); ?></a></li>
+                <?php }
+                ?>      </ul>
+        </div>
+        <?
+            }
+            if (count($searchGalleries) > 0)
+            {
+        ?>      <div id='galleries'>
+                    <div class="title"><?php echo($this->getCibleText('gallery_module_name')); ?> (<?php echo(count($searchGalleries)); ?>)</div>
+                        <ul>
+<?php foreach ($searchGalleries as $gallery)
+                { ?>              <li><a href="<?php echo("$webRoot/{$gallery['link']}"); ?>"><?php echo($gallery['title']); ?></a></li>
+<?php } ?>      </ul>
+                    </div>
+<?php } ?>  </div>
+<?php
+        }
+        else
+        {
+?>      <div id='message'><?php echo($this->getClientText('search_no_result_text')); ?> "<?php echo($words) ?>"</div>
+<?php } ?>
+    </div>
+
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+<?php if (strlen($this->words) > 0): ?>
+    $(window).load(function(){
+        $('#search-box-terme').val('<?php echo $this->words ?>');
+    });
+<?php endif; ?>
+});
+//]]>
+</script>

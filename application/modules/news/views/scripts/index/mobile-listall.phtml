@@ -1,0 +1,103 @@
+<section class="news listall module block">
+
+    <?php if ($this->params[7]) echo $this->formSelect; ?>
+    <?php echo $this->showBlockTitle('h2', array('class' => 'news-title'));?>
+    <?php
+    $flag = 1;
+    $count = 1;
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+    if (count($this->paginator)):
+        foreach ($this->paginator as $news):
+
+            $date = new Zend_Date($news['ND_Date'], null, $langSuffix);
+            $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SHORT, '.');
+            $href = $this->baseUrl() . '/' . $this->details_page . "/" . $news['ND_Date'] . "/" . $news['NI_ValUrl'];
+//            $last = $count == $this->paginator->getItemCountPerPage() ? ' last' : '';
+            ?>
+
+            <article class="news-article">
+                <header class='news-header'>
+                    <?php if ($this->params['5']): ?>
+                        <span class="news-article-date">
+                            <?php
+                            echo preg_replace('/[0-9]{4}/', '', $date_string);
+                            ?>
+                        </span>
+                    <?php endif; ?>
+                </header>
+
+                <div class="news-article-content">
+                    <?php
+                    $text = '';
+                    $showNext = true;
+                    if ($this->params['3'] && !empty($news['NI_Brief'])) {
+                        $text = $news['NI_Brief'];
+                    } elseif ($this->params['3'] && empty($news['NI_Brief'])) {
+                        $text = Cible_FunctionsGeneral::html2text($news['NI_Text']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 150);
+                    } else
+                        $showNext = false;
+
+
+                    if ($this->paginator->getItemCountPerPage() != $flag) :
+                        $flag++;
+                        ?>
+                    <?php endif; ?>
+                    <h2 class="news-article-title">
+                        <?php echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text'))); ?>
+                    </h2>
+
+                    <?php if (!empty($text)): ?>
+                        <div class="news-article-brief">
+                            <?php echo $text; ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="news-article-bottom-navigation">
+                        <?php if ($showNext): ?>
+                            <?php
+                            echo $this->link(
+                                    $href, $this->getClientText('see_details_news_text'), array(
+                                'title' => $this->getClientText('see_details_news_text'),
+                                'class' => 'news-article-link'
+                                    )
+                            );
+                            ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </article>
+            <?php
+            if ($this->paginator->getItemCountPerPage() != $flag) :
+                $flag++;
+                ?>
+                <?php
+            endif;
+            $count++
+            ?>
+        <?php endforeach; ?>
+        <?php echo $this->paginationControl($this->paginator, 'sliding', 'partials/products.paginator.mobile.phtml'); ?>
+    <?php else: ?>
+        <div class="news-no-article">
+            <?php if ($this->otherData): ?>
+                <?php $options = array('type' => 'page', 'message' => $this->getClientText('empty_data_disclaimer')); ?>
+                <p><?php echo $this->languageSwitcher($options); ?></p>
+            <?php else: ?>
+                <p><?php echo $this->getCibleText('news_no_news') ?></p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</section>
+<?php echo $this->partial('partials/filterDates.phtml'); ?>
+
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+
+        $('.news1col').click(function() {
+            window.location.href = $(this).find('a').attr('href');
+        });
+    });
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

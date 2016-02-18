@@ -1,0 +1,25 @@
+textarea {
+    .form-control();
+    border:1px solid @brand-grey;
+    color:@brand-grey;
+    height:auto;  
+    .font-weight('light', 'sans-serif');
+    .border-radius(2px);
+    &.empty {
+        color:@brand-grey-light;
+        border-color:@brand-grey-light;
+    }
+     & when (@device-type = 'desktop') {
+        padding-top:18px;
+        padding-left:22px;
+        margin-bottom:12px;  
+        .responsive-font(@font-size-base - 3);
+    }
+     & when (@device-type = 'mobile') {
+        margin-bottom:12px * @mobile-divider-text;
+        padding-top:10px * @mobile-divider-text;
+        padding-left:12px * @mobile-divider-text;
+        .responsive-font((@font-size-base + 8) * @mobile-divider-text);
+        .box-sizing(border-box);
+    }
+}

@@ -1,0 +1,82 @@
+<?php
+$arrow         = ' ' . $this->clientImage('arrowBreadcrumb.jpg') . ' ';
+$typeName      = '';
+$collecName    = '';
+$clienteleName = '';
+$arrowCol    = false;
+$arrowCli    = false;
+$arrowTyp    = false;
+
+if (isset($this->filter['collections']))
+{
+    foreach ($this->collections as $data)
+    {
+        if ($this->filter['collections'] == $data['SCI_ValUrl'])
+        {
+            $collecName = $data['SCI_Name'];
+            $arrowCol = true;
+        }
+    }
+}
+if (isset($this->filter['clienteles']))
+{
+    foreach ($this->clienteles as $data)
+    {
+        if ($this->filter['clienteles'] == $data['CLI_ValUrl'])
+        {
+            $clienteleName = $data['CLI_Name'];
+            $arrowCli = true;
+        }
+    }
+}
+if (isset($this->filter['typeVetements']))
+{
+    foreach ($this->types as $data)
+    {
+        if ($this->filter['typeVetements'] == $data['TI_ValUrl'])
+        {
+            $typeName = $data['TI_Name'];
+            $arrowTyp = true;
+        }
+    }
+}
+
+?>
+<div id="catalogBreadcrumb">
+    <?php
+    if (Zend_Registry::isRegistered('category'))
+    {
+//        echo $this->breadcrumbCatalog(5, false);
+    }
+    ?>
+    <?php
+    if (!empty($this->view->productDetails))
+    {
+        echo $this->view->productDetails['SCI_Name'];
+        echo $arrow;
+        echo $this->view->productDetails['clientele']['CLI_Name'];
+        echo $arrow;
+        echo $this->view->productDetails['type']['TI_Name'];
+    }
+    else
+    {
+        if (!empty($collecName))
+        {
+            echo $collecName;
+            if (($arrowCol && $arrowCli) || ($arrowCol && $arrowTyp))
+                echo $arrow;
+        }
+        if (!empty($clienteleName))
+        {
+            echo $clienteleName;
+            if ($arrowCli && $arrowTyp)
+                echo $arrow;
+        }
+        if (!empty($typeName))
+        {
+            echo $typeName;
+        }
+    }
+    ?>
+
+</div>

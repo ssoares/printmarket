@@ -1,0 +1,21 @@
+<ul class="<?php echo $this->class; ?>">     
+    <?php    
+    
+    foreach($this->menuGallery as $gall){
+        if($gall['G_ID']==$this->galleryID){?>
+            <li class='selected'>
+                <a href="<?php echo $this->details_page . "/ID/" . $gall['G_ID']; ?>">
+            <?php echo $gall['GI_Title'];?>
+                </a>
+            </li>
+      <?php  }
+        else{?>
+            <li>
+                <a href="<?php echo $this->details_page . "/ID/" . $gall['G_ID']; ?>">
+                    <?php echo $gall['GI_Title'];?>
+                </a>
+            </li>
+       <?php }
+    }
+    ?>    
+</ul>

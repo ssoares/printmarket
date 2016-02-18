@@ -1,0 +1,50 @@
+.h1-style() {
+    .font-weight('normal', "sans-serif");      
+    color: @text-color;
+    text-transform:uppercase;
+    line-height: 1.15em;  
+    margin-bottom:2em;
+     & when (@device-type = 'desktop') {
+        .responsive-font(@font-size-h1);
+    }    
+     & when (@device-type = 'mobile') {
+        .responsive-font(@font-size-h1 * @mobile-divider-text);
+    }    
+    .inverted & {
+        color:@text-color-inverted;
+    }
+}
+.h2-style() {
+    .font-weight('normal', "sans-serif");
+    color: @brand-primary;
+    font-style:italic;
+    line-height: 1.15em;     
+    margin:0 0 0.3em 0;    
+     & when (@device-type = 'desktop') {
+        .responsive-font(@font-size-h2);
+    }    
+     & when (@device-type = 'mobile') {
+        .responsive-font(@font-size-h2 * @mobile-divider-text);
+    }     
+    .inverted & {
+        color:@brand-secondary;
+    }
+}
+.h3-style() {
+    font-family:@font-family-sans-serif;
+    font-weight:300;
+    text-transform:uppercase;   
+    color: @brand-secondary;
+    font-style:normal;
+    line-height: 1.15em;
+    margin:0 0 0.3em 0;  
+    .inverted & {
+        color:@brand-white;
+    }    
+     & when (@device-type = 'desktop') {
+        .responsive-font(@font-size-h3);
+    }    
+     & when (@device-type = 'mobile') {
+        .responsive-font(@font-size-h3 * @mobile-divider-text);
+    }    
+}

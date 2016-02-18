@@ -1,0 +1,49 @@
+<?php
+    $list = '';
+    $genericMemberDetails  = $this->data;
+    $nbProfiles = count($this->profiles);
+
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_delete_profile_text'),
+    'pageDescription' => $this->getCibleText('header_delete_profile_description'),
+    'breadcrumb' => ''
+));
+?>
+<div id="default_form">
+<?php
+    if ($genericMemberDetails):
+?>      <h3><?php echo($genericMemberDetails['GP_FirstName']) ?>&nbsp;<?php echo($genericMemberDetails['GP_LastName']) ?></h3>
+
+        <?php if ($nbProfiles > 0): ?>
+        <?php
+            foreach ($this->profiles as $key => $values)
+            {
+                $list .= ' - ' . $this->getCibleText('profile_tab_title_' . $key) . '<br />';
+            }
+        ?>
+        <div class="alert">
+            <?php echo str_replace(array('##NBPROFILE##', '##PROFILESLIST##'), array($nbProfiles, $list),$this->getCibleText('profile_delete_alert_existing_profiles')); ?>
+            <a href="<?php echo $this->editLink; ?>">
+                <p id="searchAgain" class="blueish-button">
+                    <?php echo $this->getCibleText('button_modify_existing_profile'); ?>
+                </p>
+            </a>
+        </div>
+        <?php endif; ?>
+
+        <p><?php echo str_replace('%MEMBER_NAME%', "<i><b>".$genericMemberDetails['GP_FirstName']." ".$genericMemberDetails['GP_LastName']."</b></i>", $this->getCibleText('profile_delete_message_confirmation')) ?></p>
+        <form action="" method="post">
+            <div>
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+
+    <?php else: ?>
+        <!--<p><?php echo $this->getCibleText('module_element_nout_found') ?></p>-->
+        <a href="<?php echo ($this->return); ?>"><?php echo $this->getCibleText('button_return') ?></a>
+
+<?php
+    endif;
+?>
+</div>

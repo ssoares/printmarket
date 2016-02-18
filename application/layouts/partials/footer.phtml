@@ -1,0 +1,125 @@
+<?php
+$section = $this->section;
+$lang = $this->view->languageId;
+$baseUrl = Zend_Registry::get('web_root');
+$config = Zend_Registry::get('config');
+$edith_logo = $this->link('#', $this->clientImage('logo.png', array('alt' => "Edith", 'title' => "Edith")));
+$array_replace = array('<p>' => '', '<P>' => '', '</p>' => '', '</P>' => '',
+    '%%%GET_DATE_YEAR%%%' => date('Y'),
+    '%%%SITE_NAME%%%' => $config->site->title->$lang);
+$copyrightText = $this->getClientText('footer_copyright', null, $array_replace);
+?>
+<div class="site-footer-top">
+    <div class="site-footer-top-container container content">
+        <?php echo $this->getClientText('footer_nous_joindre_button') ?>
+    </div>
+</div>
+<div class="site-footer-middle">
+    <div class="site-footer-middle-container container">
+        <div class="site-footer-infos col-md-2">
+            <?php echo $this->menu('footer', array('parentIdAlt' => 'footer1ParentId', 'class' => 'site-footer-menu')) ?>
+        </div>
+        <nav class="site-footer-menu-wrapper col-md-4">
+            <!--<h2><?php // echo $this->getClientText('footer_newsletter_title') ?></h2>-->
+            <?php // echo $this->action("formsnewsletterfooter", "index", "forms"); ?>
+        </nav>
+        <div class="site-footer-address col-md-6 content">
+            <?php echo $this->getClientText('footer_address') ?>
+        </div>
+    </div>
+</div>
+<div class="site-footer-bottom">
+    <div class="site-footer-bottom-container container">
+        <div class='site-footer-copyright col-md-6'>
+            <?php echo $edith_logo; ?>
+            <span class="site-footer-copyright-text">
+                <?php echo $copyrightText; ?>
+            </span>
+            <?php echo $this->menu('copyright', array('parentIdAlt' => 'footer3ParentId', 'class' => 'site-footer-copyright-menu')) ?>
+        </div>
+        <div class='site-footer-realisation col-md-2'>
+            <?php echo strip_tags($this->getClientText('footer_cible_realisation'), '<span>,<a>,<br>') ?>
+        </div>
+        <nav class="site-footer-reseaux col-md-4">
+            <?php echo $this->menu('reseaux', array('parentIdAlt' => 'footer2ParentId', 'class' => 'site-footer-reseaux-menu')) ?>
+        </nav>
+    </div>
+</div>
+<?php
+$config = Zend_Registry::get('config');
+if ($config->zIndexCalculator->embeded):
+    ?>
+    <script type="text/javascript" src="<?php echo $this->locateFile('zIndexGenerator.js'); ?>"></script>
+<?php endif; ?>
+<?php
+if ($config->searchbox->embeded)
+    echo $this->partial('partials/jsSearchBox.phtml')
+    ?>
+<?php if (Zend_Registry::isRegistered('disabledFieldStatus') && !Zend_Registry::get('disabledFieldStatus')): ?>
+    <script type="text/javascript" src="<?php echo $this->locateFile('manageChangedFields.js', null, 'back'); ?>"></script>
+<?php endif; ?>
+<?php echo $this->placeholder('footerScript');?>
+<script type="text/javascript" src="<?php echo $this->locateFile('jsAddToCart.js'); ?>"></script>
+<?php echo $this->partial('partials/jsCatalog.phtml', 'catalog'); ?>
+<script type="text/javascript">
+    function ie8BeforeAfterFix(selectorString) {
+        if ($('html').is('.ie8')) {
+            var sel = selectorString || '.icon:before,.icon:after';
+            var head = document.getElementsByTagName('head')[0],
+                    style = document.createElement('style');
+            style.type = 'text/css';
+            style.styleSheet.cssText = sel + '{content:none !important}';
+            head.appendChild(style);
+            setTimeout(function() {
+                head.removeChild(style);
+            }, 0);
+        }
+    }
+    $(window).on('load', function() {
+        ie8BeforeAfterFix();
+    })
+    $(document).ready(function() {
+        //polyfill activation
+//        $("[placeholder]").not('[data-sticky-ignore]').stickyPlaceholders();
+//        $("[placeholder][data-sticky-alt]").stickyPlaceholders({placeholderOpacity: 1});
+        //select enhancer
+        if (jQuery.fn.selectpicker) {
+            $('select').selectpicker();
+            $('select').live('cible.creation', function() {
+                $(this).selectpicker();
+            });
+            $('select').live('cible.destruction', function() {
+                $(this).selectpicker('destroy');
+            });
+            $('select').live('cible.modification', function() {
+                $(this).selectpicker('refresh');
+            });
+        }
+//        $('[type=checkbox], [type=radio]').each(function() {
+//            $(this).prettyCheckable();
+//        });
+        $('.google-map').cibleGoogleMaps({icon: "<?php echo $this->locateFile('map-icon.png'); ?>"});
+        //script qui permet de rajouter des data-toggle sur des éléments html
+        var options = [
+            {'name': 'open', 'events': 'click', 'className': 'open', 'typeName': 'toggle', 'touch': true}
+        ];
+        $('html').cibletoggle(options);
+        $('[type=number],[data-input-number]').inputNumber();
+        $('[type=number],[data-input-number]').live('cible.creation', function() {
+            $(this).inputNumber()
+        })
+        //ajoute une classe empty lorsqu'un champ est vide
+        setInterval(function() {
+            $('input[type=text], textarea').each(function() {
+                $this = $(this);
+                $this.toggleClass('empty', ($this.val() == ""));
+            });
+        }, 100);
+    });
+    var arrayUnique = function(a) {
+        return a.reduce(function(p, c) {
+            if (p.indexOf(c) < 0) p.push(c);
+            return p;
+        }, []);
+    };
+</script>

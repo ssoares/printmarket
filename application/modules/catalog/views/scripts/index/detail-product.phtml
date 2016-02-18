@@ -1,0 +1,213 @@
+<?php
+$this->headLink()->appendStylesheet($this->locateFile('imageslibrary.css'), 'all');
+$this->headScript()->appendFile($this->locateFile('ld.jquery.variableSlider.js'));
+//$url   = $this->baseUrl() . '/' . 'cart/index/ajax/';
+$product = $this->productDetails['data'];
+$images = $this->productDetails['images'];
+$items = $this->productDetails['items'];
+$tabs = $this->productDetails['tabs'];
+$relatedP = $this->productDetails['relatedProducts'];
+$imgPath = $this->imgProductPath . $product['P_ID'] . '/';
+
+$config = Zend_Registry::get('config');
+$large = $config->catalog->image->original->maxWidth . 'x' . $config->catalog->image->original->maxHeight . '_';
+$medium = $config->catalog->image->medium->maxWidth . 'x' . $config->catalog->image->medium->maxHeight . '_';
+$small = $config->catalog->image->thumb->maxWidth . 'x' . $config->catalog->image->thumb->maxHeight . '_';
+$descr = $product['CCI_Description'];
+$this->headTitle($product['PI_Name']);
+$this->pageTitle($product['PI_Name']);
+?>
+<section class="block catalog">
+    <?php echo $this->partial('partials/searchContainer.phtml', array('view' => $this)); ?>
+    <?php echo $descr; ?>
+    <div class="caracteristics_top row">
+        <figure class="medium col-lg-5 text-center">
+        <?php if (!empty($product['P_Photo'])): ?>
+            <?php
+            $img = $this->moduleImage(
+                'catalog', 'products/' . $product['P_ID'],
+                $product['P_Photo'],
+                'medium',
+                array('class' => 'img-responsive')
+            );
+            $large = $this->moduleImage('catalog', 'products/' . $product['P_ID'],
+                $product['P_Photo'], 'original', array('getSource' => true));
+            echo $this->link($large, $img, array('class' => 'prettyPhoto'));
+            ?>
+            <?php
+        else:
+            echo $this->clientImage('pix.gif', array('alt' => ''));
+            ?>
+        <?php endif; ?>
+        </figure>
+        <?php if (count($images) > 0): ?>
+        <div class="vertical-slider col-lg-2">
+            <div class="thumbnail-container">
+                <figure class="thumbs-column">
+                    <p class="thumbnail-catalog selected">
+                    <?php
+                    echo $this->moduleImage(
+                        'catalog', 'products/' . $product['P_ID'],
+                        $product['P_Photo'], 'thumb', array('alt' => $product['P_Photo'],
+                            'title' => $product['PI_Name']));
+                    ?>
+                        <input class="imgName" type="hidden" value="<?php echo $product['P_Photo']; ?>" />
+                    </p>
+                <?php foreach ($images as $image): ?>
+                    <p class="thumbnail-catalog">
+                        <?php
+                        echo $this->moduleImage(
+                            'catalog', 'products/' . $product['P_ID'], $image['CPI_Img'],
+                            'thumb', array('alt' => $product['P_Photo'],
+                            'title' => $product['PI_Name'])
+                        );
+                        ?>
+                        <input class="imgName" type="hidden" value="<?php echo $image['CPI_Img']; ?>" />
+                    </p>
+                    <?php endforeach; ?>
+                </figure>
+            </div>
+            <div class="side-up"><a href="javascript:void(0)" class="side-up-button">&nbsp;</a></div>
+            <div class="side-down"><a href="javascript:void(0)" class="side-down-button">&nbsp;</a></div>
+        </div>
+        <?php endif; ?>
+        <div class="product-items col-lg-5">
+            <ul class="items-list container col-lg-12">
+            <?php foreach ($items as $i => $item): ?>
+                <?php
+                $values = array($product['P_ID'], $item['I_ID']);
+                $options = array('class' => 'add-to-cart icon-icon icon-cart',
+                    'data-order-id' => implode('-', $values));
+                ?>
+                <li class="row <?php echo $i %2 == 0 ? 'even' : 'odd'; ?> border-bottom">
+                    <span class="item-label col-xs-12 col-md-6 border-right"><?php echo $item['II_Name']; ?></span>
+                    <span class="item-price col-xs-6 col-md-4 border-right text-center"><?php echo $item['I_PriceDetail']; ?> $</span>
+                    <span class="item-addtocart col-xs-6 col-md-2 text-center">
+                    <?php if (!$item['I_NoAddToCart']): ?>
+                    <?php echo $this->link('javascript:void(0);','Cart', $options); ?>
+                    <?php endif; ?>
+                    </span>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+    <?php
+    $classWidth = 'col-lg-4';
+    $isEmptyOptions = empty($product['PI_Options']);
+    $isEmptyNote = empty($product['PI_Notes']);
+    if ($isEmptyNote || $isEmptyOptions){
+        $classWidth = 'col-lg-6';
+    }
+    if ($isEmptyNote && $isEmptyOptions){
+        $classWidth = 'col-lg-12';
+    }
+    ?>
+    <div class="<?php echo $classWidth; ?>">
+    <?php if (!empty($product['PI_Description'])): ?>
+        <header class="title_products">
+            <h3><?php echo $this->getCibleText('product_label_descriptionPublic'); ?></h3>
+        </header>
+        <?php echo $product['PI_Description']; ?>
+    <?php endif; ?>
+    </div>
+    <?php // if (!$isEmptyOptions): ?>
+<!--    <div class="<?php // echo $classWidth; ?>">
+        <header>
+            <h3><?php // echo $this->getCibleText('form_label_PI_Options'); ?></h3>
+        </header>
+        <?php // echo $product['PI_Options']; ?>
+    </div>
+    <?php // endif; ?>
+    <?php // if (!$isEmptyNote): ?>
+    <div class="<?php // echo $classWidth; ?>">
+        <header>
+            <h3><?php // echo $this->getCibleText('product_label_notePublic'); ?></h3>
+        </header>
+        <?php // echo $product['PI_Notes']; ?>
+    </div>-->
+    <?php // endif; ?>
+    <!--Display tabs content-->
+    <div class="col-lg-12">
+        <ul class="nav nav-tabs">
+            <?php foreach ($tabs as $key => $tab): ?>
+            <li class="<?php echo ($key == 0 ? 'active' : ''); ?>">
+                <?php echo $this->link('#' . $tab['CPT_TabId'], $tab['CPT_TabTitle'],
+                    array('class' => '', 'data-toggle' => "tab"));
+                ?>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <?php foreach ($tabs as $key => $tab): ?>
+        <div id="<?php echo $tab['CPT_TabId']; ?>" class="tab-pane in <?php echo ($key == 0 ? 'active' : ''); ?>">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php echo $tab['CPT_TabText']; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if (!empty($relatedP)): ?>
+    <div class="relatedProducts col-lg-12">
+        <h2><?php echo $this->getCibleText('form_label_related_products'); ?></h2>
+        <?php echo $this->partial('partials/slideRenderer.phtml', array('imagesData' => $relatedP, 'view' => $this)); ?>
+    </div>
+    <?php endif; ?>
+</section>
+<script type="text/javascript">
+    //<![CDATA[
+    $(window).load(function() {
+        $(".thumbnail-container").variableSlider({
+            arrowPrevious: '.side-up-button',
+            arrowNext: '.side-down-button',
+            childrenSelector:'p',
+            containerSelector:'figure',
+//            transitionTime: 1000,
+            sliderTooShortCallback: function(e) {
+                e.currentTarget.parent().addClass('disabled');
+            }
+        }).find('a').attr('rel', 'gal["produit"]');
+
+
+    });
+    $(document).ready(function() {
+        //        $('.addCart a').click(function(e){
+        //            var options = new Array();
+        //            options.borderColor = "#BABE00";
+        //            $('#cible-tooltip-box').tooltip_appear(options);
+        //        });
+
+//        $('li[id^=itemId]').click(function(e){
+//            setSelectedItem(e.type, $(this));
+//        });
+
+        $('.thumbnail-catalog').click(function(e){
+            var large = '<?php echo $large; ?>'
+            var medium = '<?php echo $medium; ?>'
+            var small = '<?php echo $small; ?>'
+            var imgPath = '<?php echo $imgPath; ?>';
+            var imgDest = $('figure.medium').find('img');
+            var imgSrc = $(this).find('input').val();
+            var linkImg = $('.picture-frame').find('a');
+            var explode = imgDest.attr('src').split('/');
+            var tmp = explode[explode.length-1];
+            var src = tmp.replace(medium, '');
+            var tmpName = imgPath + large + imgSrc;
+            linkImg.attr('href', tmpName);
+            tmpName = imgPath + medium + imgSrc;
+            imgDest.attr('src', tmpName);
+            tmpName = 'url("' +imgPath + small + src + '")';
+//            $(this).css('backgroundImage', tmpName);
+//            thisImg.val(src);
+
+        });
+
+    });
+    //]]>
+</script>

@@ -1,0 +1,105 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_profile_text'),
+    'pageDescription' => $this->getCibleText('header_edit_profile_description'),
+    'breadcrumb' => ''
+));
+$hidden = '';
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <div id="action_panel" class="list_action_panel">
+            <input id="general" type="hidden" value="0" />
+            <ul class="buttons">
+                <li id="addTab"><a class="action_submit add" href="#"><?php echo $this->getCibleText('add_user_profile'); ?></a>
+                    <ul class="profiles closed">
+                        <?php foreach ($this->profilesList as $key => $value): ?>
+                            <?php foreach ( $this->tabsList as $tab): ?>
+                            <?php
+                            if ($value['M_MVCModuleTitle'] == $tab[0])
+                            {
+                                $hidden = 'style="display:none;"';
+                                break;
+                            }
+                            else
+                                $hidden = '';
+                            ?>
+                            <?php endforeach; ?>
+                            <?php $icon = $this->baseUrl() . '/' . $value['M_MVCModuleTitle'] . '/index/get-icon/format/48x48'; ?>
+                        <li <?php echo $hidden; ?>>
+                            <a href="<?php echo $value['M_MVCModuleTitle']; ?>" class="addProfile <?php echo $value['M_MVCModuleTitle']; ?>">
+                            <?php echo $this->image($icon, array('class' => 'iconProfile', 'direct' => true)); ?>
+                            <?php echo $this->getCibleText($value['M_MVCModuleTitle'] . '_module_name'); ?></a>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+
+                </li>
+            </ul>
+        </div>
+        <div class="required-field-message" style="margin: -35px 0 10px 0;"><span class="field_required">*</span>  <?php echo $this->getCibleText('form_field_required_label') ?></div>
+        <?php
+        $this->tabPane("profilesTab", $this->form, array('title' => $this->getCibleText('profile_tab_title_general'), 'id' => 'general'));
+        $this->tabPane("profilesTab", $this->log, array('title' => $this->getCibleText('profile_tab_title_log'), 'id' => 'logTab'));
+        $imgDel = $this->image($this->BaseUrl() . '/icons/icon-close-16x16.png', array('title' => $this->getCibleText('button_delete')));
+        foreach ($this->tabsList as $tab)
+        {
+            $tabTitle = $this->getCibleText('profile_tab_title_' . $tab[0]);
+            $tabTitle .= '<a class="deleteTab ' . $tab[0] .'">' . $imgDel . '</a>';
+            $this->tabPane("profilesTab", $tab[1], array('title' => $tabTitle, 'id' => $tab[0]));
+        }
+
+        echo $this->tabContainer("profilesTab", array(), array('class' => 'tabContain'));
+        ?>
+        <input id="selectedState" name="selectedState" type="hidden" value="<?php echo($this->selectedState); ?>"/>
+        <input id="selectedCity" name="selectedCity" type="hidden" value="<?php echo($this->selectedCity); ?>"/>
+    </div>
+</div>
+<div id="dialog-confirm" title="<?php echo $this->getCibleText('form_profile_delete_dialog_title')?>" class="hidden">
+	<p>
+        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+        <?php echo $this->getCibleText('form_profile_delete_dialog_text')?>
+    </p>
+</div>
+<script type="text/javascript">
+    $(window).load(function(){
+        $('input[name=submitSave]').attr('disabled', 'disabled');
+    });
+    $(document).ready(function(){
+        var errorEmpty = "<?php echo $this->getCibleText('validation_message_empty_field')?>";
+        $('.profile').profile({
+            baseUrl: '<?php echo $this->baseUrl(); ?>',
+            id: '<?php echo $this->id; ?>',
+            imgDel: '<?php echo $imgDel;?>',
+            isEmpty: errorEmpty
+        });
+
+        $('#logTab').parent().addClass('logTab');
+    });
+</script>
+<ul class="emptyModel actions-buttons">
+    <li></li>
+</ul>
+    <?php echo $this->partial(
+        'partials/js.GenericFormValidate.phtml',
+        array(
+            'id' => $this->params['id'],
+            'baseUrl' => $this->BaseUrl()
+        )
+    );
+    ?>
+
+<?php echo $this->partial('partials/js.addressRetailer.phtml'); ?>
+<?php echo $this->partial("partials/autocomplete.phtml"); ?>
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+    $('.shortcutLog').click(function(){
+        var inputFilter = $('#log_filter').find('input');
+        inputFilter.val($(this).attr('data-filter-val'));
+        inputFilter.trigger('keyup');
+        $('#logTab').click();
+    });
+});
+//]]>
+</script>

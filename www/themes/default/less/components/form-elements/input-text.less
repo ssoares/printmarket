@@ -1,0 +1,29 @@
+//input normaux
+input[type=text], input[type=search] {
+    .form-control();
+    line-height:@input-height-base - @input-padding  !important;
+    height:@input-height-base  !important;
+    color:@brand-grey;
+    border:1px solid @brand-grey;
+    .font-weight('light', 'sans-serif');
+    .border-radius(2px);
+    &.empty {
+        color:@brand-grey-light;
+        border-color:@brand-grey-light;
+    }
+     & when (@device-type = 'desktop') {
+        padding:@input-padding / 2 22px;
+        margin-bottom:12px;
+        .responsive-font(@font-size-base + 1);
+    }
+     & when (@device-type = 'mobile') {
+        padding:@input-padding / 2 12px * @mobile-divider-text;
+        margin-bottom:12px * @mobile-divider-text;
+        .responsive-font((@font-size-base + 8) * @mobile-divider-text);
+        .box-sizing(border-box);
+    }
+    .tokenfield & {
+        display: inline-block;
+        width: auto;
+    }
+}

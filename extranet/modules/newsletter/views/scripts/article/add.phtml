@@ -1,0 +1,117 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_newsletter_article_title'),
+    'pageDescription' => $this->getCibleText('header_add_newsletter_article_description')
+    //'breadcrumb' => Cible_FunctionsPages::buildTextBreadcrumb($this->pageId)
+));
+?>
+
+<div id="default_form">
+    <!--<div class="trigger_crop">
+        <a href="#">
+            [ <?php echo $this->getCibleText('crop'); ?> ]
+        </a>
+    </div>-->
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>
+</div>
+<div id="boxes">
+
+</div>
+<?php echo $this->partial('partials/jsArticles.phtml',array('maxChar' => $this->maxChar)); ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.trigger_crop').hide();
+        $('.trigger_crop').css('margin-top','95px');
+
+         <?php if($this->showCrop==1){?>
+
+        var splitST = $('#ImageSrc_preview').attr('src').search("image_non_ disponible.jpg");
+        if(splitST==-1){
+           $('.trigger_crop').show();
+        }
+        $('#ImageSrc_preview').load(function(){
+
+            var splitST = $('#ImageSrc_preview').attr('src').search("image_non_ disponible.jpg");
+            if(splitST==-1){
+               $('.trigger_crop').show();
+            }
+            else{
+                $('.trigger_crop').hide();
+            }
+        });
+
+        $('.trigger_crop').click(function(e){
+
+            var imageScr = $('#ImageSrc_original').attr('value');
+
+
+            if(imageScr!=""){
+                var myArray = imageScr.split('/');
+                imageScr = myArray[myArray.length-1];
+                $('#cropImage').val(imageScr);
+
+                var dialogJ = $('#boxes');
+                $.get('<?php echo $this->baseUrl() ?>/newsletter/article/cropimage/new/Y/newsletterID/' + <?php echo $this->newsletterID; ?> + '/image/' + imageScr,{},function(html){
+                    dialogJ.html('');
+                    dialogJ.append(html);
+                    dialogJ.dialog({
+                        'modal':true,
+                        width:1200,
+                        height:1000,
+                        buttons:{
+                            'annuler':function(){$(this).dialog("close");
+                                    $('.imgareaselect-outer').css('visibility','hidden');
+                                    $('.imgareaselect-selection').parent().css('visibility','hidden');
+                                    dialogJ.dialog("close");
+                                    dialogJ.dialog('destroy');
+                                },
+                            'crop':function(){
+                                $.post(
+                                '<?php echo $this->baseUrl() ?>/newsletter/article/cropimage/',
+                                {
+                                    newsletterID:'<?php echo $this->newsletterID; ?>',
+                                    image: imageScr,
+                                    ImageSrc: $('form#imageCropForm input#ImageSrc').attr('value')  ,
+                                    ImageDestination: $('form#imageCropForm input#ImageDestination').attr('value'),
+                                    x1: $('form#imageCropForm input#x1').attr('value'),
+                                    x2: $('form#imageCropForm input#x2').attr('value'),
+                                    y1: $('form#imageCropForm input#y1').attr('value'),
+                                    y2: $('form#imageCropForm input#y2').attr('value'),
+                                    w: $('form#imageCropForm input#w').attr('value'),
+                                    h: $('form#imageCropForm input#h').attr('value'),
+                                    rh: $('form#imageCropForm input#rh').attr('value'),
+                                    rw: $('form#imageCropForm input#rw').attr('value'),
+                                    maxWShow: $('form#imageCropForm input#maxWShow').attr('value'),
+                                    maxHShow: $('form#imageCropForm input#maxHShow').attr('value'),
+                                    maxWPreShow: $('form#imageCropForm input#maxWPreShow').attr('value'),
+                                    maxHPreShow: $('form#imageCropForm input#maxHPreShow').attr('value'),
+                                    realHShow: $('form#imageCropForm input#realHShow').attr('value'),
+                                    realWShow: $('form#imageCropForm input#realWShow').attr('value'),
+                                    sizeXWanted: $('form#imageCropForm input#sizeXWanted').attr('value'),
+                                    sizeYWanted: $('form#imageCropForm input#sizeYWanted').attr('value'),
+                                    returnPage: $('form#imageCropForm input#returnPage').attr('value')
+                                },
+                                function(data){
+                                    dialogJ.dialog("close");
+                                    dialogJ.dialog('destroy');
+                                    $('.imgareaselect-outer').css('visibility','hidden');
+                                    $('.imgareaselect-selection').parent().css('visibility','hidden');
+                                    //$('#ImageSrc_preview').attr('src',$('#ImageSrc_original').val());
+                                    $("#ImageSrc_preview").attr("src", $('#ImageSrc_original').val() + "?timestamp=" + new Date().getTime());
+                                    $("#ImageSrc_preview").attr("width","<?php echo $this->thumbWidth; ?>");
+                                    $("#ImageSrc_preview").attr("height","<?php echo $this->thumbHeight; ?>");
+
+                                })
+                            }
+                        }
+                    });
+                })
+            }
+        });
+
+<?php } ?>
+    });
+</script>

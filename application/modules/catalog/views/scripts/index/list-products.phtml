@@ -1,0 +1,37 @@
+<?php
+$this->headTitle($this->title);
+$this->pageTitle($this->title);
+$prevCategory = '';
+?>
+<section id="contentCatalog" class="block catalog">
+    <?php echo $this->partial('partials/searchContainer.phtml', array('view' => $this)); ?>
+    <?php foreach ($this->paginator as $name => $data): ?>
+        <article class="list col-lg-4">
+            <?php
+            $name = $data["PI_Name"];
+            !$this->isSkuList ?: $name . ' - ' . $data['I_Number'];
+            $urlValues = $this->getProductPath($data);
+            $prevCategory = $data['CCI_ValUrl'];
+
+            $this->isSkuList ? $urlValues[] = $data["II_ValUrl"]:'';
+            $url = implode('/', $urlValues);
+            ?>
+            <figure class="picture">
+                <?php $img = $this->clientImage('logo.png'); ?>
+                <?php if (!empty($data['P_Photo'])) : ?>
+                <?php $img = $this->moduleImage(
+                            'catalog', 'products/' . $data['P_ID'],
+                            $data['P_Photo'], 'medium', array('class' => 'img-responsive'));
+                ?>
+                <?php endif; ?>
+                <?php echo $this->link($url, $img); ?>
+            </figure>
+            <p class="text">
+                <?php // echo $data['CCI_Description']; ?>
+                <?php echo $this->link($url, $name, array('class' => '')); ?>
+            </p>
+        </article>
+        <?php endforeach;?>
+    <div class="clear_both"></div>
+    <?php echo $this->paginationControl($this->paginator,'sliding', 'partials/products.paginator.phtml'); ?>
+</section>

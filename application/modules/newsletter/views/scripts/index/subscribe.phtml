@@ -1,0 +1,47 @@
+<section class="newsletter module subscribe">
+    <?php
+    echo $this->showBlockTitle('h2', array('class'=> 'newsletter-title'));
+
+    $inscriptionValidate = $this->inscriptionValidate;
+    if (!$inscriptionValidate) {
+        echo($this->form);
+    } else {
+        ?>
+        <p class="newsletter-form-validated">
+            <?php
+            echo($this->message);
+            ?>
+        </p>
+    <?php } ?>
+
+<?php /*
+    <nav class="newsletter-options">
+        <a href="<?php echo $this->subscribeLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_subscribe')); ?>
+        </a>
+        <a href="<?php echo $this->unsubscribeLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_unsubscribe')); ?>
+        </a>
+        <a href="<?php echo $this->archivesLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_archives')); ?>
+        </a>
+    </nav>
+ * */ ?>
+    <div class="newsletter-privacy-policy">
+        <?php
+        echo($this->messageConfidentialite);
+        ?>
+    </div>
+
+</section>
+
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        
+        // Remove the possible text from the newsletter email input in the footer
+        if( $('#newsletteremail').length )
+            $('#newsletteremail').val('');
+    });
+//]]>
+</script>

@@ -1,0 +1,104 @@
+<div class="block colonne3">
+<?php echo $this->showBlockTitle('h2'); ?>
+    <?php if ($this->events): ?>
+    <div class="heightContainer">
+        <?php
+        $first = true;
+        $withImage = false;
+        $count = 1;
+        ?>
+        <?php foreach($this->events as $event): ?>
+            <?php
+            $class = $first ? ' first-event' : '';
+            $espace = $count % 3 ? ' espace' : '';
+            $href= $this->baseUrl() . '/' . $this->details_page . '/ID/' . $event['ED_ID']; ?>
+        <div class="events whiteBox3 <?php echo $espace?>">
+            <?php if($first): ?>
+            <?php
+                $first = false;
+                if(!empty($event['ED_ImageSrc'])):
+                    $withImage = true;
+                ?>
+                    <?php $img = $this->eventImage($event['ED_ID'], $event['ED_ImageSrc'], 'thumb', array('class'=>'events-list-photo', 'border'=>'0', 'thickbox' => array('size'=>'original'))); ?>
+                    <?php echo $this->link($href, $img); ?>
+                <?php endif; ?>
+            <?php endif;?>
+            <h6><?php echo $event['EI_Title'] ?></h6>
+                <?php
+                    $date_string = '';
+                    foreach($event['dates'] as $date){
+                        $langSuffix = Zend_Registry::get('languageSuffix') . '_CA';
+                        $startDate = new Zend_Date($date['EDR_StartDate'],null, $langSuffix);
+                        $endDate = new Zend_Date($date['EDR_EndDate'],null, $langSuffix);
+//                        $startDate = new Zend_Date($startDt,null, 'fr_CA');
+//                        $endDate = new Zend_Date($endDt,null, 'fr_CA');
+                        if( !empty($date_string) )
+                            $date_string .= " {$this->getClientText('and')} ";
+
+                        $strTo = $this->getClientText('to');
+                        if( $startDate->get(Zend_Date::YEAR) == $endDate->get(Zend_Date::YEAR) ){
+                            if( $startDate->get(Zend_Date::DAY) != $endDate->get(Zend_Date::DAY) || $startDate->get(Zend_Date::MONTH) != $endDate->get(Zend_Date::MONTH))
+                                $date_string .= sprintf("%d %s %s %d %s %d",
+                                    $startDate->get(Zend_Date::DAY),
+                                    $startDate->get(Zend_Date::MONTH_NAME),
+                                    $strTo,
+                                    $endDate->get(Zend_Date::DAY),
+                                    $endDate->get(Zend_Date::MONTH_NAME),
+                                    $endDate->get(Zend_Date::YEAR)
+                                    );
+                            else
+                                $date_string .= sprintf("%d %s %d",
+                                    $startDate->get(Zend_Date::DAY),
+                                    $startDate->get(Zend_Date::MONTH_NAME),
+                                    $startDate->get(Zend_Date::YEAR)
+                                    );
+                        }
+                        else
+                            $date_string .= sprintf("%d %s %d %s %d %s %d",
+                                $startDate->get(Zend_Date::DAY),
+                                $startDate->get(Zend_Date::MONTH_NAME),
+                                $startDate->get(Zend_Date::YEAR),
+                                $strTo,
+                                $endDate->get(Zend_Date::DAY),
+                                $endDate->get(Zend_Date::MONTH_NAME),
+                                $endDate->get(Zend_Date::YEAR));
+                    }
+                ?>
+        <p class="date_events">
+            <a href="<?php echo $href ?>"><?php echo $this->link($href,$date_string) ?></a>
+            <!--<a href="<?php echo $this->baseUrl() . '/' . $this->details_page . '/ID/' . $event['ED_ID'] ?>"><?php echo $event['EI_Brief'] ?></a>-->
+        </p>
+        <!--<div class="view-details"><?php echo $this->clientImage('button-register-event.jpg'); ?></div>-->
+    </div>
+            <?php if ($count % 3 == 0 && $count < (count($this->events))): ?>
+            </div>
+            <div class="heightContainer">
+            <?php endif; ?>
+            <?php $count++; ?>
+        <?php endforeach; ?>
+    </div>
+
+    <span class="suite_arrow">
+        <?php echo $this->link( "{$this->baseUrl()}/{$this->listall_page}/", $this->getClientText('see_all_events_text')) ?>
+    </span>
+
+    <?php else: ?>
+    <div>
+        <?php if ($this->otherData): ?>
+            <?php $options = array('type' => 'page', 'message' =>$this->getClientText('empty_data_disclaimer')); ?>
+            <p><?php echo $this->languageSwitcher($options); ?></p>
+        <?php else: ?>
+            <p><?php echo $this->getCibleText('events_no_events') ?></p>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        $('.events').click(function(){
+            window.location.href = $(this).find('a').attr('href');
+        });
+    });
+    //]]>
+</script>

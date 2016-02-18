@@ -1,0 +1,89 @@
+@header-line-height:76px;//dans ce cas-ci, le line-height devrait être de la même hauteur que le logo
+@header-menu-line-height:36px;//la hauteur de ligne du menu
+@header-padding-top:68px / 2;//padding top du header
+@header-padding-bottom:68px / 2;//padding top du header
+.site-header {
+    position:relative;
+    background:@brand-white;
+    padding:@header-padding-top 0 @header-padding-bottom 0;
+    line-height:@header-line-height;
+}
+.site-header-container {
+    padding:0;
+}
+.site-name {
+    .make-md-column(4);
+    display:table;
+}
+.site-logo {
+    height:@header-line-height;
+    img {
+        max-width:100%;
+        vertical-align:middle;
+    }
+}
+.site-baseline {
+    .responsive-font(@font-size-base + 6);
+    .font-weight("normal",'serif');
+    font-style:italic;
+    display:table-cell;
+    padding-left:@grid-gutter-width / 2;
+    line-height:@header-menu-line-height;
+    @media @mq-phone {
+        .responsive-font(@font-size-base + 4);
+    }
+}
+.site-menu-principal {
+    min-height:@header-line-height;
+    text-align:right;
+    .make-md-column(8);
+    @media @mq-tablet {
+        text-align:left;
+    }
+}
+.cart-icon-data {
+    a {
+        text-decoration: none !important;
+        .item-label{
+            .responsive-font(10px);
+        }
+        .cart-item-count{
+            background: @brand-secondary;
+            line-height: 13px;
+            .font-weight('bold');
+            .box-shadow(0 0 3px 0 #000000);
+            left: 45px;
+            bottom: -1000px;
+            top: -1000px;
+            margin: auto;
+            position: absolute;
+            padding-top: 5px;
+            text-align: center;
+            .border-radius(7px);
+            height: 35px;
+            width: 35px;
+        }
+    }
+    .icon-cart:after{
+        .responsive-font(2.4rem);
+        line-height: @line-height-base;
+    }
+    }
+    .cart-icon-arrow{
+
+    }
+    .cart-icon-arrow:after {
+        border: medium solid transparent;
+        content: " ";
+        height: 0;
+        pointer-events: none;
+        position: absolute;
+        left: 29px;
+        width: 0;
+    }
+    .cart-icon-arrow:after{
+        border-right-color: @brand-primary;
+        border-width: 8px;
+        margin-top: -8px;
+        top: 50%;
+}

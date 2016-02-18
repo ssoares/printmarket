@@ -1,0 +1,11 @@
+@import "border-radius.less";
+
+//transform l'élément en cercle
+.circle(@radius:5px, @color:white ) when (default()) {
+    display:inline-block;
+    height:@radius * 2;
+    width:@radius * 2;
+    .border-radius(@radius);
+    background:@color;
+    font-size:0;
+}

@@ -1,0 +1,89 @@
+<?php
+$associationSetID = $this->options[0];
+$fieldPrefix = $this->options[1];
+$dataFieldToDisplay = $this->options[2];
+$associationSetCpt = $this->options[3];
+$associationSetTitle = $this->options[4];
+$associationsData = $this->options[5];
+$associationArray = $this->options[6];
+$addLine = $this->options[7];
+
+$typeInput = "numeric decimal";
+$textInput = $this->getCibleText('form_label_CAP_Amount');
+if(isset($this->textType)){
+    $typeInput = $this->textType['type'];
+    $textInput = $this->textType['text'];
+}
+$idOffset = $fieldPrefix . 'ID';
+if(count($associationArray) == 0){
+    $associationArray[0] = 0;
+}else{
+    $associationArrayTmp = array();
+    foreach($associationArray as $association){
+        $associationArrayTmp[] = $association;
+    }
+    $associationArray = $associationArrayTmp;
+}
+
+$cptAssociation = count($associationArray);
+
+?>
+<?php if(!$addLine): ?>
+    <fieldset id="fieldset-<?php echo $associationSetID ?>">
+        <div id="associationSet_<?php echo $associationSetCpt?>" class="associationSetContent" associationSetID="<?php echo $associationSetID; ?>">
+            <div class='associationSetContent_action'>
+                <div class='action'>
+                    <fieldset id='fieldset-actions-association'>
+                        <ul class='actions-buttons'>
+                            <li><button name='addAssociation' id='addAssociation' type='button' class='stdButton addAssociation'>Ajouter</button></li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class='title'><?php echo $associationSetTitle; ?></div>
+            </div>
+            <div class="associationContent">
+                <input type="hidden" id="associationCountID" value="<?php echo $cptAssociation; ?>"/>
+                <input type="hidden" id="associationCount" value="<?php echo $cptAssociation; ?>"/>
+                <table cellpadding="0" cellspacing="0">
+<?php endif; ?>
+            <?php
+            $i = 0;
+            if($addLine){
+                $i = $associationSetCpt - 1;
+                $cptAssociation = $associationSetCpt;
+            }
+
+            for($i; $i < $cptAssociation; $i++):
+                $row = $i % 2 ? 'row_odd' : $row = 'row_even';
+                $optionsValues = array();
+                $value = isset($associationArray[$i])?$associationArray[$i] : 0;
+            ?>
+                <?php if(!$addLine): ?>
+                    <tr class="association" associationID="<?php echo $i; ?>">
+                <?php endif; ?>
+                        <td class=" <?php echo $row; ?>">
+                            <label class=""><?php echo $textInput ?></label>
+                            <input type="text" class="<?php echo $typeInput ?>" value="<?php echo $value; ?>" name="<?php echo $associationSetID . 'Set[' . $i . ']' ?>" id=""/>
+                        </td>
+                    <?php if(!$addLine): ?>
+                        <td class="tdAssociationAction <?php echo $row; ?>">
+                    <?php if(count($associationArray) > 0): ?>
+                            <div class='action'>
+                                <fieldset id='fieldset-actions-association'>
+                                    <ul class='actions-buttons'>
+                                        <li><button name='deleteAssociation' id='deleteAssociation' type='button' class='stdButton delAssociation'>Supprimer</button></li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+                    <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+    <?php endfor; ?>
+
+<?php if(!$addLine): ?>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+<?php endif; ?>

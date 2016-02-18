@@ -1,0 +1,19 @@
+<div id="topInfo" class="topInfo">
+    <table cellpadding="0" cellspacing="0">
+    <tr>
+        <td class="title_column">
+            <h1 id="title"><?php echo $this->pageTitle; ?></h1>
+        </td>
+
+        <td class="description_column">
+            <div id="description">
+                <?php echo $this->pageDescription; ?>
+            </div>
+        </td>
+    </tr>
+    </table>
+</div>
+<?php if( !empty($this->breadcrumb) ): ?>
+    <div id="breadcrumb" class="topInfo-breadcrumb"><?php echo $this->breadcrumb; ?></div>
+<?php else: ?>
+<?php endif; ?>

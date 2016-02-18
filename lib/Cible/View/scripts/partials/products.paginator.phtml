@@ -1,0 +1,98 @@
+<?php
+if ($this->pageCount > 1):
+    $visiblePages = 4;
+    // images
+    //$_first_img = $this->first_link_image ? $this->first_link_image : $this->image("{$this->baseUrl()}/icons/paging_first.png", array('border'=> 0));
+    $_prev_img = $this->prev_link_image ? $this->prev_link_image : $this->image("{$this->baseUrl()}/icons/paging_prev.png", array('border' => 0));
+
+    $_next_img = $this->next_link_image ? $this->next_link_image : $this->image("{$this->baseUrl()}/icons/paging_next.png", array('border' => 0));
+    //$_last_img = $this->last_link_image ? $this->last_link_image : $this->image("{$this->baseUrl()}/icons/paging_last.png", array('border'=> 0));
+    ?>
+
+    <!-- Numbered page links -->
+    <ul id="page-list" class="module-pagination-list pagination-list">
+        <?php if (isset($this->previous)) { ?>
+            <li class="module-navigation-previous">
+                <a href="<?php echo $this->url(array('page' => $this->previous)); ?>"></a>
+            </li>
+        <?php } ?>
+        <?php if ($this->first < $this->firstPageInRange): ?>
+            <li class="module-navigation-page module-navigation-page-out-of-range first">
+                <a href="<?php echo $this->url(array('page' => $this->first)); ?>"><?php echo $this->first; ?></a>
+            </li>
+        <?php endif; ?>
+        <?php foreach ($this->pagesInRange as $page): ?>
+            <?php
+            $class = '';
+            if ($page == $this->firstPageInRange)
+                if ($this->first < $this->firstPageInRange)
+                    $class = 'first-in-range';
+                else
+                    $class = 'first';
+            if ($page == $this->lastPageInRange)
+                if ($this->last > $this->lastPageInRange)
+                    $class = 'last-in-range';
+                else
+                    $class = 'last';
+            ?>
+            <?php if ($page == $this->current): ?>
+                <li class="module-navigation-selected selected <?php echo $class ?>">
+                    <span><?php echo $page; ?></span>
+                </li>
+            <?php elseif (abs($this->current - $page) < $visiblePages): ?>
+                <li class="module-navigation-page <?php echo $class ?>">
+                    <a href="<?php echo $this->url(array('page' => $page)); ?>"><?php echo $page; ?></a>
+                </li>
+            <?php elseif (abs($this->current - $page) == $visiblePages): ?>
+                <li class="module-navigation-page module-navigation-page-edge <?php echo $class ?>">
+                    <a href="<?php echo $this->url(array('page' => $page)); ?>"><?php echo $page; ?></a>
+                </li>
+            <?php else: ?>
+                <li class="module-navigation-page module-navigation-page-out-of-range <?php echo $class ?>">
+                    <a href="<?php echo $this->url(array('page' => $page)); ?>"><?php echo $page; ?></a>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <?php if ($this->last > $this->lastPageInRange): ?>
+            <li class="module-navigation-page module-navigation-page-out-of-range last">
+                <a href="<?php echo $this->url(array('page' => $this->last)); ?>"><?php echo $this->last; ?></a>
+            </li>
+        <?php endif; ?>
+        <?php if (isset($this->next)) { ?>
+            <li class="module-navigation-next">
+                <a href="<?php echo $this->url(array('page' => $this->next)); ?>" ></a>
+            </li>
+        <?php } ?>
+    </ul>
+
+<?php endif; ?>
+
+    
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function () {
+        
+        var elementPre = $($("ul#page-list").find("li.module-navigation-page.module-navigation-page-edge.first")).detach();
+        $('ul#page-list').prepend(elementPre);
+        
+        var elementPre = $($("ul#page-list").find("li.module-navigation-page.module-navigation-page-out-of-range.first")).detach();
+        $('ul#page-list').prepend(elementPre);
+        
+        
+        
+        
+        var elementAft = $($("ul#page-list").find("li.module-navigation-page.module-navigation-page-edge.last")).detach();
+        $('ul#page-list').append(elementAft);
+        
+        var elementAft = $($("ul#page-list").find("li.module-navigation-page.module-navigation-page-out-of-range.last")).detach();
+        $('ul#page-list').append(elementAft);
+        
+        
+            
+        
+    });
+//]]>
+</script>
+    
+    
+    

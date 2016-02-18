@@ -1,0 +1,226 @@
+@import "../vendor/bootstrap/variables.less";
+@import "../vendor/bootstrap/mixins.less"; 
+
+@import "../variables/general-variables.less";
+@import "../variables/custom-icons.less";
+
+@import "font-face.less";
+
+@import "../custom/title-style.less";
+@import "../custom/spritesheet.less";
+
+@import "../mixins/absolute-center.less";
+@import "../mixins/circle.less";
+@import "../mixins/for.less";
+@import "../mixins/font-weight.less";
+@import "../mixins/gradient.less";
+@import "../mixins/import-icon.less";
+@import "../mixins/prefixed.less";
+@import "../mixins/responsive-font.less";
+@import "../mixins/print-font.less";
+
+@import "content/buttons.less";
+@import "content/columns.less";
+@import "content/custom.less";
+@import "content/googlemap.less";
+@import "content/icons.less";
+@import "content/sprite.less";
+@import "content/table.less";
+//récupérer le font-size pour le rem de Bootstrap
+html { 
+    font-size: 62.5%;
+}
+//font de base pour tout les composantes qui en ont besoin
+.front-end, .mce-content-body {
+    font-family:@font-family-sans-serif;
+}
+a:active,
+a:focus,
+a:hover {
+  outline: 0 none;
+}
+//editor only
+#tinymce.mce-content-body {
+    img {
+        background:@brand-grey-light;
+    }    
+}
+
+//lignes qui fixent certaines anomalies avec le tinmce
+.mce-text[style*="font-size:0"] {
+    font-size:@font-size-base !important;
+}
+.mce-text[style*="color:white"],
+.mce-text[style*="color:#fff"],
+.mce-text[style*="color:rgb(255, 255, 255)"] {
+    color:@text-color !important;
+}
+.mce-tinymce .mce-i-none {
+    margin-top:2px ;
+}
+
+//back-end and front-end
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .front-end {
+    h1 {
+        .h1-style();
+    }
+    h2 {  
+        .h2-style();
+    }
+    .inverted h2 {
+        color:@text-color-inverted;
+    }
+    a {
+        color:@brand-primary;
+        text-decoration:none; 
+        &:hover {
+            text-decoration:underline;
+        }        
+    }
+    h1 a, h2 a, h3 a { 
+        color:inherit;
+        font-family:inherit;
+        &:hover {
+            text-decoration:none;
+        }
+    }     
+}
+//permet d'avoir un preview bleu dans le textbox de l'infolettre
+.content-blue {
+    .h2-style();
+}
+//back-end and content
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content { 
+    line-height:1.5em;
+    .font-weight('light', "sans-serif");  
+    .inverted & {             
+        color:@text-color-inverted;
+    }
+    & when (@device-type = 'desktop') {
+        .responsive-font(@font-size-base + 1);
+    }
+    & when (@device-type = 'mobile') {
+        .responsive-font((@font-size-base + 1) * @mobile-divider-text);
+        .contact & {
+            .responsive-font((@font-size-base + 12) * @mobile-divider-text);
+            line-height:1.3em;
+        }    
+    }
+    h3 {
+        .h3-style();    
+    }
+    h4 {       
+        color: @text-color;
+        line-height: 1.15em;
+        margin:0 0 0.5em 0; 
+        & when (@device-type = 'desktop') {
+            .responsive-font(@font-size-h4);
+        }    
+        & when (@device-type = 'mobile') {
+            .responsive-font(@font-size-h4 * @mobile-divider-text);
+        }    
+    }
+    h5 {
+        .responsive-font(@font-size-h5);
+        .font-weight('light', "sans-serif");  
+        color: @text-color;
+        line-height: 1.15em;
+        margin:0 0 0.5em 0; 
+        & when (@device-type = 'desktop') {
+            .responsive-font(@font-size-h5);
+        }    
+        & when (@device-type = 'mobile') {
+            .responsive-font(@font-size-h5 * @mobile-divider-text);
+        }    
+    }
+    h6 {
+        .responsive-font(@font-size-h6);
+        .font-weight('light', "sans-serif");  
+        color: @text-color;
+        line-height: 1.15em;
+        margin:0 0 0.5em 0;  
+        & when (@device-type = 'desktop') {
+            .responsive-font(@font-size-h6);
+        }    
+        & when (@device-type = 'mobile') {
+            .responsive-font(@font-size-h6 * @mobile-divider-text);
+        }    
+    }
+    hr {
+        background:#bfbfbf;
+        border: 0;
+        height: 1px;
+        margin: 12px 0;
+    }
+    img {
+        max-width:100%;
+        margin-bottom:10px;
+        height:auto !important;
+    }
+
+    //    
+    p {
+        margin:0 0 1em 0;
+        .font-weight('light', 'sans-serif');
+        line-height:1.25em;
+    }
+    code,pre {
+        font-family: @font-family-monospace;
+        margin:0 0 0.66em 0;
+        padding:12px;
+    }
+    blockquote {
+        margin:0 0 20px 0;
+        padding:0;
+        border:0;
+        color:@brand-primary;
+        .font-weight('normal','serif');
+        font-style:italic;
+        line-height:1.45em;
+        * { 
+            font-size:inherit;
+            font-family:inherit;
+            line-height:inherit;
+            & when (@device-type = 'desktop') {
+                .responsive-font(@font-size-base + 9 );
+            }
+            & when (@device-type = 'mobile') {
+                .responsive-font((@font-size-base + 9) * @mobile-divider-text );
+            }
+        }
+    }
+
+
+    @media @print {
+        line-height:1.2em;
+        blockquote {
+            .print-font(@font-size-base);            
+        }
+        p {
+            .print-font(@font-size-base);
+        }
+        h2 {       
+            .print-font(@font-size-h2);     
+        }
+        h3 {
+            .print-font(@font-size-h3); 
+        }
+        h4 {
+            .print-font(@font-size-h4); 
+        }
+        h5 {
+            .print-font(@font-size-h5);   
+        }
+        h6 {
+            .print-font(@font-size-h6);  
+        }
+        a {
+            text-decoration:underline;
+            color:@brand-grey;
+        }
+        a:after {
+            content:" (" attr(href) ")";
+            color:@brand-grey;
+        }
+    }
+}

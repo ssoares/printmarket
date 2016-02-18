@@ -1,0 +1,48 @@
+<?php
+$langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+$date = new Zend_Date($this->parution_date, null, $langSuffix);
+$date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG, ' ');
+$date_string_url = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SQL, '-');
+$this->headMeta()->appendProperty('og:title', $this->parution_title);
+$this->headTitle($this->parution_title);
+$this->pageTitle($this->parution_title);
+$options = array(
+    'detailsPage' => $this->details_page,
+    'dateStringUrl' => $date_string_url,
+    'parutionValURL' => $this->parutionValURL,
+);
+?>
+<section class="details-release module newsletter content">
+    <section class="articles1">
+    <?php
+    foreach ($this->articles as $article) {
+        if ($article['NA_ZoneID'] == 1) {
+            $options['article'] = $article;
+            echo $this->partial('partials/templateArticlesFirst.phtml', $options);
+        };
+    };
+    ?>
+    </section>
+
+    <section class="articles2 articles23 col-md-6">
+    <?php
+    foreach ($this->articles as $article) {
+        if ($article['NA_ZoneID'] == 2) {
+            $options['article'] = $article;
+            echo $this->partial('partials/templateArticlesOther.phtml', $options);
+        }
+    }
+    ?>
+    </section>
+
+    <section class="articles3 articles23 col-md-6">
+    <?php
+    foreach ($this->articles as $article) {
+        if ($article['NA_ZoneID'] == 3) {
+            $options['article'] = $article;
+            echo $this->partial('partials/templateArticlesOther.phtml', $options);
+        }
+    }
+    ?>
+    </section>
+</section>

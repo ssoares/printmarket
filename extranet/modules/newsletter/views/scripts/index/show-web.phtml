@@ -1,0 +1,40 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_view_newsletter_web_title'),
+    'pageDescription' => $this->getCibleText('header_view_newsletter_web_description')
+    //'breadcrumb' => Cible_FunctionsPages::buildTextBreadcrumb($this->pageId)
+));
+?>
+
+<?php
+    if($this->success)
+    {
+    ?>
+        <div id="result">
+            <span id="success" style="display: none">true</span>
+        </div>
+    <?php
+    }
+    else{   ?>
+        <div id="default_form">
+            <div id="form_panel">
+                <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                    <dl class="zend_form">
+                        <dd>
+                            <fieldset id="fieldset-actions">
+                                <div>
+                                    <ul class="actions-buttons">
+                                        <li><button name="cancel" id="cancel" type="button" onclick="document.location.href='<?php echo($this->baseUrl())?>/newsletter/index/edit/newsletterID/<?php echo($this->newsletterID); ?>'" class="stdButton">Fermer</button></li>
+                                    </ul>
+                                </div>
+                            </fieldset>
+                        </dd>
+                    </dl>
+                </form>
+            </div>
+        </div>
+        <?php
+        echo($this->render($this->template));
+    }
+?>
+

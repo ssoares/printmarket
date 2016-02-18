@@ -1,0 +1,32 @@
+
+
+@import (reference) "../vendor/bootstrap/forms.less";
+
+fieldset {
+    padding:0;
+    margin:0;
+    border:0;
+    dd {
+        margin:0;
+    }
+}
+.bootstrap-select {
+    .box-sizing(border-box);
+}
+
+//plugins (pas modifier)
+@import "../plugins/bootstrap-select.less";
+@import "../plugins/pretty-checkable.less"; 
+//components (à modifier)
+@import "form-elements/input-text.less";
+@import "form-elements/input-number.less";
+@import "form-elements/input-submit.less";
+@import "form-elements/label.less";
+@import "form-elements/textarea.less";
+@import "form-elements/errors.less";
+@import "form-elements/select.less";
+@import "form-elements/checkbox.less";
+@import "form-elements/radio.less";
+@import "form-elements/placeholder.less";  
+
+

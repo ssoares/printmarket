@@ -1,0 +1,20 @@
+<table id="article">
+    <tbody>
+        <?php $line = 0; ?>
+        <?php foreach ($this->articles as $key => $value): ?>
+        <?php $class = ($line % 2) ? 'even' : 'odd'; ?>
+        <tr id="article-<?php echo $key . '-' . $value['NA_ReleaseID']; ?>" class="<?php echo $class; ?>">
+            <td class="center emptyCell" colspan="3"></td>
+            <td class="first"><?php echo $value['NA_Title']; ?></td>
+            <td class="last center">
+                <span class="details modalDetails normal" title="<?php echo $this->getCibleText('newsletter_statistic_articleview_title'); ?> <?php echo $value['NA_Title']; ?>">
+                    <?php echo $value['details']; ?>
+                </span>
+            </td>
+        </tr>
+        <?php
+        ++$line;
+        endforeach;
+        ?>
+    </tbody>
+</table>

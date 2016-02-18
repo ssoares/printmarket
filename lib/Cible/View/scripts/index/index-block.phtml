@@ -1,0 +1,41 @@
+<?php
+    
+    $params     = $this->params;
+    //$blockParameters = $this->blockparameters;
+    $pageID = $params['pageID'];
+    $blockID = $params['ID'];
+    $position   = $params['position'];
+    $totalBlock = $params['totalBlock'];
+    $blockTitle = $params['blockTitle'];
+    
+    //$CategoryID = $blockParameters[0]['P_Value'];
+    
+?>
+<div class="block">
+    <div class="block_header">        
+        <div class="block_module_icon">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td width="55"><img class="action_icon" align="absMiddle" alt="<?php echo $this->getCibleText("{$this->moduleName}_manage_block_contents") ?>" src="<?php echo($this->baseUrl()) . '/' . $this->moduleName.'/index/get-icon/format/48x48' ?>"/></td>
+                <td class="block_title"><?php echo strtoupper($blockTitle) ?></td>
+            </tr>
+            </table>            
+        </div>
+        <div style="clear:both; height:0px;">&nbsp;</div>
+    </div>
+    <div class="block_container">
+        <?php if( !empty($this->defaultAction)): ?>
+            <div class="block_action_icon">
+                <?php if( $this->aclIsAllowed($this->moduleName, 'edit')): ?>
+                    <a href="<?php echo($this->baseUrl()) . '/' . $this->moduleName.'/'.$this->defaultController.'/'.$this->defaultAction.'/pageID/' . $pageID . '/blockID/' . $blockID ?>" class="last"><?php echo $this->getCibleText("{$this->moduleName}_manage_block_contents") ?></a>
+                <?php else: ?>
+                    <span class="access-denied"><?php echo $this->getCibleText("{$this->moduleName}_manage_block_contents") ?></span>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+                   
+        <div class="block_parameters">                        
+            <?php echo $this->action('get-index-description', 'index', $this->moduleName, array('ID' => $blockID)) ?>
+        </div>                        
+    </div>
+</div>

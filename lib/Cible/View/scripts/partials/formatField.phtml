@@ -1,0 +1,29 @@
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        var defaultLabel = '<?php echo $this->getCibleText('form_select_default_label'); ?>';
+        var locale = '<?php echo $this->locale ?>';
+        $('.decimal').live('blur', function (){
+            $(this).parse({format:"#,###.00", locale:locale});
+            $(this).format({format:"#,###.00", locale:locale});
+        });
+        $('.integer').live('blur',  function (){
+                $(this).parse({format:"#,###", locale:locale});
+                $(this).format({format:"#,###", locale:locale});
+        });
+
+        $('#fieldset-moreInfos dd.hasShortcut:first').before($('#B_Sprinkler-sprinkler'));
+        var config = {
+            '.multiselect > select': {placeholder_text_multiple : defaultLabel},
+        };
+        for (var selector in config) {
+          $(selector).chosen(config[selector]);
+        }
+    });
+    $(window).load(function(){
+        var locale = '<?php echo $this->locale ?>';
+        $('.decimal').parse({format:"#,###.00", locale:locale});
+        $('.decimal').format({format:"#,###.00", locale:locale});
+    });
+    //]]>
+</script>

@@ -1,0 +1,28 @@
+<script>
+    $(document).ready(function() {
+        $("#ImageSrc_preview").load(function(){
+            var imageUrl = $("#imageUrl").val();
+            if($(this).attr('src') != imageUrl){
+                $("#isNewImage").val('true');
+            }
+        });
+    });
+</script>
+<input type="hidden" id="imageUrl" value="<?php echo($this->imageUrl) ?>"/>
+<?php
+$cssFile = $this->baseUrl() . '/'
+    . $this->current_module
+    . '/index/get-css/file/jquery_autocomplete/ext/css';
+$this->headLink()->appendStylesheet($cssFile);
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_messages_text'),
+    'pageDescription' => $this->getCibleText('header_edit_messages_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo $this->form;?>
+    </div>
+</div>

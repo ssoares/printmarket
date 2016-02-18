@@ -1,0 +1,13 @@
+<?php
+$string = $this->getClientText('cart_steps_identification_number_' . $this->step);
+?>
+<?php if ($this->step != 4): ?>
+    <div id="cart-big-steps">
+        <h2 class="title-button title-button-blue with-button-step">
+            <span class="title-button-step">
+                <?php echo str_replace('##step##', $this->step, $this->getClientText('cart_step_label')); ?>
+            </span>
+            <?php echo $string; ?>
+        </h2>
+    </div>
+<?php endif; ?>

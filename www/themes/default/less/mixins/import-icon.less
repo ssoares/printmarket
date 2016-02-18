@@ -1,0 +1,36 @@
+//permet de mettre une icône dans l'élément courant
+.import-icon(@icon;@font-size) when (default()) {
+    &:after {
+        font-size:@font-size;
+    }
+    .import-icon(@icon);
+}
+.import-icon(@icon) {
+    &:after {     
+        .import-icon-direct(@icon);
+    }
+}
+.import-icon-base() when (default()) {
+    //-webkit-font-smoothing: antialiased; //Fixe dans Chrome 37
+    -moz-osx-font-smoothing: grayscale;
+    font-family:@font-family-icons;
+}
+.import-icon-direct(@icon) when (default()) {
+    .import-icon-base();
+    content:@icon;
+}
+.import-icon-content(@icon) when (default()) {
+    content:@icon;
+}
+.block-icon(@icon,@size,@font-size) when (default()) { 
+    &:after {
+        .block-icon-direct(@icon,@size,@font-size);
+    }
+}
+.block-icon-direct(@icon,@size,@font-size) when (default()) {
+    .non-responsive-font(@font-size);
+    .import-icon-direct(@icon);
+    height:@size;
+    width:@size;
+    line-height:@size;
+}

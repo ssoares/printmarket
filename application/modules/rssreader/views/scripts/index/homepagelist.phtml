@@ -1,0 +1,71 @@
+<?php $data = $this->data;?>
+
+<div class="block-lecteur-rss">
+    <?php  echo $this->link($data['link'], $data['block_title'], array('class'=>'rss-feed','target'=>'_BLANK')); ?>
+</div>
+
+<div class="block-rss-reader-home">       
+    
+    <?php
+    $cpt = 0;
+    if(count($this->data) > 0)
+    {                
+        foreach($data['entries'] as $content)
+        {
+            if($cpt < $data['linkMax'])
+            {
+            
+            ?>
+            <div class="rss-reader">
+
+                <div class="rss-reader-text-container-without-photo-home">
+
+                    <?php  
+//                        $date = new Zend_Date($content['dateModified'],null, (Zend_Registry::get('languageSuffix') == 'fr' ? 'fr_CA' : 'en_CA'));
+                        $date_string = Cible_FunctionsGeneral::dateToString($content['dateModified'],Cible_FunctionsGeneral::DATE_NUM,'.');
+                        ?>
+                    <div class="date-home"><?php echo $date_string ?></div>
+
+                    <div class="title-home-rss-reader">
+                        <?php echo $content['title'] ?>
+                    </div>
+                     <?php
+                            // Show brief blue                            
+                            $text = $content['description'];
+
+                            // Show brief
+                            //$text = $content['content'];
+
+
+                   ?>
+                    <div class="brief-home">
+                        <?php echo $text ?>
+                    </div>
+                    <div class="view-details-home">
+                        <a href="<?php echo $content['link'] ?>" title="<?php echo $this->getClientText('see_details_rss_reader_text') ?>" class="view-details-image" target="_blank"><?php echo $this->getClientText('see_details_rss_reader_text') ?>&nbsp;<span class="closingQuote">&#155;</span></a>
+
+                    </div>
+                </div>
+            </div>
+            <?php
+            $cpt++;
+            }
+               
+        }
+        ?>
+        <div class="view-all-home">
+            <a href="<?php echo $data['link']; ?>" target="_blank" >
+                    <?php echo $this->getClientText('see_all_rss_reader_text') ?>
+                &nbsp;<span class="closingQuote">&#155;</span>
+            </a>
+        </div>
+        
+    <?php
+    }
+    else
+    {
+        ?><div><p><?php echo $this->getCibleText('rss_reader_no_rss_feed') ?></p></div><?php
+    }
+        
+    ?>
+</div>

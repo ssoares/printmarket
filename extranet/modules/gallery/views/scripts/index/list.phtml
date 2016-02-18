@@ -1,0 +1,433 @@
+<?php $this->headStyle()->captureStart() ?>
+    .divGalleryContent{
+        padding-bottom:25px;
+        clear:both;
+    }
+
+    .image{
+        float:left;
+        padding:10px;
+        padding-left: 12px;
+        padding-right: 12px;
+        overflow:hidden;
+        text-align: center;
+        vertical-align: bottom;
+        height: 120px;
+        border: 1px solid #CCCCCC;
+    }
+
+    .divGalleryImages{
+        display:none;
+        padding-top: 40px;
+        padding-bottom:25px;
+    }
+
+
+    .galleryExpanded  { border:none;  float: left; display: block; width: 15px; height: 15px; margin: 2px; background: url(<?php echo $this->baseUrl() ?>/themes/default/images/treeview-close.gif) no-repeat
+
+left top; cursor:pointer }
+    .galleryCollapsed { border:none; float: left; display: block; width: 15px; height: 15px; margin: 2px; background: url(<?php echo $this->baseUrl() ?>/themes/default/images/treeview-open.gif) no-repeat
+
+left top; cursor:pointer }
+
+<?php $this->headStyle()->captureEnd() ?>
+
+<?php $this->jQuery()->onLoadCaptureStart() ?>
+
+    function closeAllGallery(){
+
+        $(".divGalleryImages").hide("slow");
+        $(".imagesContainer").remove();
+        $(".galleryExpanded").attr('class','galleryCollapsed');
+
+    }
+
+    function closeAllActionsMenu(){
+        dialog = $('a.show-actions-dialog').next('div');
+        jQuery.each(dialog,function(){
+            $(this).slideUp('fast');
+        });
+    }
+
+    $('body').click(function(e){
+        //closeAllActionsMenu();
+    });
+
+    $('a.show-actions-dialog').live('click',function(e){
+        closeAllActionsMenu();
+        var relativeParent = $(this).offsetParent();
+        var offset = relativeParent.offset();
+
+        var offsetLeft = e.pageX - offset.left;
+        var offsetTop = e.pageY - offset.top;
+
+        var dialog = $(this).next('div');
+
+        if(dialog.css('display') == 'block'){
+            dialog.slideUp('fast');
+        } else {
+            $('.searchable-list .actions-dialog').each(function(){
+                var _current_dialog = $(this);
+
+                if( _current_dialog.css('diplay') != 'none')
+                    _current_dialog.slideUp('fast');
+            });
+
+            dialog.css({
+                left: offsetLeft + 15,
+                top: offsetTop
+            });
+
+            dialog.slideDown('fast');
+        }
+
+    });
+
+    $("#addGallery").click(function(event){
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        closeAllGallery();
+        link = $("#addGallery").attr('href');
+
+        /*
+        $("#page_edit #header #titleHidden").val("Ajout d'une galerie de photos");
+        $("#page_edit #header #descriptionHidden").val("Cette page vous permet d'ajouter une nouvelle galerie de photos");
+        $("#page_edit #header #breadcrumbHidden").attr('value','');
+        */
+        $("#page_edit #header #titleHidden").val($("#addGalleryTitle").val());
+        $("#page_edit #header #descriptionHidden").val($("#addGalleryDescription").val());
+
+
+        getEditPage(link);
+
+    });
+
+    $(".linkEditGallery").live("click",function(event){
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        closeAllGallery();
+        link = $(this).attr('href');
+        
+        $("#page_edit #header #titleHidden").val($("#editGalleryTitle").val());
+        $("#page_edit #header #descriptionHidden").val($("#editGalleryDescription").val());
+        getEditPage(link);
+
+
+    });
+
+    $(".linkDeleteGallery").live("click",function(event){
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        closeAllGallery();
+        link = $(this).attr('href');
+        /*
+        $("#page_edit #header #titleHidden").val("Suppression d'une galerie de photos");
+        $("#page_edit #header #descriptionHidden").val('Cliquez sur le bouton "Oui" pour supprimer définitivement cette galerie');
+        $("#page_edit #header #breadcrumbHidden").attr('value','');
+        */
+        $("#page_edit #header #titleHidden").val($("#deleteGalleryTitle").val());
+        $("#page_edit #header #descriptionHidden").val($("#deleteGalleryDescription").val());
+        getEditPage(link);
+    });
+
+    $(".linkAddImage").live("click",function(event){
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        link = $(this).attr('href');
+        /*
+        $("#page_edit #header #titleHidden").val("Ajout d'une image");
+        $("#page_edit #header #descriptionHidden").val("Cette page vous permet d'ajouter une nouvelle image à cette galerie");
+        $("#page_edit #header #breadcrumbHidden").attr('value','');
+        */
+        $("#page_edit #header #titleHidden").val($("#addImageTitle").val());
+        $("#page_edit #header #descriptionHidden").val($("#addImageDescription").val());
+        getEditPage(link);
+    });
+
+    $(".linkEditImage").live("click",function(event){
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        link = $(this).attr('href');
+        
+        $("#page_edit #header #titleHidden").val($("#editImageTitle").val());
+        $("#page_edit #header #descriptionHidden").val($("#editImageDescription").val());
+        
+                
+          
+        
+        
+        getEditPage(link);
+       
+    });
+
+    $(".linkDeleteImage").live("click",function(event){
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        link = $(this).attr('href');
+        /*
+        $("#page_edit #header #titleHidden").val("Suppression d'une image");
+        $("#page_edit #header #descriptionHidden").val('Cliquez sur le bouton "Oui" pour supprimer définitivement cette image');
+        $("#page_edit #header #breadcrumbHidden").attr('value','');
+        */
+        $("#page_edit #header #titleHidden").val($("#deleteImageTitle").val());
+        $("#page_edit #header #descriptionHidden").val($("#deleteImageDescription").val());
+        getEditPage(link);
+    });
+
+    $(".linkShowImages").live("click", function(event) {
+        event.preventDefault();
+
+        closeAllActionsMenu();
+        var galleryID   = $(this).attr("id").substr(10);
+        var divID       = "divGalleryImages-"+galleryID;
+
+
+        if ($("#"+divID).is(':hidden')){
+            $("#galleryImageOpenClose-"+galleryID).attr('class','galleryExpanded');
+            url = $("#imagesAjaxLink").val();
+            $.getJSON(url,{galleryID : galleryID},
+                function(data){
+
+                    $("#"+divID).append("<div id='imagesContainer-"+galleryID+"' class='imagesContainer'></div>");
+                    if(data == ""){
+                    $("#imagesContainer-"+galleryID).append("<p id='pMessage-"+galleryID+"'><?php echo $this->getCibleText('list_gallery_empty_image_list'); ?></p>");
+                    }
+                    else{
+                        var baseWWWUrl       = $('#baseWWWUrl').val();
+                        var baseUrl       = $('#baseUrl').val();
+
+                        var textToInsert = "";
+                        for(var item in data){
+
+                            //var galleryID   = data[item]['GI_GalleryID'];
+                            var imageID     = data[item]['GI_ImageID'];
+                            var imageName   = data[item]['I_OriginalLink'];
+                            var thumbName   = data[item]['I_ThumbLink'];
+
+                            var imageTitle  = data[item]['II_Title'];
+                            var imageDescription = data[item]['II_Description'];
+
+                            var imageThumbLink = baseWWWUrl+"/data/images/gallery/"+galleryID+"/"+imageID+"/"+thumbName;
+                            var imageLink = baseWWWUrl+"/data/images/gallery/"+galleryID+"/"+imageID+"/"+imageName;
+
+                            textToInsert += "<div id='divImage-" + imageID + "' class='image'>";
+                            textToInsert +=         "<div style='display:inline'><img id='image-"+imageID+"' src='"+imageThumbLink+"' border=0/><br /><span class='spanImagetitle' id='spanImage-"+imageID+"'>" + imageTitle +"</span></br>";
+                            textToInsert +=         "<a class='linkEditImage' style='font-family: Arial;font-size: 11px;color: #767676;' href='"+$("#imagesEditLink").val()
+
+                                                        +"/imageID/"+imageID+"'><?php echo $this->getCibleText('menu_submenu_action_edit'); ?></a>&nbsp;|&nbsp;"
+                            textToInsert +=         "<a class='linkDeleteImage' style='font-family: Arial;font-size: 11px;color: #767676;' href='"+$("#imagesDeleteLink").val()
+
++"/galleryID/"+galleryID+"/imageID/"+imageID+"'><?php echo $this->getCibleText('button_delete'); ?></a></div>"
+
+                            textToInsert += "</div>";
+                        }
+                        $("#imagesContainer-"+galleryID).append(textToInsert);
+                    }
+                    $("#"+divID).show("slow");
+                }
+            );
+        }
+        else{
+            $("#"+divID).hide("slow");
+            $("#galleryImageOpenClose-"+galleryID).attr('class','galleryCollapsed');
+            $("#imagesContainer-"+galleryID).remove();
+        }
+    });
+
+    $("#result").live("click", function(){
+        var resultPane = $('#result');
+
+        var action = resultPane.find('#action').text();
+
+        if(action == "addGallery"){
+            var listGalleryUrl       = $('#listGalleryUrl').val();
+            document.location = listGalleryUrl;
+        }
+
+        if(action == "editGallery"){
+            var galleryID = resultPane.find('#galleryID').text();
+            var galleryTitle = resultPane.find('#galleryTitle').text();
+            var galleryDescription = resultPane.find('#galleryDescription').text();
+            var galleryLanguage = resultPane.find('#galleryLanguage').text();
+
+            var languageID = $('#languageID').val();
+
+            if(languageID == galleryLanguage){
+                $("#galleryTitle-"+galleryID).html(galleryTitle);
+                $("#galleryTitle-"+galleryID).html(galleryTitle);
+                $("#galleryDescription-"+galleryID).html(galleryDescription);
+            }
+        }
+
+        if(action == "deleteGallery"){
+            var listGalleryUrl       = $('#listGalleryUrl').val();
+            document.location = listGalleryUrl;
+        }
+
+        if(action == "editImage"){
+            var title = resultPane.find('#imageTitle').text();
+            var imageID = resultPane.find('#imageID').text();
+            var galleryID = resultPane.find('#galleryID').text();
+            var thumbName = resultPane.find('#thumbName').text();
+            if(thumbName!=""){
+                var baseWWWUrl  = $('#baseWWWUrl').val();            
+                var thumbLink   = baseWWWUrl+"/data/images/gallery/"+galleryID+"/"+imageID+"/"+thumbName;
+                $("#image-"+imageID).attr("src", thumbLink);
+            }
+            $("#spanImage-"+imageID).html(title);    
+            
+                        
+            
+        }
+        
+        if(action == "addImage"){
+            var galleryID = resultPane.find('#galleryID').text();
+            var imageID = resultPane.find('#imageID').text();
+            var orginalName = resultPane.find('#orginalName').text();
+            var thumbName = resultPane.find('#thumbName').text();
+            
+            var imageTitle = resultPane.find('#imageTitle').text();
+
+            var baseWWWUrl  = $('#baseWWWUrl').val();
+            var orginalLink = baseWWWUrl+"/data/images/gallery/"+galleryID+"/"+imageID+"/"+orginalName;
+            var thumbLink   = baseWWWUrl+"/data/images/gallery/"+galleryID+"/"+imageID+"/"+thumbName;
+
+
+            var textToInsert =  "<div id='divImage-"+imageID+"' class='image'>";
+            textToInsert +=         "<img id='image-"+imageID+"' src='"+thumbLink+"' border=0/><br /><span class='spanImagetitle' id='spanImage-"+imageID+"'>" + imageTitle +"</span><br />";
+            textToInsert +=         "<a class='linkEditImage' style='font-family: Arial;font-size: 10px;color: #767676;' href='"+$("#imagesEditLink").val() +"/imageID/"+imageID+"'>Modifier</a>&nbsp;|&nbsp;"
+            textToInsert +=         "<a class='linkDeleteImage' style='font-family: Arial;font-size: 10px;color: #767676;' href='"+$("#imagesDeleteLink").val()
+
++"/galleryID/"+galleryID+"/imageID/"+imageID+"'>Supprimer</a>"
+            textToInsert +=     "</div>";
+
+            $("#pMessage-"+galleryID).remove();
+            $("#imagesContainer-"+galleryID).append(textToInsert);
+        }
+
+        if(action == "deleteImage"){
+            //var galleryID = resultPane.find('#galleryID').text();
+            var imageID = resultPane.find('#imageID').text();
+            $("#divImage-"+imageID).hide("slow");
+        }
+
+
+    });
+
+<?php $this->jQuery()->onLoadCaptureEnd() ?>
+
+<?php
+  $galleriesData = $this->galleriesData;
+?>
+<?php
+$galleryName = "";
+if (!empty( $this->categoryDetails))
+        $galleryName = '<br/>"'
+            . $this->categoryDetails['CI_Title'] . '"';
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_list_gallery_text'). $galleryName,
+    'pageDescription' => $this->getCibleText('header_list_gallery_description'),
+    'breadcrumb' => ''
+));
+?>
+<input id="languageID" name="languageID" type="hidden" value="<?php echo(Cible_Controller_Action::getDefaultEditLanguage()) ?>"/>
+
+<input id="imagesAjaxLink" name="imagesAjaxLink" type="hidden" value="<?php echo($this->imagesAjaxLink) ?>"/>
+<input id="imagesEditLink" name="imagesEditLink" type="hidden" value="<?php echo($this->imagesEditLink) ?>"/>
+<input id="imagesDeleteLink" name="imagesDeleteLink" type="hidden" value="<?php echo($this->imagesDeleteLink) ?>"/>
+
+<input id="baseUrl" name="baseUrl" type="hidden" value="<?php echo($this->baseUrl()) ?>"/>
+<input id="baseWWWUrl" name="baseWWWUrl" type="hidden" value="<?php echo(Zend_Registry::get("www_root")) ?>"/>
+<input id="listGalleryUrl" name="listGalleryUrl" type="hidden" value="<?php echo($this->url(array('controller'=>'index','action'=>'list'))) ?>"/>
+<input id="editGalleryUrl" name="editGalleryUrl" type="hidden" value="<?php echo($this->url(array('controller'=>'index','action'=>'edit'))) ?>"/>
+<input id="deleteGalleryUrl" name="deleteGalleryUrl" type="hidden" value="<?php echo($this->url(array('controller'=>'index','action'=>'delete'))) ?>"/>
+<input id="addImageUrl" name="addImageUrl" type="hidden" value="<?php echo($this->url(array('controller'=>'image','action'=>'add'))) ?>"/>
+
+<input id='addGalleryTitle' name="addGalleryTitle" type="hidden" value="<?php echo($this->getCibleText('header_add_gallery_title')) ?>"/>
+<input id='addGalleryDescription' name="addGalleryDescription" type="hidden" value="<?php echo($this->getCibleText('header_add_gallery_description')) ?>"/>
+<input id='editGalleryTitle' name="editGalleryTitle" type="hidden" value="<?php echo($this->getCibleText('header_edit_gallery_title')) ?>"/>
+<input id='editGalleryDescription' name="editGalleryDescription" type="hidden" value="<?php echo($this->getCibleText('header_edit_gallery_description')) ?>"/>
+<input id='deleteGalleryTitle' name="deleteGalleryTitle" type="hidden" value="<?php echo($this->getCibleText('header_delete_gallery_title')) ?>"/>
+<input id='deleteGalleryDescription' name="deleteGalleryDescription" type="hidden" value="<?php echo($this->getCibleText('header_delete_gallery_description')) ?>"/>
+
+<input id='addImageTitle' name="addImageTitle" type="hidden" value="<?php echo($this->getCibleText('header_add_image_title')) ?>"/>
+<input id='addImageDescription' name="addImageDescription" type="hidden" value="<?php echo($this->getCibleText('header_add_image_description')) ?>"/>
+<input id='editImageTitle' name="editImageTitle" type="hidden" value="<?php echo($this->getCibleText('header_edit_image_title')) ?>"/>
+<input id='editImageDescription' name="editImageDescription" type="hidden" value="<?php echo($this->getCibleText('header_edit_image_description')) ?>"/>
+<input id='deleteImageTitle' name="deleteImageTitle" type="hidden" value="<?php echo($this->getCibleText('header_delete_image_title')) ?>"/>
+<input id='deleteImageDescription' name="deleteImageDescription" type="hidden" value="<?php echo($this->getCibleText('header_delete_image_description')) ?>"/>
+
+
+
+<?php echo($this->partial('partials/overlayEditPage.phtml')); ?>
+<div id="default_form">
+    <div id="action_panel" style="text-align:right">
+        <ul class="buttons">
+            <li><a id="addGallery" href="<?php echo $this->url(array('controller'=>'index','action'=>'add')); ?>" class="action_submit add"><?php echo $this->getCibleText('button_add_gallery') ?></a></li>
+        </ul>
+    </div>
+    <div id="form_panel">
+        <div id="divGalleries" class="searchable-list" style="margin-top:15px;"><div class="list">
+<?php       if(!empty($galleriesData)){
+?>              <table cellspacing="0" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <td width="95%"><?php echo($this->getCibleText('list_column_title')) ?></td>
+                            <td class="without_right_border"><?php echo($this->getCibleText('list_column_action')) ?></td>
+                        </tr>
+                    </thead>
+<?php               $i=1;
+                    foreach($galleriesData as $gallery){
+                        $i == 0 ? $i=1 : $i=0;
+?>                      <tr class="row_list_<?php echo($i) ?>">
+                            <td>
+                                <a id="galleryID-<?php echo($gallery['G_ID']);?>" class='linkShowImages' href='#' style="">
+                                    <img id="galleryImageOpenClose-<?php echo($gallery['G_ID']);?>" class="galleryCollapsed"/>
+                                    <div id="galleryTitle-<?php echo($gallery['G_ID']);?>" style=''><?php echo($gallery['GI_Title']); ?> </div>
+                                </a>
+                                <div id="divGalleryImages-<?php echo($gallery['G_ID']) ?>" class="divGalleryImages" style=""></div>
+                            </td>
+                            <td style="padding-top:10px;">
+                                <div>
+                                    <a class="show-actions-dialog" href="javascript:void(0);"><img src="<?php echo $this->baseUrl() ?>/icons/icon-add-24x24.png" border="0" /></a>
+                                    <div class="actions-dialog">
+                                        <div class="hd"><div class="c"></div></div>
+                                        <div class="bd">
+                                            <div class="c">
+                                                <div class="s">
+                                                    <div class="actions">
+                                                        <ul style="list-style: none; margin: 0px; padding: 0px;">
+                                                            <li><a class='linkEditGallery action_edit' href='<?php echo($this->url(array('controller'=>'index','action'=>'edit', 'galleryID'=>
+
+$gallery['G_ID'])))?>'><?php echo $this->getCibleText('list_action_gallery_edit') ?></a></li>
+                                                            <li><a class='linkDeleteGallery action_delete' href='<?php echo($this->url(array('controller'=>'index','action'=>'delete', 'galleryID'=>
+
+$gallery['G_ID'])))?>'><?php echo $this->getCibleText('list_action_gallery_delete') ?></a></li>
+                                                            <li><a class='linkAddImage action_add' href='<?php echo($this->url(array('controller'=>'image','action'=>'add', 'galleryID'=>
+
+$gallery['G_ID'])))?>'><?php echo $this->getCibleText('list_action_gallery_add_image') ?></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ft"><div class="c"></div></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+<?                    }
+?>              </table>
+<?php        }
+            else{
+                echo $this->getCibleText('list_gallery_empty_list');
+            }
+?>      </div></div>
+    </div>
+</div>

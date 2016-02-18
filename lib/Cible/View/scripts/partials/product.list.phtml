@@ -1,0 +1,170 @@
+<?php
+$url = $this->baseUrl() . '/' . 'cart/index/ajax/';
+$config = Zend_Registry::get('config');
+$module = $this->current_module;
+$keywords = $this->keywords;
+$productsCount = count($this->paginator);
+$languageSuffix = $this->languageSuffix;
+$langId = Zend_Registry::get('languageID');
+$i = 1;
+$modulo = 0;
+$columns = 3;
+$nbLines = $this->paginator->getItemCountPerPage() / $columns;
+?>
+
+<h1 id="collectionPageTitle"> <?php echo $this->subCatName; ?> </h1>
+<div class="boldLine" ></div>
+<div id="list-products-container">
+
+    <?php
+    if ($productsCount > 0)
+    {
+        $searchCount = $this->searchCount;
+        ?>
+        <div id="list-products">
+            <!--            <div id="list-products-results">
+            <?php if ($searchCount <= 1): ?>
+                <?php if ($keywords != ''): ?>
+                                                            <span class="nombre-resultats">
+                    <?php echo($this->getClientText('search_single_result_text_start')); ?></span>
+                    <?php echo($this->getClientText('search_single_result_text_end')); ?> <i><?php echo $keywords ?></i>
+                <?php else: ?>
+                                                            <span class="nombre-resultats"><?php echo($this->getClientText('search_single_result_text_start')); ?></span>
+                    <?php echo($this->getClientText('search_single_result_text_without_keywords_end')); ?>
+                <?php endif; ?>
+            <?php else: ?>
+                <?php if ($keywords != ''): ?>
+                                                            <span class="nombre-resultats">
+                    <?php echo($searchCount) ?>
+                    <?php echo($this->getClientText('search_multiple_results_text_start')); ?>
+                                                            </span>
+                    <?php echo($this->getClientText('search_multiple_results_text_end')); ?> <i><?php echo $keywords ?></i>
+                <?php else: ?>
+                                                            <span class="nombre-resultats"><?php echo($searchCount) ?><?php echo($this->getClientText('search_multiple_results_text_start')); ?></span> <?php echo($this->getClientText('search_multiple_results_text_without_keywords_end')); ?>
+                <?php endif; ?>
+            <?php endif; ?>
+                            <div id="products-results-showall"><a href="<?php echo $this->baseUrl() . '/' . Zend_Registry::get('pageIndex') ?>"><?php echo $this->getCibleText('catalogue_show_all_results') ?></a></div>
+                        </div>-->
+            <?php foreach ($this->paginator as $product): ?>
+                <div id="<?php echo $product['SCI_ValUrl'] . '-' . $product['P_ID']; ?>" class="collectionList">
+                    <p class="collectionListImg">
+                        <?php
+                        $controllerName = $this->request->getParam('controller');
+                        $modulo = $i % $columns;
+                        
+                        if (isset($product['P_Photo'])):
+                            if ($product['P_Photo'] != '')
+                            {
+                                echo $this->link(
+                                    $this->BaseUrl() . '/'
+                                    . $controllerName . '/'
+                                    . $product['CCI_ValUrl'] . '/'
+                                    . 'collection/'
+                                    . $product['SCI_ValUrl'] .'/'
+                                    . 'product/'
+                                    . $product['PI_ValUrl'],
+                                    $this->moduleImage(
+                                        'catalog', 
+                                        'products/' . $product['P_ID'],
+                                        $product['P_Photo'],
+                                        'thumb',
+                                        array(
+                                        'class' => ''
+                                        )
+                                    ), array('class' => 'collectionsList')
+                                );
+                            }
+                            else
+                            {
+                                $alt = $product["PI_Name"];
+                                echo $this->link(
+                                    $this->BaseUrl() . '/'
+                                    . $controllerName . '/'
+                                    . $product['CCI_ValUrl'] . '/'
+                                    . 'collection/'
+                                    . $product['SCI_ValUrl'] .'/'
+                                    . 'product/'
+                                    . $product['PI_ValUrl'],
+                                    $this->clientImage('noPic_174x207.jpg', array('alt' => $alt))
+                                    );
+                            }
+                            ?>
+                        </p>
+                        <?php
+                        $addClass = '';
+                        if ($modulo == 2)
+                            $addClass = 'marginTop';
+                        ?>
+                        <p class="productTitle <?php echo $addClass; ?>">
+                            <?php
+//                            $title = $product['TI_Name'];
+                            $title = '';
+                            $title .= (!empty($product['CLI_Name'])) ? ", " .$product['CLI_Name'] : "";
+                            if (!empty($product['PI_Name']))
+                                echo $this->link (
+                                    $this->BaseUrl () . '/'
+                                    . $controllerName . '/'
+                                    . $product['CCI_ValUrl'] . '/'
+                                    . 'collection/'
+                                    . $product['SCI_ValUrl'] .'/'
+                                    . 'product/'
+                                    . $product['PI_ValUrl'],
+                                    $title
+                                );
+                            else
+                                echo '&nbsp;';
+                            ?>
+                        </p>
+                        <p class="productNum">
+                            <?php
+                            if (!empty($product['PI_Name']))
+                                echo $this->link (
+                                    $this->BaseUrl () . '/'
+                                    . $controllerName . '/'
+                                    . $product['CCI_ValUrl'] . '/'
+                                    . 'collection/'
+                                    . $product['SCI_ValUrl'] .'/'
+                                    . 'product/'
+                                    . $product['PI_ValUrl'],
+                                    $this->getCibleText('form_product_code_label') . ': ' //. $product['P_Number']
+                                );
+                            else
+                                echo '&nbsp;';
+                            ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+                <?php $i++;?>
+                <?php if ($modulo == 0): ?>
+                    <div class="greenThinLine"></div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <?php if ($modulo != 0): ?>
+        <div class="greenThinLine"></div>
+        <?php endif; ?>
+        <?php
+        if ($this->paginator instanceof Zend_Paginator)
+            echo $this->paginationControl($this->paginator, 'sliding', 'partials/products.paginator.phtml', array(
+                'first_link_image' => $this->clientImage("paging_first_new.png", array('alt' => '')),
+                'prev_link_image' => $this->clientImage("paging_prev_new.png", array('alt' => '')),
+                'next_link_image' => $this->clientImage("paging_next_new.png", array('alt' => '')),
+                'last_link_image' => $this->clientImage("paging_last_new.png", array('alt' => '')),
+                'searchUrl' => $this->searchUrl
+            ));
+    }
+    else
+    {
+        ?>
+        <div id="list-products-no-product">
+            <?php echo $this->getClientText('products_no_product') ?>
+        </div>
+        <div id="products-no-results-showall">
+            <a href="<?php echo $this->baseUrl() . '/' . Zend_Registry::get('pageIndex') ?>">
+                <?php echo $this->getCibleText('catalogue_show_all_results') ?>
+            </a>
+        </div>
+        <?php
+    }
+    ?>
+</div>

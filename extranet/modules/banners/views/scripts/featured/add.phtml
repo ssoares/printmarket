@@ -1,0 +1,38 @@
+<?php
+    
+?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_'.$this->cleaction.'_text'),
+    'pageDescription' => $this->getCibleText('header_add_'.$this->cleaction.'_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+       <?php
+       echo $this->form;      
+       ?>
+    </div>                    
+</div>
+
+<script type="text/javascript">
+//$(document).ready(function() {
+//    //:odd
+//    //alert('dd');
+//    $("input[id^='IFI_UrlVideo']:odd").each(function() {
+//        //alert('s');
+//        $(this).parent().css('position', 'relative');
+//        $(this).parent().css('top', '5px');
+//        $(this).parent().css('left', '-4px');
+//    });
+//
+//    $("input[id^='IFI_UrlVideo']:even").each(function() {
+//        //alert('s');
+//        $(this).parent().css('position', 'relative');
+//        $(this).parent().css('top', '5px');
+//        $(this).parent().css('left', '-4px');
+//    });
+//});
+</script>

@@ -1,0 +1,72 @@
+<?php echo $this->doctype();
+?>
+<!--[if IE 7]>
+<html class="ie ie7 mobile" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8 mobile" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8) ]><!-->
+<html class="not-ie mobile" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
+    <!--<![endif]-->
+    <head>
+        <title><?php echo $this->headTitle(); ?></title>
+        <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+        <!-- META (START) -->
+        <?php echo $this->headMeta() ?>
+        <?php echo $this->placeholder('metaOther'); ?>
+        <!--[if IE]>
+        <link rel="shortcut icon" href="<?php echo $this->absolute_web_root ?>/favicon.ico" />
+        <![endif]-->
+        <link rel="icon" type="image/png" href="<?php echo $this->absolute_web_root ?>/favicon.png" />
+        <?php $this->jQuery()->addJavascriptFile($this->locateFile('modernizr.js')); ?>
+        <?php echo $this->jQuery(); ?>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+
+        <?php echo $this->headScript() ?>
+
+        <?php echo $this->headLink(); ?>
+
+        <?php echo $this->headStyle(); ?>
+        <!-- Tag to force the AddThis thumbnail image
+        <link rel='image_src' href='<?php echo Zend_Registry::get('addThis') ?>' /> -->
+        <?php //echo $this->partial('partials/google.analytic.phtml'); ?>
+        <?php // echo $this->partial('partials/' .  $this->currentSite . 'google.analytic.phtml'); ?>
+        <?php
+        if (Zend_Registry::isRegistered('bgStyle'))
+            $bgStyle = Zend_Registry::get('bgStyle');
+        else
+            $bgStyle = '';
+        ?>
+    </head>
+
+    <body class="front-end template <?php echo $this->templateName; ?>" <?php echo $bgStyle; ?> >        
+        <div class="site-wrap" data-speed="4" data-type="background">
+            <div class="site-container container">
+                <!-- Start : HEADER -->
+                <header class="site-header" role="banner">
+                    <div class="site-header-wrapper wrapper">
+                        <?php echo $this->partial('partials/mobile-' . $this->header, array('view' => $this)) ?>
+                    </div>
+                </header>
+                <!-- End : HEADER -->
+                <!-- Start : MAIN -->
+                <div class="site-main" role="main">
+                    <div class="site-main-wrapper wrapper photoPretty_block">
+                        <?php echo $this->layout()->content; ?>
+                    </div>
+                </div>
+                <!-- End : MAIN -->
+                <!-- Start : FOOTER -->
+                <footer class="site-footer" role="contentinfo">
+                    <?php echo $this->partial('partials/mobile-' . $this->footer, array('view' => $this)) ?>
+                </footer>
+                <!-- END : Footer -->
+            </div>
+
+        </div>
+
+        <?php echo $this->partial('partials/jsPrettyPhoto.phtml') ?>
+        
+    </body>
+</html>

@@ -1,0 +1,23 @@
+<div class="block">
+        <?php if($this->needConfirm) : ?>
+            <?php echo $this->getClientText('need_confirm_email_text');?>
+        <?php elseif($this->alreadyValide) : ?>
+            <?php
+            echo $this->getClientText('already_confirm_email_text');
+            ?>
+        <?php else : ?>
+            <?php
+            echo $this->getClientText('error_confirm_email_text');
+            ?>
+            <br />
+            <?php
+            $url = $this->BaseUrl() . '/' 
+                    . Cible_FunctionsCategories::getPagePerCategoryView(0, 'return_confirm_email', 17)
+                    . '/email/' . $this->email;
+                echo $this->link(
+                    $url,
+                    $this->getCibleText('form_select_option_view_quoteRequest_return_confirm_email'),
+                    array('class' => '')
+                ); ?>
+        <?php endif; ?>
+</div>

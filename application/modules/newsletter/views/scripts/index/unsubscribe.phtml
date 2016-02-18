@@ -1,0 +1,53 @@
+<section class="newsletter module unsubscribe">
+
+    <?php
+    echo $this->showBlockTitle('h2', array('class' => 'newsletter-title'));
+
+    $inscriptionValidate = $this->unsubscribeValidate;
+    if (!$inscriptionValidate) {
+        echo($this->form);
+    } else {
+        ?>
+        <p class="newsletter-form-validated">
+            <?php echo($this->message); ?>
+        </p>
+    <?php } ?>
+<?php /*
+    <nav class="newsletter-options">
+        <a href="<?php echo $this->subscribeLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_subscribe')); ?>
+        </a>
+        <a href="<?php echo $this->unsubscribeLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_unsubscribe')); ?>
+        </a>
+        <a href="<?php echo $this->archivesLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_archives')); ?>
+        </a>
+    </nav>
+ * */ ?>
+    <div class="newsletter-privacy-policy">
+        <?php
+        echo($this->messageConfidentialite);
+        ?>
+    </div>
+</section>
+
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var reasonSelect = $('#reason');
+        if (reasonSelect)
+        {
+            reasonSelect.change(function() {
+                var value = $(this).val();
+                var other = $('#reasonOther');
+
+                if (value == 0)
+                    other.show();
+                else
+                    other.hide();
+            }).change();
+        }
+    });
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

@@ -1,0 +1,19 @@
+@base-font: @font-size-base;
+//permet de centraliser le code pour le font-size
+.responsive-font(@font-size) when (isunit(@font-size, px)) {
+    font-size:@font-size; 
+    font-size:unit(@font-size / @base-font * 1.6, rem); 
+}
+.responsive-font(@font-size) when (isunit(@font-size, rem)) {
+    font-size:unit(@font-size * @base-font * 0.625, px);
+    font-size:@font-size;
+}  
+.responsive-font(@font-size) when (default()) {    
+    font-size:@font-size;
+}  
+.non-responsive-font(@font-size) {
+    font-size:@font-size;
+}
+.font-0() {
+    font-size:0;
+}

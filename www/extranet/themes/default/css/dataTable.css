@@ -1,0 +1,149 @@
+/*
+    Document   : dataTable
+    Created on : 2012-02-3, 15:01:46
+    Author     : soaser
+    Description:
+        Style for the statistics of the newsletter
+    $Id: dataTable.css 1788 2015-06-18 20:07:52Z ssoares $
+*/
+
+
+.ui-datepicker-header.ui-widget-header{
+    background: none;
+}
+/*.ui-widget-header .ui-icon{
+    border: 0;
+}*/
+table {
+    border: 0;
+}
+.valuesList{
+    border-collapse: collapse;
+}
+
+.center {
+    text-align: center;
+}
+.dataTables_wrapper{
+    padding-bottom: 20px;
+}
+
+.sorting{
+    background: url("../images/sort_both.png") no-repeat scroll right center initial;
+    cursor: pointer;
+}
+.borders{
+    border: 0; //1px solid #B6B7B8;
+}
+.button{
+    background: url("jquery/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") repeat-x scroll 50% 50% #E6E6E6;
+    border: 1px solid #c4c4c4;
+    font-size: 1em;
+    height: 1.2em;
+    margin: 3px 0 0;
+    padding: 2% 0 1.5%;
+    text-align: center;
+    width: 21%;
+
+}
+#dateFilter:hover{
+    background: url("jquery/smoothness/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #E6E6E6;
+
+}
+.bold, th.bold {
+    font-weight: bold;
+}
+
+.odd{
+    background-color:#FFFFFF;
+}
+.even{
+    background-color:#E9E9EA;
+}
+
+.dataTables_length, .dataTables_filter{
+    width: 50%;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.dataTables_filter{
+    text-align: right;
+}
+.paginate_disabled_previous,
+.paginate_enabled_previous,
+.paginate_disabled_next,
+.paginate_enabled_next {
+    float: left;
+    height: 9px;
+    margin-left: 3px;
+    text-indent: -9999px;
+    width: 9px;
+}
+.paginate_enabled_next {
+    background-image: url("../images/forward_enabled.jpg");
+}
+.paginate_disabled_previous {
+    background-image: url("../images/back_disabled.jpg");
+}
+.paginate_enabled_next {
+    background-image: url("../images/forward_enabled.jpg");
+}
+.dataTables_info ,
+.dataTables_paginate {
+    margin-top: 7px;
+}
+.dataTables_info {
+    float: left;
+    width: 60%;
+}
+div.dataTables_info {
+    width: 40%;
+}
+.dataTables_paginate {
+    float: right;
+    font-weight: bold;
+    text-align: right;
+    width: 44px;
+}
+.paging_full_numbers {
+    height: 1.5em;
+    line-height: 1.5em;
+    width: 60%;
+}
+.paging_full_numbers span.first,
+.paging_full_numbers span.previous,
+.paging_full_numbers span.next,
+.paging_full_numbers span.last {
+    padding: 4px 8px !important;
+    font-size: 9px;
+}
+.paging_full_numbers span.first {
+    background: transparent url('../../../icons/paging_first.png') no-repeat;
+}
+.paging_full_numbers span.previous {
+    background: transparent url('../../../icons/paging_prev.png') no-repeat;
+}
+.paging_full_numbers span.next {
+    background: transparent url('../../../icons/paging_next.png') no-repeat;
+}
+.paging_full_numbers span.last {
+    background: transparent url('../../../icons/paging_last.png') no-repeat;
+}
+
+.paging_full_numbers span.paginate_button,
+.paging_full_numbers span.paginate_active {
+    color: #4E606A;
+    cursor: pointer;
+    margin: 0 3px;
+}
+.paging_full_numbers span.paginate_active {
+    color: #66A8C9;
+}
+.paging_full_numbers span.paginate_button:hover{
+    color: #66A8C9;
+
+}
+
+.paging_full_numbers span.paginate_button_disabled{
+    cursor: default;
+}

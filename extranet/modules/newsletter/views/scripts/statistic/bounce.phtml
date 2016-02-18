@@ -1,0 +1,35 @@
+<table id="<?php echo $this->report; ?>">
+    <thead>
+        <tr>
+            <th class="first"><?php echo $this->getCibleText('newsletter_statistic_email_label'); ?></th>
+            <th><?php echo $this->getCibleText('form_reference_type_label'); ?></th>
+            <th><?php echo $this->getCibleText('form_label_date'); ?></th>
+            <th><?php echo $this->getCibleText('form_label_fname'); ?></th>
+            <th><?php echo $this->getCibleText('form_label_lname'); ?></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->logData as $key => $value): ?>
+            <?php if (!empty($key)): ?>
+        <tr id="nl-<?php echo $key; ?>">
+            <td class="borders first"><?php echo $value['email']; ?></td>
+            <td class="borders center">
+                <span class="sendTo"><?php echo $value['type']; ?></span>
+            </td>
+            <td class="borders center">
+                <span class="opened"><?php echo $value['time'] ?></span>
+            </td>
+            <td class="borders last">
+                <span class="opened"><?php echo $value[''] ?></span>
+            </td>
+            <td class="borders last">
+                <span class="opened"><?php echo $value[''] ?></span>
+            </td>
+        </tr>
+            <?php endif; ?>
+        <?php
+        endforeach;
+        ?>
+    </tbody>
+</table>

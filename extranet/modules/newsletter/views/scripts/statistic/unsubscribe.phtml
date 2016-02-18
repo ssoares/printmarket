@@ -1,0 +1,45 @@
+<?php $other = (!empty($this->data[0])) ? $this->data[0]['unsubscribe'] : 0; ?>
+<?php $total = $other;?>
+<table id="unsubscribe">
+    <thead>
+        <tr>
+            <th class="sorting"><?php echo $this->getCibleText('newsletter_statistic_releases_label'); ?></th>
+            <th class="sorting"><?php echo $this->getCibleText('form_label_unsubscribe_reason'); ?></th>
+            <th class="sorting"><?php echo $this->getCibleText('newsletter_statistic_total_label'); ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->data as $key => $value): ?>
+            <?php if ($key > 0): ?>
+            <tr id="nl-<?php echo $key; ?>">
+                <td class="borders first"><?php echo !empty($value['NR_Title'])? $value['NR_Title'] : ''; ?></td>
+                <td class="borders "><?php echo $value['reason']; ?></td>
+                <td class="borders center last">
+                    <span class="unsubscribe modalDetails" title="<?php echo $this->getCibleText('newsletter_statistic_unsubscription_title'); ?> <?php echo $value['NR_Title']; ?>">
+                    <?php echo $value['unsubscribe']; ?>
+                    </span>
+                </td>
+            </tr>
+            <?php $total += $value['unsubscribe']; ?>
+            <?php endif; ?>
+        <?php
+        endforeach;
+        ?>
+    </tbody>
+    <tfoot>
+            <tr id="nl-empty" class="">
+                <th class="borders first" ><?php echo $this->getCibleText('newsletter_statistic_unsubother_label'); ?></th>
+                <th class="borders first" >
+                    <span class="unsubscribe modalDetails" title="<?php echo $this->getCibleText('newsletter_statistic_unsubother_linkToReason_title'); ?>">
+                    <?php echo $this->getCibleText('newsletter_statistic_unsubother_linkToReason'); ?></th>
+                    </span>
+                <th class="borders bold center"><?php echo $other; ?></th>
+            </tr>
+            <tr class="">
+                <th class="bold borders first" colspan="2"><?php echo $this->getCibleText('newsletter_statistic_total_label'); ?></th>
+                <th class="borders center bold"><?php echo $total; ?></th>
+            </tr>
+    </tfoot>
+</table>
+
+

@@ -1,0 +1,39 @@
+<?php
+$this->headTitle($this->title);
+$this->pageTitle($this->title);
+?>
+
+<section id="contentCatalog" class="block catalog row">
+    <?php echo $this->partial('partials/searchContainer.phtml', array('view' => $this)); ?>
+    <?php foreach ($this->paginator as $name => $data): ?>
+        <?php
+        $urlValues = $this->getProductPath($data);
+        $urlValues[] = $data['CCI_ValUrl'];
+        $url = implode('/', $urlValues);
+        $catName = $data["CCI_Name"];
+        ?>
+        <article class="list col-lg-4">
+            <figure class="picture">
+                <?php $img = $this->clientImage('logo.png'); ?>
+                <?php if (!empty($data['CC_imageCat'])):?>
+                    <?php
+                        $img = $this->moduleImage(
+                            'catalog', 'categories/' . $data['CC_ID'],
+                            $data['CC_imageCat'], 'medium',
+                            array(
+                                'class' => 'img-responsive',
+                            )
+                        );
+                    ?>
+                <?php endif; ?>
+                <?php echo $this->link($url, $img);?>
+            </figure>
+            <p class="text">
+                <?php // echo $data['CCI_Description']; ?>
+                <?php echo $this->link($url, $catName, array('class' => '')); ?>
+            </p>
+        </article>
+        <?php endforeach;?>
+    <div class="clear_both"></div>
+    <?php echo $this->paginationControl($this->paginator,'sliding', 'partials/products.paginator.phtml'); ?>
+</section>

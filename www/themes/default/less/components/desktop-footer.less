@@ -1,0 +1,85 @@
+
+.site-footer-top {
+    background:@brand-grey;
+    padding:55px 0;
+    .link-button {
+        margin-left:100px;
+        @media @mq-tablet-below {
+            margin-left:0;
+        }
+    }
+}
+.site-footer-middle {
+    background:@brand-grey-very-light;
+    padding:58px 0 38px 0;
+    h2 {
+        .front-end & { 
+            font-style:normal;
+            .font-weight('normal','sans-serif');
+            color:@brand-primary;
+            .responsive-font(@font-size-base + 2);
+            text-transform:uppercase;
+            margin-bottom:20px;
+        }
+    }
+}
+.site-footer-address {
+    line-height:1.2em;
+    strong {
+        text-transform:uppercase;
+        .responsive-font(@font-size-base - 2);
+    }
+}
+@footer-line-height:51px;//dans ce cas-ci, le line-height devrait être de la même hauteur que le logo
+@footer-text-line-height:18px;//la hauteur de ligne du menu
+@footer-padding-top:26px;//padding top du header 
+@footer-padding-bottom:26px;//padding top du header 
+
+.site-footer-bottom {
+    background:@brand-grey;
+    color:@brand-white;
+    padding:@footer-padding-top 0 @footer-padding-bottom 0;
+    line-height:@footer-line-height;
+    .font-0();
+    ul,li {
+        display:inline;
+    }
+    .site-footer-bottom-container{ 
+        & > * { 
+            line-height:@footer-text-line-height;
+            display:inline-block;
+            vertical-align:middle;
+            float:none;
+            .responsive-font(@font-size-base - 2);
+            @media @mq-tablet-below {
+                display:block;
+            }
+        }
+        .site-footer-realisation {
+            text-transform:uppercase;
+            a {
+                color:@brand-secondary;
+            }
+            @media @mq-desktop {
+                .responsive-font(@font-size-base - 4);
+            }
+        }
+    }
+}
+.site-footer-copyright {
+    img {
+        height:50px;
+    }
+}
+.site-footer-copyright-text {
+    line-height:@footer-text-line-height;
+    display:inline-block;
+    padding:6px 0 0 28px;
+    display:inline-block;
+    vertical-align:middle;
+    @media @mq-tablet-below {
+        display:block;
+        padding:6px 0;
+        margin-bottom:10px;
+    }
+}

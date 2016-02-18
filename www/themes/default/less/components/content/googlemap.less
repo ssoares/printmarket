@@ -1,0 +1,38 @@
+//editor only
+#tinymce.mce-content-body { 
+    .google-map {
+        background:@brand-grey;
+        position:relative;
+        white-space:nowrap;
+        text-align:center;
+        height:200px;
+        width:300px;
+        .font-0();
+        &:before {
+            content:"";
+            display:inline-block;
+            vertical-align:middle;
+            height:100%;
+        }
+        &:after {
+            content:"Google Maps";
+            vertical-align:middle;
+            display:inline-block;
+            color:@brand-white;
+            .responsive-font(@font-size-base);
+        }
+    }
+}
+//back-end and front-end
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .front-end {
+    .google-map {        
+        width:100%;
+        height:480px;
+        img {
+            max-width:none;
+        }
+    }
+}
+//back-end and content
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content {   
+}

@@ -1,0 +1,38 @@
+<script type="text/javascript">
+    var id = '<?php echo $this->id?>';
+    $("#genericProfile").validate({
+        rules: {
+            GP_FirstName: {
+                required: true
+            },
+            GP_LastName: {
+                required: true
+            },
+            GP_Email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: "<?php echo $this->baseUrl?>/users/index/user-exists/id/" + id,
+                    type: "post"
+                }
+            },
+            GP_Password: {
+
+            },
+            passwordConfirmation: {
+                equalTo: '#GP_Password'
+            }
+        },
+        messages: {
+            GP_Email: {
+                required: 'Obligatoire',
+                email: "Adresse invalide",
+                remote:"<?php echo $this->getCibleText('profile_message_email_already_exists') ?>"
+//                remote:'Test'
+            },
+            passwordConfirmation: {
+                equalTo: 'Les mots de passe ne sont pas identiques.'
+            }
+        }
+    });
+</script>

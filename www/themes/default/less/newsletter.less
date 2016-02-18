@@ -1,0 +1,50 @@
+@import "vendor/bootstrap/mixins.less"; 
+.newsletter { 
+    &.details-release, &.show-web {
+        h1 {
+            margin-bottom:6px;
+        }
+        .date {
+            margin-bottom:16px;
+        }
+    } 
+}
+.newsletter-top-news {
+    margin:0 0 32px 0;
+}
+.newsletter-zone-news {
+    margin:0 0 20px 0;
+}
+.newsletter-news-image {
+    margin: 0 0 26px 0;
+    .newsletter-article-image-link {
+        width:100%;
+        height:390px;
+        .newsletter-zone-news & {
+            height:261px;
+        } 
+    }
+    .newsletter-zone-news & {
+        margin:0 0 16px 0;
+    }
+}
+.newsletter-news-title {
+    .newsletter-top-news & { 
+        margin:0 0 12px 0;    
+    }
+    .newsletter-zone-news & {
+        margin:0 0 12px 0;    
+    }
+}
+.newsletter-top-news-content {
+    .newsletter-top-news & { 
+        margin:0 0 12px 0; 
+        &.content-h2-style { 
+            line-height:1.1em;
+            margin:0 0 16px 0; 
+        }   
+    }
+}
+.newsletter-privacy-policy {
+    margin-top:30px;
+}

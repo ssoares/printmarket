@@ -1,0 +1,400 @@
+<script>
+    $(document).ready(function() {
+        $("#addFilterSet").click(function(event){
+            event.preventDefault();
+            var filterSet = $('#filterSet');
+            var filterSetCountID = parseInt(filterSet.children('#filterSetCountID').val());
+
+            var filterOption    = "newFilter";
+            var url = $("#ajaxFilterLink").val();
+            $.getJSON(url,{filterOption : filterOption, filterID : 1, filterSetID : filterSetCountID+1},
+                function(data){
+                    var newFilterSet = '';
+                    newFilterSet += "<div id='filter_"+(filterSetCountID+1)+"' class='filterSetContent' filterSetID='"+(filterSetCountID+1)+"'>";
+                    newFilterSet += "   <div class='filterSetContent_action'>";
+
+                    newFilterSet += "      <div class='action'>";
+                    newFilterSet += "          <fieldset id='fieldset-actions-filterset'>";
+                    newFilterSet += "              <ul class='actions-buttons'>";
+                    newFilterSet += "                  <li><button name='addFilter' id='addFilter' type='button' class='stdButton addFilter'>"+$('#linkAddNewsletterFilter').val()+"</button></li>";
+                    newFilterSet += "                  <li><button name='deleteFilterSet' id='deleteFilterSet' type='button' class='stdButton deleteFilterSet'>"+$('#linkDeleteNewsletterFilterSet').val()+"</button></li>";
+                    newFilterSet += "              </ul>";
+                    newFilterSet += "          </fieldset>";
+                    newFilterSet += "      </div>";
+                    newFilterSet += "      <div class='title'>"+$('#newsletterFiltersetTitle').val()+"</div>";
+
+                    newFilterSet += "   </div>";
+
+                    newFilterSet += "   <div class='filterContent'>";
+                    newFilterSet += "       <input type='hidden' id='filterCountID' value='1'/> ";
+                    newFilterSet += "       <input type='hidden' id='filterCount' value='1'/> ";
+                    newFilterSet += "       <table cellpadding='0' cellspacing='0'>";
+                    newFilterSet += "           <tr class='filter' filterID='1'>";
+                    newFilterSet += "               <td class='tdSelectFilterOption row_even'>";
+                    newFilterSet +=                     data['newElement'];
+                    newFilterSet += "               </td>";
+                    newFilterSet += "               <td class='tdFilterValue row_even'></td>";
+                    newFilterSet += "               <td class='tdFilterAction row_even'>";
+                    newFilterSet += "                   <div class='action'>";
+                    newFilterSet += "                       <fieldset id='fieldset-actions-filterset'>";
+                    newFilterSet += "                           <ul class='actions-buttons'>";
+                    newFilterSet += "                               <li><button name='deleteFilter' id='deleteFilter' type='button' class='stdButton deleteFilter'>"+$('#linkDeleteNewsletterFilter').val()+"</button></li>";
+                    newFilterSet += "                           </ul>";
+                    newFilterSet += "                       </fieldset>";
+                    newFilterSet += "                   </div>";
+                    newFilterSet += "               </td>";
+                    newFilterSet += "           </tr>";
+                    newFilterSet += "       </table>";
+                    newFilterSet += "   </div>";
+                    newFilterSet += "</div>";
+
+                    filterSet.append(newFilterSet);
+                    refreshSelect();
+
+                    filterSet.children('#filterSetCountID').val(filterSetCountID+1);
+                }
+            );
+        });
+
+        $(".addFilter").live('click',function(event){
+            event.preventDefault();
+            var filterSetContent = $(this).parents('.filterSetContent');
+            var filterSetID = filterSetContent.attr('filterSetID');
+
+            var filterContent   = filterSetContent.children('.filterContent');
+            var filterTable     = filterContent.children('table');
+
+            var filterCountID     = parseInt(filterContent.children('#filterCountID').val());
+            var filterOption    = "newFilter";
+
+            var url = $("#ajaxFilterLink").val();
+            $.getJSON(url,{filterOption : filterOption, filterID : (filterCountID+1), filterSetID : filterSetID},
+                function(data){
+                    var row = '';
+                    if ((filterCountID+1)%2)
+                        row = 'even';
+                    else
+                        row = 'odd';
+
+                    newFilter   = ""
+
+                    newFilter += "<tr class='filter' filterID='"+(filterCountID+1)+"'>";
+                    newFilter += "  <td class='tdSelectFilterOption row_"+row+"'>";
+                    newFilter +=        data['newElement'];
+                    newFilter += "  </td>";
+                    newFilter += "  <td class='tdFilterValue row_"+row+"'>&nbsp;</td>";
+                    newFilter += "  <td class='tdFilterAction row_"+row+"'>";
+                    newFilter += "      <div class='action'>";
+                    newFilter += "          <fieldset id='fieldset-actions-filterset'>";
+                    newFilter += "              <ul class='actions-buttons'>";
+                    newFilter += "                  <li><button name='deleteFilter' id='deleteFilter' type='button' class='stdButton deleteFilter'>"+$('#linkDeleteNewsletterFilter').val()+"</button></li>";
+                    newFilter += "              </ul>";
+                    newFilter += "          </fieldset>";
+                    newFilter += "      </div>";
+                    newFilter += "  </td>";
+                    newFilter += "</tr>";
+
+                    filterTable.append(newFilter);
+                    refreshSelect();
+
+                    filterContent.children('#filterCountID').val(filterCountID+1);
+                    filterContent.children('#filterCount').val(parseInt(filterContent.children('#filterCount').val())+1);
+                }
+            );
+        });
+
+        $(".deleteFilterSet").live('click',function(event){
+            event.preventDefault();
+            $(this).parents('.filterSetContent').remove();
+
+        });
+
+        $(".deleteFilter").live('click',function(event){
+            event.preventDefault();
+            var filterSetContent = $(this).parents('.filterSetContent');
+            var filterContent   = filterSetContent.children('.filterContent');
+            var filterSetID = filterSetContent.attr('filterSetID');
+            var filter      = $(this).parents('.filter');
+            var filterID    = filter.attr('filterID');
+
+            filterContent.children('#filterCountID').val(filterContent.children('#filterCountID').val()-1);
+            filterContent.children('#filterCount').val(filterContent.children('#filterCount').val()-1);
+
+            filter.remove();
+
+            var rows = filterContent.children('table').children('tbody').children('tr');
+            var cells = '';
+            var rowClass = 'even';
+            rows.each(function(index){
+                cells = $(this).children('td');
+                cells.each(function(index2){
+                    $(this).removeClass('row_odd row_even');
+                    $(this).addClass('row_'+rowClass);
+                });
+                if(rowClass == 'even')
+                    rowClass = 'odd';
+                else
+                    rowClass = 'even';
+            });
+        });
+
+
+
+
+        function refreshSelect(){
+            $(".selectFilterOption").change(function(event){
+                var filterSetID = $(this).parents('.filterSetContent').attr('filterSetID');
+                var filter      = $(this).parents('.filter');
+                var filterID    = filter.attr('filterID');
+                var filterOption= $(this).val();
+
+                url = $("#ajaxFilterLink").val();
+                $.getJSON(url,{filterOption : filterOption, filterID : filterID, filterSetID : filterSetID},
+                    function(data){
+                        filterValue = filter.children('.tdFilterValue');
+                        filterValue.html(data['newElement']);
+                    }
+                );
+            });
+        }
+
+        refreshSelect();
+
+        function dump(arr,level) {
+            var dumped_text = "";
+            if(!level) level = 0;
+
+            //The padding given at the beginning of the line.
+            var level_padding = "";
+            for(var j=0;j<level+1;j++) level_padding += "    ";
+
+            if(typeof(arr) == "object") { //Array/Hashes/Objects
+             for(var item in arr) {
+              var value = arr[item];
+
+              if(typeof(value) == "object") { //If it is an array,
+               dumped_text += level_padding + "\'" + item + "\' ...\n";
+               dumped_text += dump(value,level+1);
+              } else {
+               dumped_text += level_padding + "\'" + item + "\' => \"" + value + "\"\n";
+              }
+             }
+            } else { //Stings/Chars/Numbers etc.
+             dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+            }
+            return dumped_text;
+        }
+    });
+</script>
+<style>
+    .filterSetContent{
+        /*background-color: #E3E3E3;*/
+        width: 100%;
+        float: left;
+        border: 1px solid #b6b7b8;
+        margin-top:0px;
+        margin-bottom:40px;
+    }
+
+    .filterSetContent_action{
+        padding-right: 20px;
+        padding-left: 20px;
+        background-color: #e9e9ea;
+        height: 40px;
+        border-bottom: 1px solid #b6b7b8;
+    }
+
+    .filterSetContent_action .action{
+        float:right;
+
+    }
+    .filterSetContent_action .title{
+        padding-top: 15px;
+        color: #5a9cbe;
+    }
+
+    .filterContent{
+        /*background-color: blue;*/
+        float: left;
+        clear: both;
+        width: 100%;
+    }
+
+    .filterContent table{
+        width:100%;
+        border:0px;
+    }
+
+    .filterContent table tr td{
+        padding-left: 20px;
+    }
+
+    td.tdSelectFilterOption{
+        width:350px;
+    }
+
+    td.tdFilterValue{
+
+    }
+
+    td.tdFilterAction{
+        text-align: right;
+        padding-right: 20px;
+    }
+
+    select.selectFilterOption{
+        width:300px;
+    }
+
+    table tr.filter .row_odd{
+        background-color: #e9e9ea;
+    }
+    table tr.filter .row_even{
+        background-color: #FFFFFF;
+    }
+</style>
+
+<?php
+$form = $this->form;
+$filterOptionsData = $this->filterOptionsData;
+$filterSetArray = $this->filterSetArray;
+//$this->dump($filterSetArray);
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <input type="hidden" id="ajaxFilterLink" value="<?php echo($this->baseUrl())?>/newsletter/filter/ajax"/>
+        <input type="hidden" id="linkDeleteNewsletterFilter" value="<?php echo($this->getCibleText('link_delete_newsletter_filter')); ?>"/>
+        <input type="hidden" id="linkAddNewsletterFilter" value="<?php echo($this->getCibleText('link_add_newsletter_filter')); ?>"/>
+        <input type="hidden" id="linkDeleteNewsletterFilterSet" value="<?php echo($this->getCibleText('link_delete_newsletter_filterSet')); ?>"/>
+        <input type="hidden" id="newsletterFiltersetTitle" value="<?php echo($this->getCibleText('newsletter_filterset_title')); ?>"/>
+
+        <form enctype="application/x-www-form-urlencoded" method="post" action="">
+            <dl style="margin: 0px; padding: 0px;">
+                <?php echo($form->actions); ?>
+            </dl>
+
+            <div id="collection">
+                <div class="divContent">
+                    <dl><?php echo($form->getSubForm('collectionForm')); ?></dl>
+                </div>
+            </div>
+            <fieldset id="fieldset-filterSet">
+                <div id="filterSet">
+<?php               if($filterSetArray){
+                        $i = 1;
+                        $filterSetCount = count($filterSetArray);
+                        $newFilterSet = "<input type='hidden' id='filterSetCountID' value='$filterSetCount'/>";
+                        foreach($filterSetArray as $filterSet){
+                            $filterCount = count($filterSet);
+                            $newFilterSet .= "<div id='filter_".$i."' class='filterSetContent' filterSetID='".$i."'>";
+                            $newFilterSet .= "   <div class='filterSetContent_action'>";
+                            $newFilterSet .= "      <div class='action'>";
+                            $newFilterSet .= "          <fieldset id='fieldset-actions-filterset'>";
+                            $newFilterSet .= "              <ul class='actions-buttons'>";
+                            $newFilterSet .= "                  <li><button name='addFilter' id='addFilter' type='button' class='stdButton addFilter'>{$this->getCibleText('link_add_newsletter_filter')}</button></li>";
+                            $newFilterSet .= "                  <li><button name='deleteFilterSet' id='deleteFilterSet' type='button' class='stdButton deleteFilterSet'>{$this->getCibleText('link_delete_newsletter_filterSet')}</button></li>";
+                            $newFilterSet .= "              </ul>";
+                            $newFilterSet .= "          </fieldset>";
+                            $newFilterSet .= "      </div>";
+                            $newFilterSet .= "      <div class='title'>{$this->getCibleText('newsletter_filterset_title')}</div>";
+                            $newFilterSet .= "   </div>";
+                            $newFilterSet .= "   <div class='filterContent'>";
+                            $newFilterSet .= "       <input type='hidden' id='filterCountID' value='$filterCount'/> ";
+                            $newFilterSet .= "       <input type='hidden' id='filterCount' value='$filterCount'/> ";
+                            $newFilterSet .= "       <table cellpadding='0' cellspacing='0'>";
+
+                            $y=1;
+                            $row = 'even';
+                            foreach($filterSet as $filter){
+                                $newFilterSet .= "           <tr class='filter' filterID='$y'>";
+                                $newFilterSet .= "               <td class='tdSelectFilterOption row_$row'>";
+                                $newFilterSet .= "                  <select name='filterSet[$i][$y][filterSet]' id='filterSet-filterSet' class='selectFilterOption'>";
+                                $newFilterSet .= "                      <option value='0'>".$this->getCibleText('newsletter_send_filter_selectOne')."</option>";
+                                foreach($filterOptionsData as $filterOption){
+                                    if($filterOption['NFPF_Name'] == $filter['filterSet'])
+                                        $newFilterSet .= " <option value='".$filterOption['NFPF_Name']."' selected='selected'>".$filterOption['name']."</option>";
+                                    else
+                                        $newFilterSet .= " <option value='".$filterOption['NFPF_Name']."'>".$filterOption['name']."</option>";
+                                }
+                                $newFilterSet .= "                  </select>";
+                                $newFilterSet .= "               </td>";
+                                $newFilterSet .= "               <td class='tdFilterValue row_$row'>";
+                                $newFilterSet .=                    $filter['element'];
+                                $newFilterSet .= "               </td>";
+                                $newFilterSet .= "               <td class='tdFilterAction row_$row'>";
+                                $newFilterSet .= "                  <div class='action'>";
+                                $newFilterSet .= "                      <fieldset id='fieldset-actions-filterset'>";
+                                $newFilterSet .= "                          <ul class='actions-buttons'>";
+                                $newFilterSet .= "                              <li><button name='deleteFilter' id='deleteFilter' type='button' class='stdButton deleteFilter'>{$this->getCibleText('link_delete_newsletter_filter')}</button></li>";
+                                $newFilterSet .= "                          </ul>";
+                                $newFilterSet .= "                      </fieldset>";
+                                $newFilterSet .= "                  </div>";
+                                $newFilterSet .= "               </td>";
+                                $newFilterSet .= "           </tr>";
+
+                                $y++;
+                                if($row == 'even')
+                                    $row = 'odd';
+                                else
+                                    $row = 'even';
+                            }
+
+                            $newFilterSet .= "       </table>";
+                            $newFilterSet .= "   </div>";
+                            $newFilterSet .= "</div>";
+
+
+                            $i++;
+                        }
+                        echo($newFilterSet);
+                    }
+                    else{
+?>                      <input type="hidden" id="filterSetCountID" value="1"/>
+                        <div id="filterSet_1" class="filterSetContent" filterSetID="1">
+                            <div class='filterSetContent_action'>
+                                <div class='action'>
+                                    <fieldset id='fieldset-actions-filterset'>
+                                        <ul class='actions-buttons'>
+                                            <li><button name='addFilter' id='addFilter' type='button' class='stdButton addFilter'><?php echo($this->getCibleText('link_add_newsletter_filter'));?></button></li>
+                                            <li><button name='deleteFilterSet' id='deleteFilterSet' type='button' class='stdButton deleteFilterSet'><?php echo($this->getCibleText('link_delete_newsletter_filterSet'));?></button></li>
+                                        </ul>
+                                    </fieldset>
+                                </div>
+                                <div class='title'><?php echo($this->getCibleText('newsletter_filterset_title'));?></div>
+                            </div>
+                            <div class="filterContent">
+                                <input type="hidden" id="filterCountID" value="1"/>
+                                <input type="hidden" id="filterCount" value="1"/>
+
+                                <table cellpadding="0" cellspacing="0">
+                                    <tr class="filter" filterID="1">
+                                        <td class="tdSelectFilterOption row_even">
+                                            <select name="filterSet[1][1][filterSet]" id="filterSet-filterSet" class="selectFilterOption">
+                                                <option value='0'><?php echo($this->getCibleText('newsletter_send_filter_selectOne')); ?></option>
+                                                <?php
+                                                foreach($filterOptionsData as $filter){
+                                                    echo("<option value='".$filter['NFPF_Name']."'>".$filter['name']."</option>");
+                                                }
+                                                ?>
+                                            </select>
+                                        </td>
+                                        <td class="tdFilterValue row_even"></td>
+                                        <td class="tdFilterAction row_even">
+                                            <div class='action'>
+                                                <fieldset id='fieldset-actions-filterset'>
+                                                    <ul class='actions-buttons'>
+                                                        <li><button name='deleteFilter' id='deleteFilter' type='button' class='stdButton deleteFilter'><?php echo($this->getCibleText('link_delete_newsletter_filter')); ?></button></li>
+                                                    </ul>
+                                                </fieldset>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+<?php               }
+?>              </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

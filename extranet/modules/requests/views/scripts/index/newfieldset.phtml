@@ -1,0 +1,80 @@
+<?php
+$filterOptionsData = $this->fields;
+$filterSetArray = array();
+$id = !empty($this->id)?$this->id: 1;
+$fieldsetId = !empty($this->fieldsetId)?$this->fieldsetId: 1;
+$nbRows = !empty($this->nbRows)?$this->nbRows: 1;
+$style = ($nbRows % 2 > 0) ? 'even' : 'odd';
+$add = $this->getTemplate == 'add' ? true : false;
+$openFieldset = $this->getTemplate == 'openFieldset' ? true : false;
+if ($openFieldset){
+    $openFilterset = true;
+}else{
+    $openFilterset = $this->getTemplate == 'openFilterset' ? true : false;
+}
+$closeFieldset = $this->getTemplate == 'closeFieldset' ? true : false;
+if ($closeFieldset){
+    $closeFilterset = true;
+}else{
+    $closeFilterset = $this->getTemplate == 'closeFilterset' ? true : false;
+}
+$getNewFieldset = $this->getTemplate == 'getNewFieldset' ? true : false;
+if (empty($this->name)){
+    $this->name = 'filterSet[1][1]';
+}
+?>
+<?php if ($add || $openFieldset): ?>
+<fieldset id="fieldset-filterSet">
+    <div class="text-right">
+        <?php echo $this->link('javascript:void(0);', $this->getCibleText('link_add_newsletter_filterSet'), array('class'=>'addFilterSet add')); ?>
+    </div>
+    <div class="filterSet">
+<?php endif; ?>
+<?php if ($getNewFieldset || $add || $openFilterset): ?>
+        <div id="filterSet_<?php echo $fieldsetId?>" class="filterSetContent" data-filterSetId="<?php echo $fieldsetId?>">
+            <div class='filterSetContent_action'>
+                <div class='action'>
+                    <fieldset id='fieldset-actions-filterset'>
+                        <ul class='actions-buttons'>
+                            <li><button name='addFilter' id='addFilter' type='button' class='stdButton addFilter'><?php echo($this->getCibleText('link_add_newsletter_filter')); ?></button></li>
+                            <li><button name='deleteFilterSet' id='deleteFilterSet' type='button' class='stdButton deleteFilterSet'><?php echo($this->getCibleText('link_delete_newsletter_filterSet')); ?></button></li>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class='title'><?php echo($this->getCibleText('newsletter_filterset_title')); ?></div>
+            </div>
+            <div class="filterContent">
+                <table cellpadding="0" cellspacing="0">
+                    <tbody>
+<?php endif; ?>
+                    <?php if (!$closeFieldset): ?>
+                    <tr class="filter" data-filterId="<?php echo $id?>">
+                        <td class="tdSelectFilterOption <?php echo $style ?>">
+                            <?php echo $this->formSelect($this->name . '[filterSet]',
+                                $this->filterSet, array('class' => 'selectFilterOption filterSelect'), $filterOptionsData);?>
+                        </td>
+                        <td class="tdFilterValue <?php echo $style ?>">
+                            <?php echo $this->criteria; ?>
+                        </td>
+                        <td class="tdFilterAction <?php echo $style ?>">
+                            <div class='action'>
+                                <fieldset id='fieldset-actions-filterset'>
+                                    <ul class='actions-buttons'>
+                                        <li><button name='deleteFilter' id='deleteFilter' type='button' class='stdButton deleteFilter'><?php echo($this->getCibleText('link_delete_newsletter_filter')); ?></button></li>
+                                    </ul>
+                                </fieldset>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+<?php if ($getNewFieldset || $add || $closeFilterset): ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+<?php endif; ?>
+<?php if ($add || $closeFieldset): ?>
+    </div>
+</fieldset>
+<?php echo $this->partial("partials/jsFilters.phtml", array('view' => $this)); ?>
+<?php endif; ?>

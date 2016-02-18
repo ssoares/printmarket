@@ -1,0 +1,12 @@
+<section class="content text index module">
+    <?php if (!empty($this->block)): ?>
+        <?php echo $this->showBlockTitle('h2', array('class' => 'text-title'));?>
+        <?php echo($this->block); ?>
+    <?php else: ?>
+        <?php if ($this->otherData): ?>
+            <?php $options = array('type' => 'page', 'message' => $this->getClientText('empty_data_disclaimer')); ?>
+            <p><?php echo $this->languageSwitcher($options); ?></p>
+        <?php endif; ?>
+    <?php endif; ?>
+</section>
+

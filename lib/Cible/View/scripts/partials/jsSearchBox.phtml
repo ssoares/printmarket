@@ -1,0 +1,20 @@
+
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        //empêche la boîte de se cacher lorsqu'on rempli le champ de recherche
+        $('.site-header-search-form').click(function(e){
+            e.stopPropagation();
+        })
+        //lorsqu'on clique sur le bouton submit, faire une redirection vers la page de résultats
+        $('.search-box-submit').on('click touchstart', function(e){
+            e.preventDefault();
+            var url = $(".site-header-search-form").prop('action')+"/" + $('#search-box-terme').val();
+            window.location = url;
+            return false;
+        })
+    });
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

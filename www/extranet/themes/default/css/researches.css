@@ -1,0 +1,59 @@
+/*
+    Document   : researches
+    Created on : 2013-04-13, 16:07:32
+    Author     : ssoares
+    Description:
+        Purpose of the stylesheet follows.
+*/
+form select{
+    width: 230px;
+}
+.shortcut{
+    background: transparent url('../../../icons/action_icons_add.png') no-repeat;
+    margin: -32px 0 10px 240px;
+
+}
+#fieldset-leftData{
+    float: left;
+}
+fieldset.addresseClass{
+    margin-left: -8px;
+}
+#researchers fieldset.addresseClass{
+    float: right;
+    margin-right: 180px;
+}
+#coordinators #fieldset-address,
+#researchers #fieldset-rightData{
+    float: right;
+    width: 45%;
+}
+#researchers #fieldset-rightData textarea{
+    height: 90px;
+}
+#PRI_Keywords{
+    height: 80px;
+}
+#researchers #fieldset-bottomData {
+    clear: both;
+}
+.publicationsList tr{background-color: #F1F1F1; border: 1px solid #B6B7B8}
+.publicationsList td{padding: 0 20px;}
+.publicationsList td .label{font-weight: bold}
+
+#form_panel form .inline.multicheckbox > label {
+    display: inline-block;
+    width: 24%;
+}
+#form_panel form .inline.multicheckbox label.noStyle {
+    width: 100%;
+}
+dd.startDate{
+    float:left;
+    width: 250px;
+}
+
+.filePDF {
+    float: left;
+    width: 380px;
+}

@@ -1,0 +1,96 @@
+<?php $pageManage = $this->baseUrl() . '/page/manage'; ?>
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_pageheader_text'),
+    'pageDescription' => $this->getCibleText('header_edit_pageheader_description'),
+    'breadcrumb' => ''
+));
+?>
+<div id="action_panel" class="list_action_panel">
+    <fieldset id="fieldset-actions">
+        <ul class="actions-buttons">
+            <li>
+                <?php echo $this->link($pageManage . '/addheader/actionKey/add',
+                    $this->getCibleText('add_image_header'),
+                    array('class' => 'button-add'));
+                ?>
+            </li>
+            <li>
+                <?php echo $this->link($pageManage . '/structure/site/s',
+                    $this->getCibleText('returnToTreeList'),
+                    array('class' => 'cancel'));
+                ?>
+            </li>
+        </ul>
+    </fieldset>
+</div>
+<?php
+    $imagePath = $this->imageFolder . "header/";
+
+    foreach($this->imageFiles as $imageFiles){
+    ?>
+        <div class="imagesFilesManage">
+            <div class="imagesText">
+
+                <div class="imagesDelete">
+                    <a href="<?php echo $pageManage ?>/deleteheader/image/<?php echo $imageFiles; ?>">
+                        <?php echo $this->getCibleText('delete'); ?>
+                    </a>
+                </div>
+                <?php
+                $config = Zend_Registry::get('config')->toArray();
+                if($this->showCrop){
+                ?>
+                              <div class="imagesCrop">
+                    <a href="<?php echo $pageManage ?>/cropimage/mode/edit/new/N/image/<?php echo $imageFiles; ?>">
+                        <?php echo $this->getCibleText('crop'); ?>
+                    </a>
+                </div>
+                <?php
+                }
+                ?>
+                <div class="imagesListPages">
+                    <?php
+                    $pages = $this->Headerpages($imageFiles);
+                    $numberOfPages = count($pages);
+                    $pageString = $this->getCibleText('numberOfPages') . ' ' . $numberOfPages . "<br />";
+                    foreach($pages as $page){
+                        $pageString .= '&nbsp;&nbsp; - ' . $page['PI_PageTitle'] . "<br />";
+                    }
+                    ?>
+                    <input type="hidden" value="<?php echo $pageString; ?>">
+                    <?php if($numberOfPages>1){
+                            echo $numberOfPages . " " . $this->getCibleText('listPages');
+                        }
+                        else{
+                            echo $numberOfPages . " " . $this->getCibleText('listPage');
+                        }
+                    ?>
+                </div>
+            </div>
+            <div class="imagesFile" style="max-width: <?php echo $this->thumbW; ?>px;max-height: <?php echo $this->thumbH; ?>px">
+                <?php
+                $thumbPrefix = $this->thumbW . 'x' . $this->thumbH . '_';
+                $tmp = $imagePath . $thumbPrefix . $imageFiles;
+                $old = $imagePath  . $imageFiles;
+                $image = (file_exists($this->rootImgPath.$tmp))?$tmp : $old;
+                ?>
+                 <a title="" rel="prettyPhoto" href="<?php echo $imagePath . $imageFiles; ?>?timestamp=<?php echo date('Y-m-d H:i:s');?>">
+                    <image src="<?php echo $image; ?>?timestamp=<?php echo date('Y-m-d H:i:s');?>" style="max-width: <?php echo $this->thumbW; ?>px;max-height: <?php echo $this->thumbH; ?>px"/>
+                 </a>
+            </div>
+
+        </div>
+    <?php
+    }
+
+?>
+<div class="info"></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".imagesListPages").click(function() {
+        var value = $(this).find('input').val();
+        $('.info').html(value).dialog({title:'Infos', width: 350});
+    });
+});
+</script>

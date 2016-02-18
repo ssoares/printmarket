@@ -1,0 +1,13 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_list_text_approbation_title'),
+    'pageDescription' => $this->getCibleText('header_list_text_approbation_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form" style="margin-top: 10px;">
+    <div id="form_panel">
+        <?php echo($this->mylist->render()); ?>        
+    </div>                    
+</div>

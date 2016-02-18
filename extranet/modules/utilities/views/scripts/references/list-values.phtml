@@ -1,0 +1,85 @@
+<?php $langs = Cible_FunctionsGeneral::getAllLanguage(); ?>
+<?php if (isset($this->list)) : ?>
+    <table id="valuesList" class="valuesList">
+        <thead>
+            <tr>
+                <th class="borders first"></th>
+                <?php if ($this->addChkbox): ?>
+                    <th class="borders center allSel">
+                        <input type="checkbox" value="" id="selectAll" /> <?php echo $this->getCibleText('select_all'); ?>
+                    </th>
+                <?php endif; ?>
+                <?php foreach ($langs as $key => $lang): ?>
+                    <?php if (!$this->orderBySeq && $lang['L_ID'] == $this->currentLang): ?>
+                        <?php $classOrderSelected = 'white ' ?>
+                        <?php $classOrderSelected .= 'languageSelector_' . $this->currentLang; ?>
+                    <?php else: ?>
+                        <?php $classOrderSelected = ''; ?>
+                    <?php endif; ?>
+                    <th class="borders <?php echo $classOrderSelected ?>"><?php echo $this->getCibleText('references_value_' . $lang['L_Suffix']); ?></th>
+                <?php endforeach; ?>
+                <th class="borders"><?php echo $this->getCibleText('list_column_action'); ?></th>
+            </tr>
+        </thead>
+        <tbody class="sortable">
+                    <?php $i = 1; ?>
+            <?php foreach ($this->list as $key => $value): ?>
+                    <?php $rowStyle = 'row_list_'; ?>
+                    <?php $rowStyle .= $i % 2 == 0? 1 : 0; ?>
+            <tr id="ref-<?php echo $key . '-' . $value['R_Seq']; ?>" class="<?php echo $rowStyle?>">
+                    <td class="borders first center">
+                        <?php if ($this->orderBySeq): ?>
+                            <label class="handler ui-icon ui-icon-arrowthick-2-n-s">||</label>
+                        <?php else: ?>
+                            <label class="">&nbsp;</label>
+                        <?php endif; ?>
+                    </td>
+                    <?php if ($this->addChkbox): ?>
+                        <td class="borders center">
+                            <input type="checkbox" class="selectVal stdInput" id="sel<?php echo '-' . $value['R_ID']; ?>" value="<?php echo $value['R_ID']; ?>"/>
+                        </td>
+                    <?php endif; ?>
+                    <?php foreach ($langs as $index => $lang): ?>
+                        <?php $suffix = $lang['L_Suffix']; ?>
+                        <?php $field = 'RI_Value_' . $lang['L_Suffix']; ?>
+                        <?php $hasValue = (isset($value[$field])) ? true : false; ?>
+                        <td class="allowChange borders <?php // echo ($index == 0) ? 'first' : ''       ?>" id="<?php echo $value['R_ID'] . '-' . $suffix; ?>">
+                            <span class="lbl<?php echo ucfirst($suffix); ?>" id="lbl<?php echo ucfirst($suffix) . '-' . $value['R_ID']; ?>"><?php echo ($hasValue) ? $value[$field] : $this->getCibleText('button_add_references_values'); ?></span>
+                            <span class="val<?php echo ucfirst($suffix); ?> hidden"><input type="text" class="stdInput" id="val<?php echo ucfirst($suffix) . '-' . $value['R_ID']; ?>" value="<?php echo ($hasValue) ? $value[$field] : $this->getCibleText('button_add_references_values'); ?>"/></span>
+                        </td>
+                    <?php endforeach; ?>
+                    <td class="delete borders center bold last" id="del-<?php echo $value['R_ID']; ?>">
+                        <span class="deleteBtn" title="<?php echo $this->getCibleText('button_delete'); ?>">&nbsp;</span>
+                    </td>
+                </tr>
+                <?php
+                $i++;
+            endforeach;
+            ?>
+        </tbody>
+    </table>
+<?php endif; ?>
+
+<p class="addValueDisplayLine">
+    <?php echo $this->link('#', $this->getCibleText('button_add_references_values'), array('id' => 'displayAddLine', 'class' => 'displayAddLine')); ?>
+</p>
+
+<table style="display: none" id="trTemplate">
+    <tr id="newRef">
+        <td class="borders first"> </td>
+        <?php if ($this->addChkbox): ?>
+            <td class="borders"></td>
+        <?php endif; ?>
+        <?php foreach ($langs as $key => $lang): ?>
+            <?php $suffix = $lang['L_Suffix']; ?>
+            <td id="new-<?php echo $suffix; ?>" class="borders first">
+                <span id="" class="lbl<?php echo ucfirst($suffix); ?>" style="display: none;"></span>
+                <span class="val<?php echo ucfirst($suffix); ?> hidden" id="" style="display: inline;"><input type="text" value="" id="" class="stdInput"></span>
+            </td>
+        <?php endforeach; ?>
+        <td id="add-new" class="borders center bold last add">
+            <span title="<?php echo $this->getCibleText('button_add'); ?>" class="addBtn">&nbsp;</span>
+            <span title="<?php echo $this->getCibleText('button_cancel'); ?>" class="removeBtn">&nbsp;</span>
+        </td>
+    </tr>
+</table>

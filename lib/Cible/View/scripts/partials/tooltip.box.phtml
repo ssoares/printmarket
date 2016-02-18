@@ -1,0 +1,31 @@
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function(){
+        jQuery.fn.extend({
+            tooltip_appear : function(options){
+                var newHTML = $("#add_item_to_cart_succes_message").val();
+                this.html(newHTML);
+                this.center();
+                
+                if(options && options.hasOwnProperty("borderColor")){
+                    this.css('border-color',options.borderColor);
+                }
+                
+                this.fadeIn(500).animate({ opacity: 1.0 },1000).fadeOut(500);
+            },
+            
+            center : function(){
+                this.css("position","absolute");
+                this.css("top", ( $('.block-common-content-left').height() - this.height() ) / 2+$('block-common-content-left').scrollTop() + "px");
+                this.css("left", ( $('#wrapper').width() - this.width() ) / 2+$('#wrapper').scrollLeft() + "px");
+                this.css("z-index", "10000");
+                return this;
+            }
+        });    
+    });
+    //]]>
+</script>
+
+
+<div id='cible-tooltip-box'></div>
+<input type="hidden" id="add_item_to_cart_succes_message" value="<?php echo($this->getClientText('add_item_to_cart_succes_message')); ?>"/>

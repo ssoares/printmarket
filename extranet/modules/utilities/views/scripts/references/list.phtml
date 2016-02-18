@@ -1,0 +1,15 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_list_'.($this->cleaction).'_text'),
+    'pageDescription' => $this->getCibleText('header_list_'.($this->cleaction).'_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php
+            if (isset($this->mylist))
+                echo($this->mylist->render()); ?>
+    </div>
+</div>

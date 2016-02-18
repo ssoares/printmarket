@@ -1,0 +1,63 @@
+<?php
+// One place_holder template, so grab only the first place_holder elements
+$emptyPlaceholders = $this->zonesBlocks(array('nbZones' => $this->nbZones));
+
+$tree = $this->subMenu(array('id' => 'submenu', 'class' => 'open', 'buildOnCatalog' => true));
+$menu = $this->menu($tree, array(
+    'id' => 'submenu',
+    'startLevel' => 2,
+    'maxLevel' => 4,
+    'parentIdAlt' => 'subMenu-',
+    'parentId' => $tree['MID_ParentId'],
+    'class' => 'nav nav-pills nav-stacked')
+    );
+$withLeftMenu = 'col-md-12 site-main-without-menu';
+
+$breadCrumb = $this->breadcrumbmenu(array('menuTitle' => 'principal',
+    'showHomeClass' => 'breadcrumb-home')
+);
+?>
+<?php if (isset($tree[0])): ?>
+    <?php $withLeftMenu = 'col-md-9 site-main-with-menu'; ?>
+<?php endif; ?>
+
+<div class="site-banner" role="banner">
+    <div class="site-banner-container container ">
+        <?php if ($this->imgHeader != '') echo $this->image($this->imgHeader, array('class' => 'img-header', 'direct' => true)); ?>
+        <div class="site-banner-content content">
+            <p class="blue-quote"><?php echo $this->bannerTitle ?></p>
+        </div>
+    </div>
+</div>
+<div class="site-common-zone-1 site-common-zone-1-container container">
+    <?php if (isset($tree[0])): ?>
+        <aside class="site-main-aside col-md-3" role="complementary">
+            <nav class="aside-menu-secondaire" role="navigation">
+                <?php echo $menu; ?>
+            </nav>
+        </aside>
+    <?php endif; ?>
+    <main class="site-common-main  <?php echo $withLeftMenu; ?>">
+        <div class="site-breadcrump">
+            <?php
+            echo $breadCrumb;
+            ?>
+        </div>
+        <?php if ($this->showTitle): ?>
+            <h1 class="site-main-title"><?php echo $this->pageTitle()->toString(null, null, true) ?></h1>
+        <?php endif; ?>
+        <?php echo $this->placeholder('zone1') ?>
+    </main>
+</div>
+<?php if (!isset($emptyPlaceholders[2])): ?>
+    <div class="site-common-zone-2 inverted blue-zone">
+        <div class="site-common-zone-2-container container">
+            <?php echo $this->placeholder('zone2') ?>
+        </div>
+    </div>
+<?php endif; ?>
+<?php if (!isset($emptyPlaceholders[3])): ?>
+    <div class="site-common-zone-3 site-common-zone-3-container container">
+        <?php echo $this->placeholder('zone3') ?>
+    </div>
+<?php endif; ?>

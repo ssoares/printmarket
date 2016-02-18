@@ -1,0 +1,55 @@
+<?php if ($this->pageCount > 0): ?>
+    <?php
+
+        // images
+        //$_first_img = $this->first_link_image ? $this->first_link_image : $this->image("{$this->baseUrl()}/icons/paging_first.png", array('border'=> 0));
+        $_prev_img = $this->prev_link_image ? $this->prev_link_image : $this->clientImage('largeArrowLeft.png', array());
+
+        $_next_img = $this->next_link_image ? $this->next_link_image : $this->clientImage('largeArrowRight.png', array());
+        //$_last_img = $this->last_link_image ? $this->last_link_image : $this->image("{$this->baseUrl()}/icons/paging_last.png", array('border'=> 0));
+
+    ?>
+
+    <div class="paginationControl">
+        <!-- Previous page link
+        <div id="pagination-previous">
+            <?php if (isset($this->previous)): ?>
+                <a href="<?php echo $this->url(array('nav' => $this->previous, 'img' => $this->img)); ?>" class="product-navigation-previous"><?php echo $this->getCibleText('form_paginator_previous') ?></a>&nbsp;&nbsp;
+            <?php endif; ?>
+        </div> -->
+
+        <!-- Next page link
+        <div id="pagination-next">
+            <?php if (isset($this->next)): ?>
+                <a href="<?php echo $this->url(array('nav' => $this->next, 'img' => $this->img)); ?>" class="product-navigation-next"><?php echo $this->getCibleText('form_paginator_next') ?></a>
+            <?php endif; ?>
+        </div> -->
+
+        <!-- Numbered page links -->
+        <div id="page-list" style="top : <?php echo $this->top; ?>px">
+            <div id="pagination-previous">
+                <?php if (isset($this->previous)): ?>
+                    <a href="<?php echo $this->url(array('nav' => $this->previous, 'img' => $this->img)); ?>" class="product-navigation-previous"><?php echo $_prev_img ?></a>
+                <?php else: ?>
+                    <?php echo $_prev_img ?>
+                <?php endif; ?>
+            </div>
+
+            <?php // foreach ($this->pagesInRange as $page): ?>
+                <?php // if ($page != $this->current): ?>
+                    <!--<a href="<?php echo $this->url(array('nav' => $page)); ?>" class="paginator_link_page_number"><?php echo $page; ?></a>-->
+                <?php // else: ?>
+                    <!--<span class="paginator_link_page_number selected"><?php echo $page; ?></span>-->
+                <?php // endif; ?>
+            <?php // endforeach; ?>
+
+            <div id="pagination-next">
+                <?php if (isset($this->next)): ?>
+                    <a href="<?php echo $this->url(array('nav' => $this->next, 'img' => $this->img)); ?>" class="product-navigation-next"><?php echo $_next_img ?></a>
+                <?php else: ?>
+                    <?php echo $_next_img ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

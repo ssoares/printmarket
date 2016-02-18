@@ -1,0 +1,48 @@
+@import "../../mixins/caret.less";
+
+.bootstrap-select {
+    max-width:100% !important; // responsive muthafucka
+    position:relative;
+}
+.bootstrap-select .btn {
+    border:0;
+    background:@brand-grey-very-light;
+    color:@brand-grey;
+    border-radius:0;
+    height:@select-height;
+     & when (@device-type = 'desktop') {
+        padding:10px @select-height 10px 20px;
+        .responsive-font(@font-size-base + 2);
+    }
+     & when (@device-type = 'mobile') {
+        padding:10px * @mobile-divider-text @select-height 10px * @mobile-divider-text 20px * @mobile-divider-text;
+        .responsive-font((@font-size-base + 2) * @mobile-divider-text);
+    }
+
+}
+.bootstrap-select.open .btn {
+    color:@brand-primary;
+}
+.bootstrap-select.btn-group .btn .caret {
+    position:absolute;
+    top:2px;
+    right:0;
+    height:@select-height;
+    line-height:@select-height;
+    width:@select-height;
+    text-align:center;
+    border:0;
+    .responsive-font(@font-size-base * 2 - 8);
+    &:after {
+        .import-icon-direct(@icon-dropdown-arrow);
+        .responsive-font(( @font-size-base * 2 - 8) * @mobile-divider-text);
+    }
+}
+.bootstrap-select.dropup .btn .caret {
+    &:after {
+        .import-icon-content(@icon-dropdown-arrow-inverted);
+    }
+}
+.bootstrap-select .dropdown-menu {
+    // fait n'importe quoi ici
+}

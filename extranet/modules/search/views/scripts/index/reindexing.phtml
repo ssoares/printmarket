@@ -1,0 +1,71 @@
+<? $this->headScript()->captureStart() ?>
+    $(document).ready(function() {
+        function reindexing(){
+            if ($('#reindexing').val() == 'true'){
+                $('body').css('cursor', 'wait'); 
+                $('#reindexing-message').append($('#message_execution1').val()+"<br/>");
+                url = $("#deleteIndexationAjaxLink").val();
+                $.getJSON(url,
+                    function(data){
+                        $('#reindexing-message').append($('#message_execution2').val()+" ("+data['totalTime']+")<br/><br/>");
+                        
+                        url = $("#addIndexationAjaxLink").val();                                
+                        $('#reindexing-message').append($('#message_execution3').val()+"<br/>");
+                        $.getJSON(url,
+                            function(data){
+                                $('#reindexing-message').append($('#message_execution4').val()+" ("+data['totalTime']+")<br/>");
+                                $('#cancel').show();
+                                $('body').css('cursor', 'default'); 
+                        });
+                
+                });
+            }
+        }
+        
+        reindexing();
+    
+        
+    });
+    
+    
+<?php $this->headScript()->captureEnd() ?>
+
+<?php
+    $reindexing = $this->reindexing;
+    
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+        'pageTitle' => $this->getCibleText('header_reindexing_text'),
+        'pageDescription' => $this->getCibleText('header_reindexing_description'),
+        'breadcrumb' => ''
+    ));                 
+?>
+
+<div id="container_middle_full">    
+<?  if(!$reindexing){
+?>      <input type="hidden" id="reindexing" value="false"/>
+        <h3 style="margin-bottom:15px"><?php echo($this->getCibleText('reindexing_message_confirmation')) ?></h3>
+        <form enctype="application/x-www-form-urlencoded" method="post" action="">
+            <div>
+                <input type="submit" id="reindexing" name="reindexing" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <button id="cancel" name="cancel" type="submit"><?php echo $this->getCibleText('button_no') ?></button>
+            </div>
+        </form>
+<?  }
+    else{
+?>      <form enctype="application/x-www-form-urlencoded" method="post" action="">
+            <input type="hidden" id="reindexing" value="true"/>
+            <input type="hidden" id="message_execution1" value="<?php echo($this->getCibleText('reindexing_message_execution1')); ?>"/>
+            <input type="hidden" id="message_execution2" value="<?php echo($this->getCibleText('reindexing_message_execution2')); ?>"/>
+            <input type="hidden" id="message_execution3" value="<?php echo($this->getCibleText('reindexing_message_execution3')); ?>"/>
+            <input type="hidden" id="message_execution4" value="<?php echo($this->getCibleText('reindexing_message_execution4')); ?>"/>
+            <input id="deleteIndexationAjaxLink" name="deleteIndexationAjaxLink" type="hidden" value="<?php echo($this->deleteIndexationAjaxLink) ?>"/>
+            <input id="addIndexationAjaxLink" name="addIndexationAjaxLink" type="hidden" value="<?php echo($this->addIndexationAjaxLink) ?>"/>
+            <h3 style="margin-bottom:15px"><?php echo($this->getCibleText('reindexing_message_inprogress')) ?></h3>      
+            <div id='reindexing-message' style="margin-bottom:20px;"></div>
+            <button id="cancel" name="cancel" type="submit" style="cursor:pointer; display:none;"><?php echo $this->getCibleText('button_return') ?></button>
+        </form>
+<?  }
+?>      
+    
+    
+</div>

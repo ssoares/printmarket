@@ -1,0 +1,465 @@
+/*
+    Document   : newsletterStats
+    Created on : 2011-09-27, 15:01:46
+    Author     : soaser
+    Description:
+        Style for the statistics of the newsletter
+    $Id: newsletterStats.css 1838 2016-01-08 21:21:38Z mlaplante $
+*/
+.ui-dialog {
+    z-index: 3001 !important;
+    min-height: 300px;
+}
+.ui-dialog-content {
+    min-height: 300px;
+    max-height: 560px;
+}
+.statFieldset{
+    margin: 10px 0 10px 0;
+}
+
+.statFieldset legend{
+    margin: 0;
+}
+.container{
+    border: 1px solid #C4C4C4;
+}
+.container p{
+    padding: 0;
+    display: inline-table;
+    margin: 0;
+}
+table {
+    border: none;
+    border-spacing:0;
+}
+.container td {
+    padding: 5px;
+    height: 40px;
+    width: 33.3333333%;
+}
+td.left{
+
+}
+td.middle{
+
+}
+td.right{
+
+}
+.borderLeft{
+    border-left: 1px solid #C4C4C4;
+}
+.borderRight{
+    border-right: 1px solid #C4C4C4;
+}
+.hasDatepicker{
+    display: inline;
+    margin-right: 28%;
+    width: 33.333333%;
+}
+#filtersTable label{
+    float: left;
+    width: 25%;
+}
+#filtersTable td{
+    vertical-align: top;
+}
+#filtersTable td.left{
+    /*width: 20%;*/
+}
+#filtersTable .tab-filters label{
+    min-width: 50%;
+}
+#filtersTable select{
+    width: 80%;
+}
+#categoriesFilter{
+    display: none;
+}
+#reports{
+    border: solid 1px #c4c4c4;
+}
+#tabContainer{
+    margin: 10px 0;
+}
+
+.dataTables_wrapper{
+    padding-bottom: 20px;
+}
+.dataTables_wrapper table{
+    width: 100%;
+}
+#detailsReasons_wrapper,
+#viewers_wrapper{
+    text-align: left;
+}
+#detailsReasons,
+#consultations,
+#viewers{
+    width:100%;
+    text-decoration:none;
+}
+#subscribe,
+#unsubscribe,
+#totalSub,
+#otherUnsub,
+#totalUnsub,
+#subContainer,
+#unsubContainer{
+    width:100%;
+    text-decoration:none;
+    margin-bottom: 15px;
+}
+#detailsReasons tbody,
+#viewers tbody,
+#tabContainer tbody,
+thead,
+tfoot{
+    border: 1px solid #C4C4C4
+}
+#tabContainer.ui-widget-content{
+    border: 0;
+    background-color:rgba(255, 255, 255, 0.5);
+    padding:20px;
+}
+.footer,
+#detailsReasons th,
+#viewers th,
+#tabContainer th{
+    /*background-color:#E9E9EA !important;*/
+    color: #fff;
+    font-size: 12px;
+    height: 72px;
+    margin: 2px 0;
+    padding: 5px 25px;
+}
+
+#detailsReasons .last,
+#viewers .last,
+#tabContainer .last{
+    border-right: 0;
+}
+#detailsReasons th.sorting_disabled,
+#viewers th.sorting_disabled,
+#tabContainer th.sorting_disabled{
+    border-right: 0;
+    /*padding: 0px;*/
+}
+.sorting{
+    background: url("../images/sort_both.png") no-repeat scroll right center transparent;
+    cursor: pointer;
+}
+.borders{
+    border: 1px solid #B6B7B8;
+}
+#detailsReasons td,
+#viewers td,
+#tabContainer td{
+    border: medium none;
+    font-size: 12px;
+    margin: 2px 0;
+    padding: 5px 25px;
+    vertical-align: middle;
+}
+
+.odd{
+    background-color:#FFFFFF;
+}
+.even{
+    background-color:#E9E9EA;
+}
+
+.dataTables_length, .dataTables_filter{
+    width: 50%;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.dataTables_filter{
+    text-align: right;
+}
+.mainLabel{
+    width: 100%;
+}
+#dateFilter{
+    display: inline-block;
+}
+#clearDate{
+    display: inline-block;
+}
+.button{
+    background: url("jquery/smoothness/images/ui-bg_glass_75_e6e6e6_1x400.png") repeat-x scroll 50% 50% #E6E6E6;
+    border: 1px solid #c4c4c4;
+    font-size: 1em;
+    height: 1.2em;
+    margin: 3px 0 0;
+    padding: 2% 0 1.5%;
+    text-align: center;
+    width: 21%;
+
+}
+#dateFilter:hover{
+    background: url("jquery/smoothness/images/ui-bg_glass_75_dadada_1x400.png") repeat-x scroll 50% 50% #E6E6E6;
+
+}
+.bold, #tabContainer th.bold {
+    font-weight: bold;
+}
+.totArtRead{
+    cursor: pointer;
+}
+#article {
+    width: 890px;
+}
+#article td.emptyCell {
+    width: 50px;
+}
+#article td.first{
+    width: 695px;
+}
+#article td.last{
+    width: 145px;
+}
+
+#tabContainer #consultations th.first{
+    width: 375px;
+}
+
+#tabContainer #subscribe th,
+#tabContainer #unsubscribe th,
+#detailsReasons td.first,
+#viewers td.first,
+#subscribe td.first,
+#unsubscribe td.first{
+    padding-left: 15px;
+}
+#tabContainer #subscribe th,
+#tabContainer #unsubscribe th{
+    width: 55% !important;
+}
+
+#tabContainer #subscribe tfoot th,
+#detailsReasons tfoot th,
+#viewers tfoot th,
+#tabContainer #unsubscribe tfoot th
+{
+    padding: 1px 1px 1px 5px;
+}
+
+#modalDetails{
+    width: 75%;
+}
+
+.modalDetails{
+    cursor: pointer;
+    font-weight: bold;
+    color: #4E606A;
+}
+
+.modalDetails:hover{
+    color: #82b8c2;
+}
+
+.normal{
+    font-weight: normal;
+}
+.alignRight{
+    text-align: right;
+    padding-right: 5px;
+}
+.paginate_disabled_previous,
+.paginate_enabled_previous,
+.paginate_disabled_next,
+.paginate_enabled_next {
+    float: left;
+    height: 9px;
+    margin-left: 3px;
+    text-indent: -9999px;
+    width: 9px;
+}
+.paginate_enabled_next {
+    background-image: url("../images/forward_enabled.jpg");
+}
+.paginate_disabled_previous {
+    background-image: url("../images/back_disabled.jpg");
+}
+.paginate_enabled_next {
+    background-image: url("../images/forward_enabled.jpg");
+}
+.dataTables_info ,
+.dataTables_paginate {
+    margin-top: 7px;
+}
+.dataTables_info {
+    float: left;
+    width: 60%;
+}
+div.dataTables_info {
+    width: 44%;
+}
+.dataTables_paginate {
+    float: right;
+    font-weight: bold;
+    text-align: right;
+    width: 44px;
+}
+.paging_full_numbers {
+    height: 1.5em;
+    line-height: 1.5em;
+    width: 55%;
+}
+.paging_full_numbers span.first,
+.paging_full_numbers span.previous,
+.paging_full_numbers span.next,
+.paging_full_numbers span.last {
+    padding: 0 8px !important;
+    font-size: 12px;
+}
+.paging_full_numbers span.first {
+    background: transparent url('../../../icons/paging_first.png') no-repeat;
+}
+.paging_full_numbers span.previous {
+    background: transparent url('../../../icons/paging_prev.png') no-repeat;
+}
+.paging_full_numbers span.next {
+    background: transparent url('../../../icons/paging_next.png') no-repeat;
+}
+.paging_full_numbers span.last {
+    background: transparent url('../../../icons/paging_last.png') no-repeat;
+}
+
+.paging_full_numbers span.paginate_button,
+.paging_full_numbers span.paginate_active {
+    color: #4E606A;
+    cursor: pointer;
+    margin: 0 3px;
+}
+.paging_full_numbers span.paginate_active {
+    color: #66A8C9;
+}
+.paging_full_numbers span.paginate_button:hover{
+    color: #66A8C9;
+
+}
+
+.paging_full_numbers span.paginate_button_disabled{
+    cursor: default;
+}
+
+.columnLabel{
+    display: inline-block;
+    min-width: 125px;
+}
+
+fieldset#reports{
+    border:none;
+    padding:20px;
+}
+
+fieldset legend{
+    font-size:22px;
+    font-family:"nexaslab-bold",sans-serif;
+}
+
+.container_control-panel-part{
+    background-color:#FFF;
+    padding:20px;
+    height:150px;
+}
+.container_control-panel-part:after{
+    content:'';
+    display:block;
+    clear:both;
+}
+
+#filtersTable td{
+    padding:0;
+}
+
+#filters.container{
+    border:none;
+    background-color:rgba(255, 255, 255, 0.5);
+}
+
+#filtersTable td.left{
+    padding:20px 10px 20px 20px;
+}
+
+#filtersTable td.middle{
+    padding:20px 10px;
+}
+
+#filtersTable td.right{
+    padding:20px 20px 20px 10px;
+}
+
+.ui-tabs,.ui-tabs .ui-tabs-nav{
+    padding:0;
+}
+
+.ui-tabs .ui-tabs-nav{
+    padding:20px;
+    background-color:rgba(0, 0, 0, 0.6);
+}
+
+.ui-widget-content .ui-tabs-nav li{
+    background:rgba(0, 0, 0, 0.3) none;
+    
+}
+
+
+.ui-widget-content .ui-tabs-nav li.ui-state-active{
+    background:#8f0e6f none; 
+}
+
+.ui-widget-content .ui-tabs-nav li.ui-state-hover{
+    background:rgba(150,150,150, 0.6) none; 
+}
+
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited{
+    color:#FFF;
+}
+
+.ui-state-hover a,
+.ui-state-hover a:link,
+.ui-state-hover a:visited{
+    color:#FFF !important;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected{
+    padding:0;
+}
+
+.ui-tabs .ui-tabs-panel{
+    background-color:#FFF;
+}
+
+.dataTables_wrapper table{
+    background-color:rgba(255,​ 255,​ 255,​ 0.5);
+}
+.dataTables_wrapper table tr.odd{
+    background-color:transparent;
+}
+.dataTables_wrapper table tr.even{
+    background-color:rgba(199, 199, 199, 0.5);
+}
+
+.button,#dateFilter{
+    background: #8f0e6f none;
+    border: none;
+    color: #fff;
+    display: inline-block;
+    font-family: "nexaslab-bold",sans-serif;
+    font-size: 12px;
+    padding: 12px 20px;
+    text-transform: uppercase;
+    width:auto;
+    height:auto;
+}
+
+.button:hover,#dateFilter:hover{
+    background:#d4d4d5 none;
+    color:#3d3c3f;
+}

@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        var dropdown = $('#EU_DefaultSite');
+        $('input[id^=EU_SiteAccess]').click(function(e){
+            var opt = '';
+            if ($(this).is(':checked'))
+            {
+                var label = $(this).parent().text();
+                var exists = $("#EU_DefaultSite option[value='"+ $(this).val() +"']").length
+
+                if (!exists)
+                {
+                    opt += '<option value="' + $(this).val() + '">' + label + '</option>';
+                    opt += '\r\n';
+                    dropdown.append(opt);
+                }
+            }
+            else
+            {
+                $("#EU_DefaultSite option[value='"+ $(this).val() +"']").remove();
+            }
+        });
+    });
+    //]]>
+</script>

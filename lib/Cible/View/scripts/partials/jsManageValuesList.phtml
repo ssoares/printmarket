@@ -1,0 +1,13 @@
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+        $('.shortcut').valuesList({
+            baseUrl : '<?php echo $this->baseUrl(); ?>',
+            refresh: false,
+            msgAlert: "<?php echo $this->getCibleText('references_delete_inuse_alert'); ?>"
+        });
+    });
+    //]]>
+</script>
+<!--<div id="dialogForm" title="" style="display:none"></div>-->
+<div id="dialogConfirm" title="" style="display:none"></div>

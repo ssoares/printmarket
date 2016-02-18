@@ -1,0 +1,92 @@
+@import "vendor/bootstrap/mixins.less";
+
+@import "mixins/absolute-center.less";
+@import "mixins/border-radius.less";
+@import "mixins/circle.less";
+@import "mixins/font-weight.less";
+@import "mixins/for.less";
+@import "mixins/prefixed.less";
+@import "mixins/responsive-font.less";
+@import "mixins/vertical-aligner.less";
+
+@import "variables/general-variables.less"; 
+@import "variables/mobile-variables.less"; 
+@import "variables/custom-icons.less"; 
+
+.news-article-date {
+    .responsive-font((@font-size-base + 10) * @mobile-divider);
+    color:@brand-primary;
+    text-transform:uppercase;
+    margin-bottom:6px * @mobile-divider-text;
+    line-height:1em;
+    .listall &, .details & {
+        background:@brand-primary;
+        color:@text-color-inverted;
+        text-align:center;
+    }
+    .listall & { 
+        padding:30px * @mobile-divider 12px * @mobile-divider;
+        .responsive-font((@font-size-base + 10) * @mobile-divider);
+        width:88px * @mobile-divider;
+        height:52px * @mobile-divider;
+        display:table-cell;
+        vertical-align:middle;
+        & when (@mobile-divider > 0.5) { 
+            .font-weight('bold', 'sans-serif');
+        }
+    }
+    .details & {
+        padding:30px * @mobile-divider-text 12px * @mobile-divider-text;
+        .responsive-font((@font-size-base + 10) * @mobile-divider-text);
+        width:88px * @mobile-divider-text;
+        height:52px * @mobile-divider-text;
+        position:absolute;
+        top:0;
+        left:0;
+        .font-weight('bold', 'sans-serif');
+    }
+}
+.news-article-brief {    
+    .responsive-font((@font-size-base + 7) * @mobile-divider);
+    .font-weight('light', 'sans-serif');
+    line-height:1.35em;
+    .listall & {
+        .responsive-font((@font-size-base - 1) * @mobile-divider-text);
+    }
+}
+
+.news-article {
+    position:relative;
+    .homepagelist & {
+        margin:36px * @mobile-divider 0;
+    }
+    .listall & {
+        padding:0 0 0 132px * @mobile-divider;
+        min-height:112px * @mobile-divider;
+        margin-bottom:42px * @mobile-divider;
+    }
+}
+.news-article-image {
+    margin-bottom:28px * @mobile-divider;
+    min-height:130px * @mobile-divider;
+    img {
+        max-width:100%;
+    }
+}
+.news-header {
+    position:relative;  
+    .listall & {
+        position:absolute;
+        top:0;
+        left:0;
+    }
+}
+.news-article-title {
+    .listall & {
+        margin-bottom:0;
+        .responsive-font((@font-size-base + 3) * @mobile-divider-text);
+    }
+}
+.news-article-bottom-navigation { 
+    .responsive-font((@font-size-base - 1) * @mobile-divider-text);
+}

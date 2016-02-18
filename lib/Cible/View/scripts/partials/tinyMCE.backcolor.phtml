@@ -1,0 +1,53 @@
+<?php
+$config = Zend_Registry::get('config')->toArray();
+if(!empty($config['tiny']['background']['color'])){ ?>
+    <div class="colorBackground">
+        <div class="colorBackgroundColor"><?php echo $this->getCibleText('tinyMCE_color'); ?>
+        </div>
+    <?php
+        foreach($config['tiny']['background']['color'] as $color){
+            $colorArray =  explode('|',$color);
+    ?>
+
+    <div class="colorBackgroundColorName">
+        <?php
+            if(!empty($colorArray[1]))
+                echo $colorArray[1];
+        ?>
+        <div class="invisibleColor">
+             <?php
+            if(!empty($colorArray[0]))
+                echo $colorArray[0];
+        ?>
+        </div>
+    </div>
+
+
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+$(document).ready(function()
+{
+    $(window).load(function ()
+    {
+        $(".colorBackgroundColorName").click(function(){
+            $(".mceIframeContainer iframe").contents().find("body").css("background-color", $(this).find('.invisibleColor').html() );
+        });
+
+    });
+});
+//]]>
+
+</script>
+
+<?php
+
+    }?>
+</div>
+<?php
+
+}
+?>

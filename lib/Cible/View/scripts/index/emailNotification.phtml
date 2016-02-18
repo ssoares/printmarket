@@ -1,0 +1,47 @@
+<?php $data = $this->emailRenderData; ?>
+<?php $config = Zend_Registry::get('config'); ?>
+<?php $colorbg = $config->mailFooterColor; ?>
+<html>
+<head>
+<meta http-equiv="content-language" content="fr">
+<title></title>
+
+</head>
+<body bgcolor="#FFFFFF" alink="#0" vlink="#0" link="#0" text="#5D5D5C" topmargin="0" leftmargin="0" style="margin:0px;padding:0px;">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td align="center" valign="top">
+            <table width="500" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="center" valign="top">
+                        <?php echo $data['emailHeader']; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="10">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" style="color: #5D5D5C; font-size:12px; font-family:arial">
+                        <?php echo $data['message']; ?>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td height="10">&nbsp;</td>
+    </tr>
+    <tr>
+        <td height="10" align="center" valign="middle" style="border-top:3px dotted #E2E2E2">&nbsp;</td>
+    </tr>
+    <tr>
+        <td bgcolor="<?php echo $colorbg; ?>" height="35" align="center" valign="middle">
+            <font style="color:#FFFFFF" >
+                <?php echo $data['footer']; ?>
+            </font>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

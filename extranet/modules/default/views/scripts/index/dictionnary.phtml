@@ -1,0 +1,19 @@
+<?php if( $this->success == 'true' ): ?>
+
+    <div id="result">
+        <span id="success">true</span>
+        <span id="value"><?php echo $this->value ?></span>
+    </div>
+
+<?php else: ?>
+
+    <div style="position: relative; padding-top: 30px;">
+        <?php
+          echo $this->form;
+        ?>
+        
+        <?php echo $this->formButton('insert_presets',$this->getCibleText('dictionnary_add_code_snippet')) ?>
+        
+    </div>
+
+<?php endif; ?>

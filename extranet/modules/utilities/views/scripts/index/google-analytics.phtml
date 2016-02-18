@@ -1,0 +1,18 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(    
+    'pageTitle' => $this->getCibleText('utilities_googleAnalytics_title'),
+    'pageDescription' => $this->getCibleText('utilities_googleAnalytics_description'),
+    'breadcrumb' => ''
+));                
+?>
+<div id="utilities-page">
+    <strong><?php echo $this->getCibleText('utilities_googleAnalytics_account') ?></strong>
+    <ul class="no-styles">
+        <li><strong><?php echo "{$this->getCibleText('utilities_googleAnalytics_username')}" ?> :</strong>&nbsp; <?php echo "{$this->username}" ?></li>
+        <li><strong><?php echo "{$this->getCibleText('utilities_googleAnalytics_password')}" ?> :</strong>&nbsp; <?php echo "{$this->password}" ?></li>
+    </ul>
+    
+    <p>
+        <?php echo $this->link('http://www.google.com/analytics/', $this->getCibleText('utilities_googleAnalytics_access_link'), array('target'=> '_Blank')) ?>
+    </p>
+</div>

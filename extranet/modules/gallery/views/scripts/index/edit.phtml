@@ -1,0 +1,58 @@
+<?php 
+if(!$this->success){
+?>
+    <script>
+        $(document).ready(function() {
+            $("#ImageSrc_preview").load(function(){
+                var imageUrl = $("#imageUrl").val();
+                imageUrl = imageUrl.substring(imageUrl.lastIndexOf('/')+1,imageUrl.length);
+                
+                var imagePreview = $(this).attr('src');
+                imagePreview = imagePreview.substring(imagePreview.lastIndexOf('/')+1,imagePreview.length);
+                
+                if(imagePreview != imageUrl){
+                    $("#isNewImage").val('true');
+                }
+            });    
+        });
+    </script>
+    <input type="hidden" id="imageUrl" value="<?php echo($this->imageUrl) ?>"/>    
+<?
+}
+?>
+<?php 
+    if( $this->isXmlHttpRequest ){
+        if($this->deleted){
+            if($this->success){
+?>              <div id="result">
+                    <span id="action" style="display: none">deleteGallery</span>
+                    <span id="success" style="display: none">true</span>
+                    <span id="galleryID" style="display: none"><?php echo $this->galleryID ?></span>
+                </div>                
+<?php       }
+            else{
+?>              <p>Cette galerie n'existe plus dans le système</p>
+                <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                    <div>
+                        <input type="submit" id="delete" name="delete" value="OK" />
+                    </div>
+                </form>
+<?php       }
+        }
+        elseif( $this->success ){
+?>          <div id="result">
+                <span id="action" style="display: none">editGallery</span>
+                <span id="success" style="display: none">true</span>
+                <span id="galleryID" style="display: none"><?php echo $this->galleryID ?></span>
+                <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                <span id="galleryTitle" style="display: none"><?php echo $this->galleryTitle ?></span>
+                <span id="galleryDescription" style="display: none"><?php echo $this->galleryDescription ?></span>
+                <span id="galleryLanguage" style="display: none"><?php echo $this->galleryLanguage ?></span>
+            </div>
+<?php   }
+        else{
+?>          
+            <?php  echo($this->form); ?>      
+            
+<?php   }
+    }

@@ -1,0 +1,58 @@
+<?php
+if (!empty($this->category)){
+    $headerText = str_replace('##CATEGORY##', $this->category, $this->getCibleText('header_edit_'.$this->cleaction.'_text'));
+}else{
+    $headerText = $this->getCibleText('header_edit_'.$this->cleaction.'_text');
+}
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $headerText,
+    'pageDescription' => $this->getCibleText('header_edit_'.$this->cleaction.'_description'),
+    'breadcrumb' => ''
+));
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>
+    </div>
+</div>
+<?php if ($this->showDiag): ?>
+<div class="popup-export" style="display: none">
+    <?php if ($this->recordsLength > 0): ?>
+        <?php foreach($this->exportFile as $key => $info): ?>
+            <?php $file = $info[2] . ' (' . $info[1] . ')'; ?>
+            <?php $link = str_replace(Zend_Registry::get('serverDocumentRoot'),
+                '', $info[0]); ?>
+            <?php echo Cible_FunctionsGeneral::dateToString(date('Y-m-d',
+                    $key)); ?> :
+            <?php echo $this->link($link, $file, array()); ?>
+            <br />
+        <?php endforeach; ?>
+    <?php else: ?>
+            <?php echo $this->getCibleText('request_no_results'); ?>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+<?php echo $this->partial("partials/formatField.phtml", array('locale' => $this->locale)); ?>
+<?php echo $this->partial("partials/autocomplete.phtml"); ?>
+<?php echo($this->inlineScript());?>
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+    var showDiag = <?php echo $this->showDiag ? 1:0?>;
+    var baseUrl = '<?php echo $this->Url(array('action' => 'ajax', 'actionKey' => null)); ?>';
+    var title = '<?php echo Cible_Translation::getCibleText('export_download_file') ?>';
+    if (showDiag > 0){
+        $('.popup-export').dialog({
+            width: 450,
+            title : title,
+            modal : true,
+            close: function( event, ui ) {
+                var actionKey = 'resetFilename';
+                var qryString = {actionKey : actionKey};
+                $.getJSON(baseUrl, qryString, function(data){});
+            }
+        });
+    }
+});
+//]]>
+</script>

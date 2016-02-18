@@ -1,0 +1,13 @@
+//crée un font-face
+.font-face(@fontname;@suffix:~'-webfont';@weight:~'normal';@style:~'normal') when (default()) { 
+    @font-face {
+        font-family: '@{fontname}';
+        src: url('../../fonts/@{fontname}@{suffix}.eot');
+        src: url('../../fonts/@{fontname}@{suffix}.eot?#iefix') format('embedded-opentype'),
+            url('../../fonts/@{fontname}@{suffix}.woff') format('woff'),
+            url('../../fonts/@{fontname}@{suffix}.ttf') format('truetype'),
+            url('../../fonts/@{fontname}@{suffix}.svg#@{fontname}-webfont') format('svg');
+        font-weight: @weight;
+        font-style: @style;
+    }
+}

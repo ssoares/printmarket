@@ -1,0 +1,20 @@
+//quelques mixins qui sont liés à la décoration à donner selon la langue
+.before-plus(@font-size:inherit,@color:inherit) when (default()) { 
+    &:before { 
+        content:"+";
+        font-size:@font-size;
+        @color:inherit;
+    }
+}
+.after-colon(@font-size:inherit,@color:inherit) when (default()) { 
+    &:after {
+        :lang(en) & { 
+            content:": ";
+        }
+        :lang(fr) & { 
+            content:" : ";
+        }
+        font-size:@font-size;
+        @color:inherit;        
+    }
+}

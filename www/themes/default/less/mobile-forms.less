@@ -1,0 +1,76 @@
+@import "mixins/border-radius.less";
+@import "mixins/responsive-font.less";
+
+@import "variables/general-variables.less";
+@import "variables/mobile-variables.less";
+
+//layout et autres trucs   
+
+.forms-contact {
+    position:relative;
+    padding-bottom:60px * @mobile-divider-text;
+}
+
+//captcha
+.form-label-captcha {
+    .responsive-font((@font-size-base - 4) * @mobile-divider-text);
+    line-height:1.2em;
+    display:block;
+    margin:20px * @mobile-divider-text 0;
+}
+.form-captcha-div {
+    float:left;
+    width:33%;
+    margin-right:33%;
+    position:relative;
+    @media @mq-small-mobile { 
+        width:50%;
+        margin-right:50%;
+    }
+    img {
+        float:left;
+        border:1px solid @brand-primary;
+        .border-radius(3px * @mobile-divider-text);
+        height:53px * @mobile-divider-text;
+        & + br {
+            display:none;
+        }
+    }
+    .form-captcha {
+        position:absolute;
+        left:100%;
+        .forms-contact & { 
+            margin:0 10px * @mobile-divider-text;
+            width:90%;
+            max-height: 100%;
+            @media @mq-small-mobile {
+                width:95%;
+            }
+        }
+    }
+    .errors { 
+        clear: both;
+        width: 200%;
+    }
+}
+
+.captcha-fieldset {
+    position:relative;
+    padding-bottom:20px  * @mobile-divider-text;
+    .form-div {
+        margin-top:10px;
+    }
+}
+.form-div-refresh {
+    position:absolute;
+    left:0;
+    bottom:0;
+    line-height:1;
+}
+.form-refresh-captcha {
+    clear:both;
+    display:block;
+}
+.form-div-submit {
+    float:right;
+}

@@ -1,0 +1,38 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('page_content_management_title'),
+    'pageDescription' => str_replace("%PAGE_NAME%", "<em><strong>" . $this->pageTitle . "</em></strong>", $this->getCibleText('page_content_management_description')),
+    'breadcrumb' => ''
+));
+?>
+
+<div style="padding: 0px">
+
+    <?php if($this->hasAccessToStructure): ?>
+
+        <div id="switchPanel"><?php echo $this->link($this->url(array('controller' => 'manage')), $this->getCibleText('manage_structure'), array(
+            'class' => 'switchButton',
+            'onmouseover' => "this.className = 'switchButtonOver';",
+            'onmouseout' => "this.className = 'switchButton';"
+        )) ?></div>
+
+    <?php endif; ?>
+
+    <div id="page-block-zones">
+        <!--<div id="page-title"><?php echo($this->pageTitle) ?></div>-->
+        <?php
+            if ($this->template_file == ""){
+        ?>      <div style="width:75%;background-color:white";><strong><?php echo($this->error_message_permission) ?></strong></div>
+
+        <?php
+            }
+            else{
+                echo $this->render($this->template_file);
+            }
+
+        ?>
+
+    </div>
+
+
+</div>

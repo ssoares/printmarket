@@ -1,0 +1,572 @@
+<style>
+    #template{
+        width: 695px;
+        position: relative;
+        font-family: arial;
+    }
+
+    #div-left   {
+        width: 600px;
+    }
+
+    .article-block{
+        padding-top: 30px;
+        padding-left: 29px;
+        padding-right: 29px;
+        padding-bottom: 23px;
+    }
+
+    .article-action{
+        background-color: #F9F9F9;
+        border-bottom: solid 1px #999999;
+        padding: 2px;
+        text-align: right;
+        cursor: move;
+    }
+    .link-edit,
+    .link-delete    {
+        font-size: 12px;
+        color: #65a3c2 !important;
+        cursor: pointer;
+    }
+    .link-edit:hover,
+    .link-delete:hover    {
+        color: #6c6c6c !important;
+        cursor: pointer;
+    }
+
+    .article-title{
+        font-size: 24px;
+        color: #000000;
+
+        padding: 0px;
+        margin: 0px;
+        margin-bottom: 22px;
+    }
+
+    .article-resume{
+
+        font-size: 12px;
+        color: #000000;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .newsletter-image-container img{
+        margin-right: 22px;
+        margin-bottom: 10px;
+        border: 2px solid #737779;
+        float: left;
+    }
+
+
+    .article-more-details{
+        border-top: 1px solid #E5E5E5;
+        border-bottom: 1px solid #E5E5E5;
+
+        padding-top: 6px;
+        padding-left: 5px;
+        padding-bottom: 7px;
+        margin: 0px;
+    }
+
+    .article-more-details a{
+        color:#727678 !important;
+        font-size: 12px;
+    }
+
+    .article-more-details a:hover{
+        color:#E4212D !important;
+    }
+
+    #template div.zone_panel    {
+        padding: 2px !important;
+        padding-bottom:30px !important;
+    }
+
+    #clone{
+        display: none;
+    }
+
+    #zone_1 li  {
+        background-color: white;
+        cursor: move;
+    }
+
+    .td-template-header {
+        background-color:white;
+        border:solid 2px #C5DEEB;
+        padding: 10px 0px 10px 5px;
+    }
+
+    .releaseTitle{
+        font-size: 18px;
+        color:#FFFFFF;
+        text-align: left;
+        padding-bottom: 10px;
+        padding-left: 10px;
+    }
+
+    #releaseDate{
+        font-size: 16px;
+        color:#FFFFFF;
+        text-align: left;
+        padding-bottom: 10px;
+        padding-left: 10px;
+    }
+
+    td.td-template-header12{
+        background-color: #9DB54B;
+        color: #FFFFFF;
+    }
+
+    div#page-block-zones #template div.zone_2_panel{
+        background-color: #DDDDDD;
+    }
+
+    div#page-block-zones #template div.zone_4_panel{
+        background-color: #DDDDDD;
+    }
+
+        div#page-block-zones #template div.zone_6_panel{
+        background-color: #DDDDDD;
+    }
+
+</style>
+<?php
+    $date = new Zend_Date($this->newsletter['NR_Date'],null, (Zend_Registry::get('languageSuffix') == 'fr' ? 'fr_CA' : 'en_CA'));
+    $date_string = Cible_FunctionsGeneral::dateToString($date,Cible_FunctionsGeneral::DATE_LONG_NO_DAY,'.');
+    $connectZone = $this->allowEdit ? 'connectedSortable' : '';
+?>
+<div id="page-block-zones">
+    <div id="template" class="templateTwo">
+        <table width="680px">
+            <tr>
+                <td colspan="2" height="20" style="color:#FFFFFF;margin-bottom: 16px;background-color: #727678;">
+                    Image d'entête
+                </td>
+            </tr>
+            <!-- Image Entête -->
+            <tr>
+                <td class="td-template-header12" colspan="2">
+                    <div id='releaseDate'><?php echo $this->getCibleText("newsletter_title") . " - " . $date_string; ?></div>
+                    <div class='releaseTitle'><?php echo($this->newsletter['NR_Title']); ?></div>
+
+                </td>
+            </tr>
+            <tr valign="top">
+
+                <td valign="top" width="350">
+                    <div class="zone_panel zone_1_panel">
+                        <ul id="zone_1" class="zone <?php echo $connectZone ?>">
+                            <li id="clone">
+                                <div class="block_action_icon article-action">
+                                    <a class="link-edit" href="#">Éditer</a>
+                                    <a class="link-delete last" href="#">Supprimer</a>
+                                </div>
+                                <div class="article-title article-title-left"></div>
+                                <div class="article-resume article-resume-left"></div>
+                                <div class="article-more-details-left">Plus de détails</div>
+                            </li>
+                            <?php
+                            foreach ($this->articles as $article)
+                            {
+                                if ($article['NA_ZoneID'] == 1)
+                                {
+                                    ?>
+                                    <li id="article-<?php echo($article['NA_ID']); ?>" articleID="<?php echo($article['NA_ID']); ?>" class="ui-state-default" zoneid="1" positionID="<?php echo($article['NA_PositionID']); ?>" releaseID="<?php echo($article['NA_ReleaseID']); ?>">
+                                        <div class="block_action_icon article-action">
+                                                    <?php if ($this->allowEdit): ?>
+                                                    <a class="link-edit" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'edit', 'articleID' => $article['NA_ID'])); ?>">Éditer</a>
+                                                    <a class="link-delete last" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'delete', 'articleID' => $article['NA_ID'])); ?>">Supprimer</a>
+                                                    <?php endif; ?>
+                                        </div>
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-left:29px;padding-right:29px;padding-top:30px;padding-bottom:23px;border-bottom:1px solid #BBC2C4;font-size: 12px;color: #727678;">
+
+                                            <tr>
+                                                <?php if (!empty($article['NA_ImageSrc'])): ?>
+                                                    <?php $config = Zend_Registry::get('config')->toArray(); ?>
+                                                    <?php $thumbMaxHeight = $config['newsletter']['image']['medium']['maxHeight']; ?>
+                                                    <?php $thumbMaxWidth = $config['newsletter']['image']['medium']['maxWidth']; ?>
+
+                                                    <td valign="top" width="30%">
+                                                       <img style="border:3px solid #DDF5FD;" src="<?php echo Zend_Registry::get('www_root') ?>/data/images/newsletter/<?php echo($this->newsletter['NR_ID']); ?>/<?php echo($article['NA_ID']); ?>/<?php echo(str_replace($article['NA_ImageSrc'], $thumbMaxWidth . 'x' . $thumbMaxHeight . '_' . $article['NA_ImageSrc'], $article['NA_ImageSrc'])); ?>" alt="<?php echo($article['NA_ImageAlt']); ?>"/>
+                                                    </td>
+                                                    <td width="5%">&nbsp;</td>
+                                                    <td width="65%">
+                                                        <table>
+                                                            <tr>
+                                                                 <td width="100%" style="font-size: 24px;color: #000000;padding-bottom: 22px;">
+                                                                    <?php echo($article['NA_Title']); ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 12px;color: #727678;">
+                                                                    <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                                    <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                                    <?php echo($text); ?>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                <?php else: ?>
+
+                                                    <td style="font-size: 12px;color: #727678;">
+                                                        <table>
+                                                            <tr>
+                                                                 <td width="100%" style="font-size: 24px;color: #000000;padding-bottom: 22px;">
+                                                                    <?php echo($article['NA_Title']); ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                                    <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                                    <?php echo($text); ?>
+                                                                    <?php if ($article['NA_Text']): ?>
+                                                                        <?php echo $this->image($this->locateFile('linkReadMore.jpg', 'common','front'), array('style' => 'margin-top:22px;')); ?>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                           </tr>
+                                                        </table>
+
+                                                    </td>
+                                             <?php endif; ?>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </td>
+                <td valign="top" width="330">
+                    <div class="zone_panel zone_2_panel">
+                        <ul id="zone_2" class="zone <?php echo $connectZone ?>">
+                            <li id="clone">
+                                <div class="block_action_icon article-action">
+                                    <?php if ($this->allowEdit): ?>
+                                    <a class="link-edit" href="#">Éditer</a>
+                                    <a class="link-delete last" href="#">Supprimer</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="article-title article-title-left"></div>
+                                <div class="article-resume article-resume-left"></div>
+                                <div class="article-more-details-left">Plus de détails</div>
+                            </li>
+                            <?php
+                            foreach ($this->articles as $article)
+                            {
+                                if ($article['NA_ZoneID'] == 2)
+                                {
+                                    ?>
+                                    <li id="article-<?php echo($article['NA_ID']); ?>" articleID="<?php echo($article['NA_ID']); ?>" class="ui-state-default" zoneid="1" positionID="<?php echo($article['NA_PositionID']); ?>" releaseID="<?php echo($article['NA_ReleaseID']); ?>">
+                                        <div class="block_action_icon article-action">
+                                                    <?php if ($this->allowEdit): ?>
+                                                    <a class="link-edit" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'edit', 'articleID' => $article['NA_ID'])); ?>">Éditer</a>
+                                                    <a class="link-delete last" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'delete', 'articleID' => $article['NA_ID'])); ?>">Supprimer</a>
+                                                    <?php endif; ?>
+                                        </div>
+                                        <?php
+
+                                        if ($article['NA_Resume']){
+                                            echo strip_tags($article['NA_Resume'], '<p><a><img>');
+                                        }
+
+                                    ?>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </td>
+
+            </tr>
+            <tr valign="top">
+                <td valign="top" width="350" rowspan="2">
+                    <div class="zone_panel zone_3_panel">
+                        <ul id="zone_3" class="zone <?php echo $connectZone ?>">
+                            <li id="clone">
+                                <div class="block_action_icon article-action">
+                                    <?php if ($this->allowEdit): ?>
+                                    <a class="link-edit" href="#">Éditer</a>
+                                    <a class="link-delete last" href="#">Supprimer</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="article-title article-title-left"></div>
+                                <div class="article-resume article-resume-left"></div>
+                                <div class="article-more-details-left">Plus de détails</div>
+                            </li>
+                            <?php
+                            foreach ($this->articles as $article)
+                            {
+                                if ($article['NA_ZoneID'] == 3)
+                                {
+                                    ?>
+                                    <li id="article-<?php echo($article['NA_ID']); ?>" articleID="<?php echo($article['NA_ID']); ?>" class="ui-state-default" zoneid="1" positionID="<?php echo($article['NA_PositionID']); ?>" releaseID="<?php echo($article['NA_ReleaseID']); ?>">
+                                        <div class="block_action_icon article-action">
+                                            <?php if ($this->allowEdit): ?>
+                                            <a class="link-edit" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'edit', 'articleID' => $article['NA_ID'])); ?>">Éditer</a>
+                                            <a class="link-delete last" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'delete', 'articleID' => $article['NA_ID'])); ?>">Supprimer</a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-left:29px;padding-right:29px;padding-top:30px;padding-bottom:23px;border-bottom:1px solid #BBC2C4;font-size: 12px;color: #727678;">
+
+                                            <tr>
+                                                <?php if (!empty($article['NA_ImageSrc'])): ?>
+                                                    <?php $config = Zend_Registry::get('config')->toArray(); ?>
+                                                    <?php $thumbMaxHeight = $config['newsletter']['image']['medium']['maxHeight']; ?>
+                                                    <?php $thumbMaxWidth = $config['newsletter']['image']['medium']['maxWidth']; ?>
+
+                                                    <td valign="top" width="30%">
+                                                       <img style="border:3px solid #DDF5FD;" src="<?php echo Zend_Registry::get('www_root') ?>/data/images/newsletter/<?php echo($this->newsletter['NR_ID']); ?>/<?php echo($article['NA_ID']); ?>/<?php echo(str_replace($article['NA_ImageSrc'], $thumbMaxWidth . 'x' . $thumbMaxHeight . '_' . $article['NA_ImageSrc'], $article['NA_ImageSrc'])); ?>" alt="<?php echo($article['NA_ImageAlt']); ?>"/>
+                                                    </td>
+                                                    <td width="5%">&nbsp;</td>
+                                                    <td width="65%">
+                                                        <table>
+                                                            <tr>
+                                                                 <td width="100%" style="font-size: 24px;color: #000000;padding-bottom: 22px;">
+                                                                    <?php echo($article['NA_Title']); ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 12px;color: #727678;">
+                                                                    <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                                    <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                                    <?php echo($text); ?>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                <?php else: ?>
+
+                                                    <td style="font-size: 12px;color: #727678;">
+                                                        <table>
+                                                            <tr>
+                                                                 <td width="100%" style="font-size: 24px;color: #000000;padding-bottom: 22px;">
+                                                                    <?php echo($article['NA_Title']); ?>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                                    <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                                    <?php echo($text); ?>
+                                                                    <?php if ($article['NA_Text']): ?>
+                                                                        <?php echo $this->image($this->locateFile('linkReadMore.jpg', 'common','front'), array('style' => 'margin-top:22px;')); ?>
+                                                                    <?php endif; ?>
+                                                                </td>
+                                                           </tr>
+                                                        </table>
+                                                    </td>
+                                             <?php endif; ?>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </td>
+                <td valign="top" width="330">
+                    <div class="zone_panel zone_4_panel">
+                        <ul id="zone_4" class="zone <?php echo $connectZone ?>">
+                            <li id="clone">
+                                <div class="block_action_icon article-action">
+                                    <?php if ($this->allowEdit): ?>
+                                    <a class="link-edit" href="#">Éditer</a>
+                                    <a class="link-delete last" href="#">Supprimer</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="article-title article-title-left"></div>
+                                <div class="article-resume article-resume-left"></div>
+                                <div class="article-more-details-left">Plus de détails</div>
+                            </li>
+                            <?php
+                            foreach ($this->articles as $article)
+                            {
+                                if ($article['NA_ZoneID'] == 4)
+                                {
+                                    ?>
+                                    <li id="article-<?php echo($article['NA_ID']); ?>" articleID="<?php echo($article['NA_ID']); ?>" class="ui-state-default" zoneid="1" positionID="<?php echo($article['NA_PositionID']); ?>" releaseID="<?php echo($article['NA_ReleaseID']); ?>">
+                                        <div class="block_action_icon article-action">
+                                            <?php if ($this->allowEdit): ?>
+                                            <a class="link-edit" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'edit', 'articleID' => $article['NA_ID'])); ?>">Éditer</a>
+                                            <a class="link-delete last" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'delete', 'articleID' => $article['NA_ID'])); ?>">Supprimer</a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-left:29px;padding-right:29px;padding-top:30px;padding-bottom:23px;border-bottom:1px solid #BBC2C4;font-size: 12px;color: #727678;">
+                                            <tr>
+                                                <td width="100%" style="font-size: 24px;color: #000000;padding-bottom: 22px;">
+                                                    <?php echo($article['NA_Title']); ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td style="font-size: 12px;color: #727678;">
+                                                    <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                    <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                    <?php echo($text); ?>
+
+                                                    <?php if ($article['NA_Text']): ?>
+                                                        <div style="border-top: 1px solid #E5E5E5;border-bottom: 1px solid #E5E5E5;padding-top: 6px;padding-left: 5px;padding-bottom: 7px;margin: 0px;">Plus de détails</div>
+                                                    <?php endif; ?>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr valign="top">
+                <td valign="top" width="330">
+                    <div class="zone_panel zone_5_panel">
+                        <ul id="zone_5" class="zone <?php echo $connectZone ?>">
+                            <li id="clone">
+                                <div class="block_action_icon article-action">
+                                    <?php if ($this->allowEdit): ?>
+                                    <a class="link-edit" href="#">Éditer</a>
+                                    <a class="link-delete last" href="#">Supprimer</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="article-title article-title-left"></div>
+                                <div class="article-resume article-resume-left"></div>
+                                <div class="article-more-details-left">Plus de détails</div>
+                            </li>
+                            <?php
+                            foreach ($this->articles as $article)
+                            {
+                                if ($article['NA_ZoneID'] == 5)
+                                {
+                                    ?>
+                                    <li id="article-<?php echo($article['NA_ID']); ?>" articleID="<?php echo($article['NA_ID']); ?>" class="ui-state-default" zoneid="1" positionID="<?php echo($article['NA_PositionID']); ?>" releaseID="<?php echo($article['NA_ReleaseID']); ?>">
+                                        <div class="block_action_icon article-action">
+                                            <?php if ($this->allowEdit): ?>
+                                            <a class="link-edit" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'edit', 'articleID' => $article['NA_ID'])); ?>">Éditer</a>
+                                            <a class="link-delete last" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'delete', 'articleID' => $article['NA_ID'])); ?>">Supprimer</a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="padding-left:29px;padding-right:29px;padding-top:30px;padding-bottom:23px;border-bottom:1px solid #BBC2C4;font-size: 12px;color: #727678;">
+
+                                            <tr>
+                                                <?php if (!empty($article['NA_ImageSrc'])): ?>
+                                                    <?php $config = Zend_Registry::get('config')->toArray(); ?>
+                                                    <?php $thumbMaxHeight = $config['newsletter']['image']['medium']['maxHeight']; ?>
+                                                    <?php $thumbMaxWidth = $config['newsletter']['image']['medium']['maxWidth']; ?>
+
+                                                    <td>
+                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                                <td valign="top" style="padding-left:22px;width:<?php echo($thumbMaxWidth); ?>px">
+                                                                    <img style="border:3px solid #DDF5FD;" src="<?php echo Zend_Registry::get('www_root') ?>/data/images/newsletter/<?php echo($this->newsletter['NR_ID']); ?>/<?php echo($article['NA_ID']); ?>/<?php echo(str_replace($article['NA_ImageSrc'], $thumbMaxWidth . 'x' . $thumbMaxHeight . '_' . $article['NA_ImageSrc'], $article['NA_ImageSrc'])); ?>" alt="<?php echo($article['NA_ImageAlt']); ?>"/>
+                                                                </td>
+                                                                <td valign="top">
+                                                                    <table border="0" cellpadding="0" cellspacing="0" style="height:<?php echo($thumbMaxHeight); ?>px;">
+                                                                        <tr>
+                                                                            <td width="100%" style="font-size: 24px;color: #000000;padding-bottom: 22px;">
+                                                                                <?php echo($article['NA_Title']); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td valign="top" style="height:<?php echo($thumbMaxHeight - 30); ?>px;font-size: 12px;color: #727678;">
+                                                                                <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                                                <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                                                <?php echo($text); ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td valign="bottom" style="font-size: 12px;color: #727678;">
+                                                                                <?php if ($article['NA_Text']): ?>
+                                                                                    <?php echo $this->image($this->locateFile('linkReadMore.jpg', 'common','front'), array('style' => 'margin-top:22px;')); ?>
+                                                                                <?php endif; ?>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                <?php else: ?>
+                                                    <td style="font-size: 12px;color: #727678;">
+                                                        <?php $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']); ?>
+                                                        <?php $text = Cible_FunctionsGeneral::truncateString($text, array(), 200); ?>
+                                                        <?php echo($text); ?>
+                                                        <?php if ($article['NA_Text']): ?>
+                                                            <?php echo $this->image($this->locateFile('linkReadMore.jpg', 'common','front'), array('style' => 'margin-top:22px;')); ?>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                <?php endif; ?>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+
+            <td valign="top" colspan="2" width="100%">
+                <div id="div-bottom-newsletter" class="zone_panel zone_6_panel">
+                        <ul id="zone_6" class="zone <?php echo $connectZone ?>" width="100%">
+                            <li id="clone" width="100%">
+                                <div class="block_action_icon article-action">
+                                    <?php if ($this->allowEdit): ?>
+                                    <a class="link-edit" href="#">Éditer</a>
+                                    <a class="link-delete last" href="#">Supprimer</a>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="article-title article-title-left"></div>
+                                <div class="article-resume article-resume-left"></div>
+                                <div class="article-more-details-left">Plus de détails</div>
+                            </li>
+                            <?php
+                            foreach ($this->articles as $article)
+                            {
+                                if ($article['NA_ZoneID'] == 6)
+                                {
+                                    ?>
+                                    <li width="100%" id="article-<?php echo($article['NA_ID']); ?>" articleID="<?php echo($article['NA_ID']); ?>" class="ui-state-default" zoneid="1" positionID="<?php echo($article['NA_PositionID']); ?>" releaseID="<?php echo($article['NA_ReleaseID']); ?>">
+                                        <div class="block_action_icon article-action">
+                                            <?php if ($this->allowEdit): ?>
+                                            <a class="link-edit" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'edit', 'articleID' => $article['NA_ID'])); ?>">Éditer</a>
+                                            <a class="link-delete last" href="<?php echo $this->url(array('controller' => 'article', 'action' => 'delete', 'articleID' => $article['NA_ID'])); ?>">Supprimer</a>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php
+
+                                        if ($article['NA_Resume']){
+                                            echo strip_tags($article['NA_Resume'], '<p><a><img>');
+                                        }
+
+                                    ?>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

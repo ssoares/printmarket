@@ -1,0 +1,65 @@
+<?php
+    $_currentlangID = $this->currentLangID;
+
+    $_availableLanguages = Cible_FunctionsGeneral::getExtranetLanguage();
+
+    if( count($_availableLanguages) > 1){
+
+
+        $_request_params = $this->params;
+        $_baseUrl = $this->baseUrl();
+
+//        $_module = '';
+//        $_controller = '';
+//        $_action = '';
+//        $_params = '';
+
+//        foreach( $_request_params as $_key => $_val){
+//            switch( $_key ){
+//                case 'module':
+//                    $_module = $_val;
+//                    break;
+//                case 'controller':
+//                    $_controller = $_val;
+//                    break;
+//                case 'action':
+//                    $_action = $_val;
+//                    break;
+//                default:
+//                    if( strtolower($_key) != 'setlang' && !isset( $_POST[$_key] ) && $_key != 'redirect' )
+//                        $_params .= "/$_key/$_val";
+//            }
+//        }
+//
+//        $_requestURI = "$_baseUrl/$_module/$_controller/$_action$_params";
+
+        $content = '';
+
+        $i = 1;
+        $counter_language = count($_availableLanguages);
+        foreach($_availableLanguages as $_lang){
+            $_selected = false;
+
+            if( $_lang['L_ID'] == $_currentlangID ){
+                $_selected = true;
+            }
+
+            $content .= $i == $counter_language ? '<li class="last">' : "<li>";
+            $url = $this->url(array('setLang' => $_lang['L_Suffix']));
+            if( $_selected ){
+                $link = $this->link($url, strtoupper($_lang['L_Suffix']), array('class'=>'selected'));
+            } else {
+                $link = $this->link($url, strtoupper($_lang['L_Suffix']));
+            }
+            $content .= $link;
+            $content .=  '</li>';
+
+            $i++;
+        }
+
+        if( !empty($content) ){
+            $content = "<ul>$content</ul>";
+        }
+
+        echo $content;
+    }

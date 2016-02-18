@@ -1,0 +1,22 @@
+
+<?php
+$languageSuffix = $this->languageSuffix;
+$isHomePage = (int) preg_replace(array("/accueil/", "/home/"), 1, $this->selectedPage);?>
+<?php if ($this->display): ?>
+<div class="messagesContainer" style="display: none;">
+    <a rel="messages" href="#?w=<?php echo $this->popupWidth; ?>"> </a>
+    <p class="title"><?php echo $this->message['MAI_Title']; ?></p>
+    <div class='content'><?php echo $this->message['MAI_Text']; ?></div>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+       $('.messagesContainer a').modalWindow({element: $('.messagesContainer a'),  containerId: '.messagesContainer'});
+        $('a.close, #fade').live('click', function(e) { //When clicking on the close or fade layer...
+            e.preventDefault();
+            $(this).modalWindow('close');
+        });
+    });
+    //]]>
+</script>
+<?php endif; ?>

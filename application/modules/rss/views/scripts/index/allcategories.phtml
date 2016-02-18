@@ -1,0 +1,40 @@
+<?php $this->headStyle()->captureStart() ?>
+    .block-rss .rss-feed {
+        background: url(<?php echo $this->baseUrl() ?>/themes/default/images/common/rss_icon_small.png) no-repeat 0% 50%;
+        padding-left: 20px;
+    }
+<?php $this->headStyle()->captureEnd() ?>
+
+<?php
+ foreach($this->categories as $category){
+?>
+<div class="blockRssAll">
+    <div class="rssCategoryTitle">
+        <?php
+        echo $category['CI_Title'];
+        ?>
+    </div>
+    <?php echo $this->baseUrl(); ?>
+    <div class="block block-rss">
+        <?php  echo $this->link("{$this->baseUrl()}/rss/{$this->lang}/{$category['CI_CategoryID']}/rss.xml", $this->getCibleText('rss_news_subscribe'), array('class'=>'rss-feed','target'=>'_BLANK')); ?>
+    </div>   
+     <input readonly="readonly" class="addressToCopy" value="<?php  echo $this->domainName . "/rss/" . $this->lang . "/" . $category['CI_CategoryID'] ."/rss.xml" ;?>">       
+   
+</div>
+<?php
+}
+?>
+
+    <?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function(){
+   
+     $(".addressToCopy").click(function(){  
+        // alert('fdsfds');
+        this.select();
+    });
+});
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

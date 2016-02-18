@@ -1,0 +1,78 @@
+<?php
+    $_currentlangID  = $this->currentLangID;
+    $langDisplay     = $this->langDisplay;
+    $class           = $this->class;
+    $liClass         = $this->liClass;
+    $_request_params = $this->params;
+    $_baseUrl        = $this->baseUrl();
+
+    $_availableLanguages = Cible_FunctionsGeneral::getAllLanguage();
+
+    $_module = '';
+    $_controller = '';
+    $_action = '';
+    $_params = '';
+
+    foreach( $_request_params as $_key => $_val){
+        switch( $_key ){
+            case 'module':
+                $_module = $_val;
+                break;
+            case 'controller':
+                $_controller = $_val;
+                break;
+            case 'action':
+                $_action = $_val;
+                break;
+            default:
+                if( strtolower($_key) != 'lang' && !isset( $_POST[$_key] ) && !is_object($_val))
+                    $_params .= "/$_key/$_val";
+        }
+    }
+
+    $_requestURI = "$_baseUrl/$_module/$_controller/$_action$_params";
+
+    $content = '';
+
+    $first = true;
+    foreach($_availableLanguages as $_lang){
+        $_selected = false;
+
+        $_class = '';
+        if( $first ){
+            $_class = 'first';
+            $first = false;
+        }
+        $label = $_lang['L_Title'];
+        $title = '';
+
+        if (!empty($langDisplay))
+        {
+            $label = strtoupper ($_lang['L_Suffix']);
+            $title = $_lang['L_Title'];
+        }
+
+        if( $_lang['L_ID'] == $_currentlangID )
+            $_selected = true;
+
+        if(!empty($liClass) && $_selected)
+            $content .= '<li class="' . $liClass . $_lang['L_ID'] . '">' ;
+        else
+            $content .= '<li>' ;
+
+        if( $_selected ){
+            $content .= $this->link("$_requestURI/lang/{$_lang['L_Suffix']}", $label, array('class'=> $_class . ' selected', 'title' => $title));
+        } else {
+            $content .= $this->link("$_requestURI/lang/{$_lang['L_Suffix']}", $label, array('class'=>$_class, 'title' => $title));
+        }
+        $content .=  '</li>';
+    }
+
+    if( !empty($content) ){
+        $content = "<ul id='language-switcher'>$content</ul>";
+    }
+?>
+<?php $style = (!empty($class))? 'class=' . $class: ''?>
+<div style="height: 25px;" <?php echo $style; ?>><?php echo $content ?></div>
+
+

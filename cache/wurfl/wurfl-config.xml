@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wurfl-config>
+    <wurfl>
+        <main-file>wurfl.zip</main-file>
+        <patches>
+            <patch>web_browsers_patch.xml</patch>
+        </patches>
+    </wurfl>
+    <allow-reload>true</allow-reload>
+    <persistence>
+        <provider>file</provider>
+        <params>dir=persistence</params>
+        <params>expiration=604800</params>
+    </persistence>
+</wurfl-config>

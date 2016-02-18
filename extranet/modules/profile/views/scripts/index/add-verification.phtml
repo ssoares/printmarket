@@ -1,0 +1,38 @@
+<?php 
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_profile_text'),
+    'pageDescription' => $this->getCibleText('header_add_profile_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<?php $this->headStyle()->captureStart() ?>
+
+    table.profile-verification{
+        margin-top: 10px;
+    }
+    table.profile-verification td{
+        vertical-align: top;
+    }
+    table.profile-verification td.continue{
+        padding-top: 15px;
+    }
+    
+    .email-textbox{
+        height: 18px;
+        width: 250px;
+    }
+
+<?php $this->headStyle()->captureEnd() ?>
+
+<?php $cancel_url = empty($this->returnModule) && empty($this->returnAction) ? $this->url(array('module'=>'profile', 'controller'=>'index', 'action'=>'list')) : $this->url(array('module'=>$this->returnModule, 'controller'=>'index', 'action'=>$this->returnAction)) ?>
+
+<div id="default_form">
+    <div id="action_panel">
+        <fieldset id="fieldset-actions" style="border: none; padding: 0px; margin: 0px;">
+            <?php echo $this->formButton('cancel', $this->getCibleText('button_cancel'), array('class' => 'stdButton','onclick'=> "document.location.href='{$cancel_url}'")) ?>
+        </fieldset>
+    </div>
+    
+    <?php echo $this->form ?>
+</div>

@@ -1,0 +1,130 @@
+<script>
+    $(document).ready(function() {
+        function sendMassMailing(){
+            var releaseID = $('#releaseID').val();
+            var url = $('#massMailingURL').val();
+
+            var message1 = $("#massmailing_message_execution1").val();
+            message1 = message1.replace('%DATE%',getDateNow());
+            message1 = message1.replace('%TIME%',getTimeNow());
+            message1 += "<?php echo $this->getCibleText('massmailing_message_execution_wait') ?><br /><br />";
+
+            $('#massmailing-message').append(message1);
+
+            $('body').css('cursor', 'wait');
+            $.getJSON(url,{releaseID : releaseID},
+                function(data){
+                    var message2 = $("#massmailing_message_execution2").val();
+                    message2 = message2.replace('%DATE%',getDateNow());
+                    message2 = message2.replace('%TIME%',getTimeNow());
+                    $('#massmailing-message').append(message2);
+
+                    var message3 = $("#massmailing_message_execution3").val();
+//                    message3 = message3.replace('%SENT_TO%',data['sentTo']);
+                    message3 = message3.replace('%TARGETED_TOTAL%',data['targetedTotal']);
+                    message3 = $("#massmailing_message_execution4").val() + message3;
+                    $('#massmailing-message').append(message3);
+
+                    //alert(dump(data));
+                    var failedEmailCount = data['failedEmail'];
+                    if(failedEmailCount){
+                        var fname = '';
+                        var lname = '';
+                        var email = '';
+                        var tableToAppend = "<strong>"+$("#newsletter_release_failed_mail").val()+"</strong>";
+                        tableToAppend += '<br />' + data['errors'];
+                        $('#massmailing-message').append(tableToAppend);
+                    }
+                    $('#cancel').show();
+                    $('body').css('cursor', 'default');
+
+                    //$('#massmailing-message').append(data['select']);
+
+                }
+            );
+
+        }
+
+        function getDateNow(){
+            var currentTime = new Date();
+            var month = currentTime.getMonth() + 1;
+            var day = currentTime.getDate();
+            var year = currentTime.getFullYear();
+            var dateNow = year + '-' + month + '-' + day;
+
+            return dateNow;
+        }
+
+        function getTimeNow(){
+            var currentTime = new Date();
+            var hours = currentTime.getHours();
+            if (hours < 10)
+                hours = "0" + hours
+            var minutes = currentTime.getMinutes();
+            if (minutes < 10)
+                minutes = "0" + minutes
+            var seconds = currentTime.getSeconds();
+            if (seconds < 10)
+                seconds = "0" + seconds
+            var timeNow = hours + ':' + minutes + ':' + seconds;
+
+            return timeNow;
+        }
+
+        function dump(arr,level) {
+            var dumped_text = "";
+            if(!level) level = 0;
+
+            //The padding given at the beginning of the line.
+            var level_padding = "";
+            for(var j=0;j<level+1;j++) level_padding += "    ";
+
+            if(typeof(arr) == "object") { //Array/Hashes/Objects
+             for(var item in arr) {
+              var value = arr[item];
+
+              if(typeof(value) == "object") { //If it is an array,
+               dumped_text += level_padding + "\'" + item + "\' ...\n";
+               dumped_text += dump(value,level+1);
+              } else {
+               dumped_text += level_padding + "\'" + item + "\' => \"" + value + "\"\n";
+              }
+             }
+            } else { //Stings/Chars/Numbers etc.
+             dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+            }
+            return dumped_text;
+        }
+
+        sendMassMailing();
+    });
+</script>
+<?php
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+        'pageTitle' => $this->getCibleText('header_send_newsletter_text'),
+        'pageDescription' => $this->getCibleText('header_send_newsletter_description'),
+        'breadcrumb' => ''
+    ));
+?>
+<input id="releaseID" value="<?php echo($this->releaseID); ?>" type="hidden"/>
+<input id="massMailingURL" value="<?php echo($this->baseUrl()."/newsletter/index/send-mass-mailing") ?>" type="hidden"/>
+<input id="massmailing_message_execution1" value="<?php echo($this->getCibleText('massmailing_message_execution1')); ?><br/>" type="hidden"/>
+<input id="massmailing_message_execution2" value="<?php echo($this->getCibleText('massmailing_message_execution2')); ?><br/><br/>" type="hidden"/>
+<input id="massmailing_message_execution3" value="<?php echo($this->getCibleText('massmailing_message_execution3')); ?><br/><br/>" type="hidden"/>
+<input id="massmailing_message_execution4" value="<?php echo($this->getCibleText('newsletter_release_sent_stats')); ?><br/><br/>" type="hidden"/>
+
+<input id="newsletter_release_failed_mail" value="<?php echo($this->getCibleText('newsletter_release_failed_mail')); ?><br/>" type="hidden"/>
+<input id="newsletter_release_failed_lname" value="<?php echo($this->getCibleText('newsletter_release_failed_lname')); ?><br/>" type="hidden"/>
+<input id="newsletter_release_failed_fname" value="<?php echo($this->getCibleText('newsletter_release_failed_fname')); ?><br/>" type="hidden"/>
+<input id="newsletter_release_failed_email" value="<?php echo($this->getCibleText('newsletter_release_failed_email')); ?><br/>" type="hidden"/>
+
+
+<div id="default_form">
+    <div id="form_panel">
+        <h3 style="margin-bottom:15px"><?php echo($this->getCibleText('massmailing_message_inprogress')) ?></h3>
+        <div id="massmailing-message" style="margin-bottom: 20px;"></div>
+        <form enctype="application/x-www-form-urlencoded" method="post" action="">
+            <button id="cancel" name="cancel" type="submit" style="cursor:pointer; display:none;"><?php echo $this->getCibleText('button_return') ?></button>
+        </form>
+    </div>
+</div>

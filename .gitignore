@@ -1,0 +1,10 @@
+/application/config/
+/lib/QCal/
+/lib/Zend/
+/lib/ZendX/
+/lib/Wurfl/
+/lib/PHPExcel/
+/lib/PHPExcel.php
+/tmp/printmarket/
+/www/printmarket/data/
+/www/printmarket/indexation/

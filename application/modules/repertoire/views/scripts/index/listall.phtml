@@ -1,0 +1,133 @@
+<div class="block">
+    <form id="filterByNames" action="" method="post" filtre="2012-12" enctype="application/x-www-form-urlencoded">
+        <div class="name">
+            <?php echo $this->getCibleText('repertoire_name'); ?>
+        </div>
+        <div class="inputDiv nameDiv">
+            <input class="input_text name" type="input" name="name" value="<?php echo $this->name; ?>">        
+            </input>
+        </div>
+        <div class="surname">
+            <?php echo $this->getCibleText('repertoire_surname'); ?>
+        </div>
+        <div class="inputDiv surnameDiv">
+            <input class="input_text surname" type="input" name="surname" value="<?php echo $this->surname; ?>">        
+            </input>
+        </div>
+        <div class="formFindButton">
+            <input class="submit_input" type="submit" value="<?php echo $this->getCibleText('repertoire_rechercher'); ?>" />
+        </div>
+        <div class="error_not_enough_char"></div>
+    </form>
+    <?php
+    if ($this->repertoires)
+    {?>
+        <?php        
+        $flag = 0;
+        foreach ($this->repertoires as $repertoire)
+        {
+           // var_dump($repertoire);
+            if(($flag>0)&&($flag%2==0)){
+                echo "</ div>";
+            }
+            if($flag%2==0){
+            ?>
+            <div class="repertoire repertoire_2columns">
+            <?php
+            }
+            ?>
+                
+                <div class="repertoire_text_container <?php if($flag%2==0){ echo "first"; }  ?>">
+                    <div class="repertoire_name" >
+                         <?php echo $repertoire['RI_Surname'] . " " . $repertoire['RI_Name'] ?>
+                    </div>
+                    <div class="repertoire_title">
+                        <?php echo $repertoire['RI_Title'] ?>
+                    </div>
+                    <div class="repertoire_phone">
+                        <?php echo $repertoire['AI_FirstTel'];
+                        if(!empty($repertoire['AI_FirstExt'])){
+                            echo ", " . $this->getCibleText('repertoire_poste') . " " . $repertoire['AI_FirstExt'];
+                        }
+                            ?>
+                    </div>
+                    <div class="repertoire_local">
+                        <?php echo $this->getCibleText('repertoire_local') . $repertoire['AI_Name'] ?>
+                    </div>
+                </div>
+            <?php
+            if($flag%2==1){
+            ?>
+            </div>
+            <?php
+            }
+            ?>
+            <?php    
+            $flag++;
+        }
+        ?>
+        </div>  
+        <div class="clear_both"></div>
+  <?php
+        
+    }
+    else
+    {
+        ?><div><p><?php echo $this->getCibleText('repertoire_no_repertoire') ?></p></div><?php
+}
+    ?>
+</div>
+
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        $(window).load(function(){
+                  
+            
+        if (!$('.input_text.name').val().length){
+            $('.input_text.name').val('<?php echo $this->getCibleText('three_characters_at_least') ?>');
+        }
+        
+        if (!$('.input_text.surname').val().length){
+            $('.input_text.surname').val('<?php echo $this->getCibleText('three_characters_at_least') ?>');
+        }
+        
+        $('.input_text').blur(function(event){  
+            var theValue = $(this).val().trim();
+            if(theValue == '')
+                $(this).val('<?php echo $this->getCibleText('three_characters_at_least') ?>');
+        });
+        
+        $('.input_text').focus(function(event){
+            if($(this).val() == "<?php echo $this->getCibleText('three_characters_at_least'); ?>" )
+                $(this).val('');
+        });
+        
+        
+        
+        $("form#filterByNames").submit(function() {
+            var theValueS = $('.input_text.surname').val().trim();
+            var theValueN = $('.input_text.name').val().trim();
+            if ((theValueS.length >2)&&(theValueN.length >2)&&(theValueN!="<?php echo $this->getCibleText('three_characters_at_least'); ?>")&&(theValueS!="<?php echo $this->getCibleText('three_characters_at_least'); ?>")) {
+                return true;
+            }
+            else{
+                $('div.error_not_enough_char').html("* <?php echo $this->getCibleText('three_characters_at_least'); ?>");
+                
+               
+                return false;
+            }
+        });
+        
+        
+        
+            
+
+        
+        
+    });
+ });
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

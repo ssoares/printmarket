@@ -1,0 +1,19 @@
+<?php 
+    if( $this->isXmlHttpRequest ){
+        if( $this->success ){
+?>          <div id="result">
+                <span id="action" style="display: none">addGallery</span>
+                <span id="success" style="display: none">true</span>
+                <span id="galleryID" style="display: none"><?php echo $this->galleryID ?></span>
+                <span id="galleryTitle" style="display: none"><?php echo $this->galleryTitle ?></span>
+                <span id="galleryDescription" style="display: none"><?php echo $this->galleryDescription ?></span>
+                <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                <span id="galleryDate" style="display: none"><?php echo $this->galleryDate ?></span>
+            </div>
+<?php   }
+        else{
+?>          
+            <?php  echo($this->form); ?>      
+            
+<?php   }
+    }

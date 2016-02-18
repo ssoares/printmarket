@@ -1,0 +1,22 @@
+<?php
+    
+?>
+<?php
+echo $this->partial(
+        'partials/header.pageDetails.phtml',
+        array(
+            'pageTitle' => str_replace(
+                    '%FORM_TITLE%',
+                    $this->formTitle,
+                    $this->getCibleText('header_list_form_response_text'
+                    )),
+            'pageDescription' => $this->getCibleText('header_list_form_response_description'),
+            'breadcrumb' => ''
+        )
+    );
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->mylist->render()); ?>        
+    </div>                    
+</div>

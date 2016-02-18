@@ -1,0 +1,685 @@
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/jquery/jquery.json-1.3.min.js") ?>
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/interface.js") ?>
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/inestedsortable.js") ?>
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/csa/overlay.js") ?>
+
+<?php $this->headScript()->captureStart() ?>
+
+    var from = null;
+    var to = null;
+    var currentID = null;
+
+    function show_overlay(){
+        overlay.show();
+    }
+
+    function hide_overlay()
+    {
+        overlay.hide();
+    }
+
+    function pretty_header_format(){
+        var actions_panel = $('#page_edit #fieldset-actions');
+        var language_switcher = $('#page_edit #language-switcher');
+        var header_height = $('#page_edit #header').height() + 10;
+
+        actions_panel.css('top', header_height);
+        language_switcher.css('top', header_height);
+
+        return header_height;
+    }
+
+    /*
+        Reapply the NestedSortable object
+        Here is where the magic happen. :)
+    */
+    function applyNestedSortable(){
+        //if($.browser.msie)
+        $('#root').SortableDestroy();
+
+        $('#root').NestedSortable({
+            accept: 'sortable_items',
+            handle: '.drag_handle',
+            helperclass: 'helper',
+            noNestingClass: '.home',
+            onStart : function(){
+                from = to = currentID = null;
+                currentID = $(this).attr('pageid');
+                from = $(this).parents('li.sortable_items:first');
+            },
+            onStop: function() {
+
+                to = $(this).parents('li.sortable_items:first');
+
+                if(to && to.attr('pageid') != null)
+                    $(this).attr('parentid', to.attr('pageid'));
+                else
+                    $(this).attr('parentid', 0);
+
+                // Loops through parents to flags parent li as open (expanded)
+                $(this).parents('li.sortable_items').each(function(){
+                    var _li = $(this);
+                     if(_li.hasClass('collapsed')){
+                        _li.removeClass('collapsed').addClass('expanded');
+                     }
+                });
+
+                applyNestedSortable();
+                serializeMySortable(from, to);
+
+                formatSortableTree();
+            }
+        });
+    }
+
+    /*
+        This method is responsible for loading the form and display it to screen
+    */
+    function getEditPage(parentID, action){
+
+        var _action = (action == 'add') ? 'add' : 'edit';
+
+        $.get('<?php echo $this->baseUrl() ?>/page/manage/'+_action+'/ID/' + parentID, function(data){
+
+            var window_height = $(window).height();
+            var window_width = $(window).width();
+
+            overlay.show();
+            if ($('#overlay').is(':hidden'))
+                    $('#overlay').show();
+            var page_edit = $('#page_edit');
+            var page_content = $('#page_content');
+
+            loadContent(page_content, data, parentID, _action);
+
+            // Popup has been loaded, we grab the height
+            var page_height = page_edit.height();
+
+            // We define the acceptable height for our popup
+            var acceptable_popup_height = window_height - (window_height / 3);
+
+            // if page_height is greater than acceptable_height, we use acceptable height instead
+            if( page_height > acceptable_popup_height ){
+                page_height = acceptable_popup_height;
+            }
+
+            // we set the css top attribute for our popup
+            var page_edit_top = Math.round((window_height - page_height ) / 2);
+
+            // we set our popup size and position
+            page_edit.css({
+                'top': page_edit_top + 'px',
+                'left': Math.round((window_width - 700) / 2) + 'px',
+                'width': '700px'
+            }).slideDown('slow');
+            //'height': page_height + 'px'
+
+            // we find out the space the header is using since some components are position absolutely
+            header_height = pretty_header_format();
+
+            // we substract the header height from the popup height so that our scrollable content doesn't oversize the popup
+            editpanel_height = page_height - header_height;
+            page_content.css('height', editpanel_height + 'px');
+
+            // web grab the actions panel positioned absolute height so that we can move down the content panel
+            var actions_panel = $('#page_edit #fieldset-actions');
+            page_content.css('margin-top', actions_panel.height() + 'px');
+        });
+
+        // Set the title and the description of the popup page
+        if(_action == "add")
+        {
+            $('#page_edit .title_column #title').text("<?php echo $this->getCibleText('page_add_page_title') ?>");
+            $('#page_edit .description_column #description').text("<?php echo $this->getCibleText('page_add_page_description') ?>");
+
+            // Ajout d'une page à la racine du site, on l'indique à l'usager
+            if(parentID == 0)
+            {
+                $.get('<?php echo $this->baseUrl() ?>/page/manage/page-breadcrumb/ID/' + parentID, function(data){
+                     $('#page_edit .topInfo-breadcrumb').text("<?php echo $this->getCibleText('page_add_page_root_breadcrumb') ?>");
+                });
+            }
+            // Sinon, on ajoute un enfant(page) à une page existante
+            else
+            {
+                $.get('<?php echo $this->baseUrl() ?>/page/manage/page-breadcrumb/ID/' + parentID, function(data){
+                     $('#page_edit .topInfo-breadcrumb').text(data);
+                });
+            }
+        }
+        else if(_action == "edit")
+        {
+            $('#page_edit .title_column #title').text("<?php echo $this->getCibleText('page_edit_page_title') ?>");
+            $('#page_edit .description_column #description').text("<?php echo $this->getCibleText('page_edit_page_description') ?>");
+
+            $.get('<?php echo $this->baseUrl() ?>/page/manage/page-breadcrumb/ID/' + parentID, function(data){
+                 $('#page_edit .topInfo-breadcrumb').text(data);
+            });
+        }
+    }
+
+    /*
+        loads data content into destination html element, after, catches the submission of the form added to destination
+    */
+    function loadContent(dest, data, parentID, action){
+        if(dest){
+            dest.html(data);
+
+            catchSubmit(dest, parentID, action);
+        }
+    }
+    /*
+        catchSubmit is responsible for trapping the submission of the ajax retrieved form and reloading them on error
+    */
+    function catchSubmit(parent, parentID, action){
+
+        // check if we've successfully added our page
+        var resultPane    = $('#result');
+        var currentAction = $('span#buttonAction').text();
+
+        // if not empty resultPane, we've got a result, else, we need to fill in the form
+        if(resultPane.size() > 0)
+        {
+             var _parentID = resultPane.find('#parentID').text();
+             var _pageID = resultPane.find('#pageID').text();
+             var _pageName = resultPane.find('#pageTitle').text();
+             var _pageOnline = resultPane.find('#pageOnline').text();
+             var _pageLangID = resultPane.find('#pageLangID').text();
+             if( _pageLangID == defaultEditLanguage ){
+                if(action == 'add'){
+
+                     if(parentID == 0){
+                        var pageIDI = "page_" + _pageID;
+                        var insideHtml = '<li id="' + pageIDI + '" class="sortable_items collapsed" pageid="'+_pageID+'" parentid="'+_parentID+'">';
+                        insideHtml += '<a class="state" onclick="toggleMenu(this)">&nbsp;</a>';
+                        if(_pageOnline==1){
+                            insideHtml += '<img class="drag_handle" src="<?php echo $this->baseUrl()?>/icons/icon-drag-22x22.png" align="left" title="drag" />';
+                            insideHtml += '<a class="element" onclick="toggleActionMenu(this)">'+_pageName+'</a>';
+                        }
+                        else{
+                            insideHtml += '<img class="drag_handle" src="<?php echo $this->baseUrl()?>/icons/icon-drag-offline-22x22.png" align="left" title="drag" />';
+                            insideHtml += '<a class="element" style="font-style:italic;" onclick="toggleActionMenu(this)">'+_pageName+'</a>';
+                        }
+
+                        insideHtml += '<div class="actions-dialog"><div class="hd"><div class="c"></div></div><div class="bd"><div class="c"><div class="s">';
+                        insideHtml += '<div class="actions"><a class="action_add" onclick="addPage(this);"><?php echo $this->getCibleText('menu_treeview_add') ?></a>';
+                        insideHtml += '<a class="action_edit" onclick="editPage(this);"><?php echo $this->getCibleText('menu_treeview_edit')?></a>';
+                        insideHtml += '<a class="action_delete" onclick="deletePage(this);"><?php echo $this->getCibleText('menu_treeview_delete')?></a>';
+                        insideHtml += '<a class="action_setAsHomePage" onclick="setAsHomePage(this);"><?php echo $this->getCibleText('menu_treeview_homepage')?></a>';
+                        insideHtml += '<a class="action_viewStructure" onclick="viewStructure(this);"><?php echo $this->getCibleText('menu_treeview_pagestructure') ?></a>';
+                        insideHtml += '<a class="action_viewContents" onclick="viewContents(this)"><?php echo $this->getCibleText('menu_treeview_content_management') ?></a>';
+                        insideHtml += '</div></div></div></div><div class="ft"><div class="c"></div></div></div><ul class="zone tree-view"></ul></li>';
+                        $('#root').append(insideHtml);
+                     }
+                     else {
+                         var child_ul = $('li#page_' + _parentID).find('ul.zone:first');
+
+                         if( child_ul.size() == 0)
+                            $('li#page_' + _parentID).append('<ul class="zone tree-view" style="display: none"></ul>');
+
+                         var insideHtml = '<li id="' + pageIDI + '" class="sortable_items collapsed" pageid="'+_pageID+'" parentid="'+_parentID+'">';
+                         insideHtml += '<a class="state" onclick="toggleMenu(this)">&nbsp;</a>';
+
+                         if(_pageOnline==1){
+                            insideHtml += '<img class="drag_handle" src="<?php echo $this->baseUrl()?>/icons/icon-drag-22x22.png" align="left" title="drag" />';
+                            insideHtml += '<a class="element" onclick="toggleActionMenu(this)">'+_pageName+'</a>';
+                        }
+                        else{
+                            insideHtml += '<img class="drag_handle" src="<?php echo $this->baseUrl()?>/icons/icon-drag-offline-22x22.png" align="left" title="drag" />';
+                            insideHtml += '<a class="element" style="font-style:italic;" onclick="toggleActionMenu(this)">'+_pageName+'</a>';
+                        }
+
+
+                         insideHtml += '<div class="actions-dialog"><div class="hd"><div class="c"></div></div><div class="bd"><div class="c"><div class="s">';
+                         insideHtml += '<div class="actions"><a class="action_add" onclick="addPage(this);"><?php echo $this->getCibleText('menu_treeview_add')?></a>';
+                         insideHtml += '<a class="action_edit" onclick="editPage(this);"><?php echo $this->getCibleText('menu_treeview_edit')?></a>';
+                         insideHtml += '<a class="action_delete" onclick="deletePage(this);"><?php echo $this->getCibleText('menu_treeview_delete')?></a>';
+                         insideHtml += '<a class="action_setAsHomePage" onclick="setAsHomePage(this);"><?php echo $this->getCibleText('menu_treeview_homepage')?></a>';
+                         insideHtml += '<a class="action_viewStructure" onclick="viewStructure(this);"><?php echo $this->getCibleText('menu_treeview_pagestructure') ?></a>';
+                         insideHtml += '<a class="action_viewContents" onclick="viewContents(this)"><?php echo $this->getCibleText('menu_treeview_content_management') ?></a>';
+                         insideHtml += '</div></div></div></div><div class="ft"><div class="c"></div></div></div><ul class="zone tree-view"></ul></li>';
+                        $('li#page_' + _parentID).find('ul.zone:first').append(insideHtml);
+                     }
+
+                     formatSortableTree();
+
+                 } else if (action == 'edit') {
+
+                     $('li#page_' + _pageID + ' .element:first').text(_pageName);
+                      if(_pageOnline==1){
+                        $('li#page_' + _pageID + ' .element:first').css("font-style","normal");
+                        $('li#page_' + _pageID + ' .drag_handle:first').attr("src","<?php echo $this->baseUrl();?>/icons/icon-drag-22x22.png");
+                 }
+                      else{
+                        $('li#page_' + _pageID + ' .element:first').css("font-style","italic");
+                        $('li#page_' + _pageID + ' .drag_handle:first').attr("src","<?php echo $this->baseUrl();?>/icons/icon-drag-offline-22x22.png");
+             }
+                 }
+             }
+
+             applyNestedSortable();
+            if (currentAction == 'submitSaveClose')
+            {
+                $('#page_edit').slideUp('slow');
+                $('#page_edit').removeAttr('style');
+                $('#page_edit').css('display', 'none');
+                //overlay.hide();
+                $('#overlay').hide();
+            }
+            else
+            {
+                getEditPage(_pageID, 'edit');
+            }
+        } else {
+
+            $('ul#language-switcher a', parent).each(function(){
+                var currentLink = $(this);
+
+                currentLink.click(function(){
+
+                    var preconfigured_action = '';
+
+                    if( currentLink.attr('href') != 'javascript:void(0);' ){
+                        preconfigured_action = currentLink.attr('href');
+                        currentLink.data('link', preconfigured_action);
+                        currentLink.attr('href','javascript:void(0);');
+                    } else {
+                        preconfigured_action = currentLink.data('link');
+                    }
+
+                    $.get(preconfigured_action, function(data){
+                        loadContent($('#page_content'), data, parentID, action);
+
+                        pretty_header_format();
+                    });
+                });
+
+            });
+
+            $('form button#cancel').click(function(){
+                $('#page_edit').slideUp('slow', function(){
+                    overlay.hide();
+                    if (!$('#overlay').is(':hidden'))
+                        $('#overlay').hide();
+                    $('#page_content').empty();
+                });
+            });
+            var button = '';
+            $('form input[type=submit][id^=submit]', parent).click(function(){
+                button = $(this).attr('id');
+
+            });
+            // Catch submit
+            $('form', parent).submit(function(){
+                var submitData = 'buttonAction=' + button + '&' + $(this).serialize();
+
+                $.post('<?php echo $this->baseUrl() ?>/page/manage/'+action+'/ID/' + parentID, submitData, function(data){
+
+                    var success = false;
+                    var pageID = '';
+                    var pageTitle = '';
+
+                    loadContent(parent, data, parentID, action);
+                    pretty_header_format();
+
+                });
+                return false;
+            });
+        }
+    }
+
+    /*
+        addPage traps who wants to add a page and where.
+    */
+    function addPage(parent){
+
+        var parent_li = $(parent).parents('li:first');
+
+        // hides the action panel
+        hideActionMenu( parent_li.find('.actions-dialog:first') );
+
+        var parentID = parent_li.attr('pageid');
+
+        // Loads the form to be able to add a new page
+        getEditPage(parentID, 'add');
+    }
+
+    /*
+        editPage traps which page has to be modified.
+    */
+    function editPage(parent){
+        var parent_li = $(parent).parents('li:first');
+        var page_id = parent_li.attr('pageid');
+
+        // hides the action panel
+        hideActionMenu( parent_li.find('.actions-dialog:first') );
+
+        var parentID = parent_li.attr('pageid');
+
+        // Loads the form to be able to add a new page
+        getEditPage(page_id, 'edit');
+    }
+
+    /*
+        deletePage traps which page has to be deleted. Ask for confirmation then delete it.
+    */
+    function deletePage(parent){
+        var parent_li = $(parent).parents('li:first');
+
+        var page_name = parent_li.find('a.element:first').text();
+        var page_id = parent_li.attr('pageid');
+
+        if(confirm('Êtes vous sûr de vouloir supprimer la page : '+ page_name +'?')){
+            $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'delete')) ?>/ID/' + page_id, 'delete=true', function(data){
+                parent_li.hide('slow').remove();
+                formatSortableTree();
+            });
+
+        } else {
+            //$(parent).parent().hide('slow');
+            hideActionMenu( parent_li.find('.actions-dialog:first') );
+        }
+    }
+
+    /*
+        setAsHomePage traps which page has to be set as homepage. remove previous homepage and set the requested one as homepage
+    */
+    function setAsHomePage(parent){
+        var parent_li = $(parent).parents('li:first');
+
+        var page_name = parent_li.find('a.element:first').text();
+        var page_id = parent_li.attr('pageid');
+
+        // check if page has subpages, if it does, return with error message
+        if( $('li', parent_li).size() > 0 ){
+            alert('Une page d\'accueil ne peut contenir de sous page.');
+
+            // closes the action panel
+            hideActionMenu( parent_li.find('.actions-dialog:first') );
+            return;
+        }
+
+        // ask for confirmation, then do it
+        if(confirm('Êtes vous sûr de vouloir définir la page : '+ page_name +' comme page d\'accueil?')){
+            $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'set-as-home-page')) ?>/ID/' + page_id, function(data){
+
+                $('.home').each(function(){
+                    $(this).removeClass('home');
+                });
+
+                parent_li.addClass('home');
+
+                // closes the action panel
+                hideActionMenu( parent_li.find('.actions-dialog:first') );
+            });
+
+        } else {
+            // closes the action panel
+            hideActionMenu( parent_li.find('.actions-dialog:first') );
+        }
+    }
+
+    function viewStructure(parent){
+        var parent_li = $(parent).parents('li:first');
+        var page_id = parent_li.attr('pageid');
+
+        window.location = "<?php echo $this->baseUrl() ?>/page/manage/index/ID/" + page_id;
+    }
+
+    function viewContents(parent){
+        var parent_li = $(parent).parents('li:first');
+        var page_id = parent_li.attr('pageid');
+
+        window.location = "<?php echo $this->baseUrl() ?>/page/index/index/ID/" + page_id;
+    }
+
+    /*
+        toggleActionMenu simply toggle the display(css) state of the action menu
+    */
+    function toggleActionMenu(parent){
+
+        var action_panel = $(parent).parent().find('.actions-dialog:first');
+        if( action_panel.css('display') == 'block' ){
+            hideActionMenu(action_panel);
+        } else {
+            $('#parent .actions-dialog').each(function(){
+                var current_panel = $(this);
+
+                if( current_panel.css('display') == 'block' )
+                    hideActionMenu( current_panel );
+            });
+            action_panel.css('top', mousePosY);
+            action_panel.css('left', mousePosX + 15);
+            showActionMenu(action_panel);
+        }
+    }
+
+    function showActionMenu(actionMenu){
+        actionMenu.slideDown('fast');
+    }
+
+    function hideActionMenu(actionMenu){
+        actionMenu.slideUp('fast');
+    }
+
+    /*
+        toggleMenu open or close the submenu when the state is clicked (+/-)
+    */
+    function toggleMenu(parent){
+
+        var parent_li = $(parent).parent();
+
+        if( parent_li.hasClass('collapsed'))
+            parent_li.removeClass('collapsed').addClass('expanded');
+        else
+            parent_li.removeClass('expanded').addClass('collapsed');
+
+        var current_ul = parent_li.find('ul.zone:first');
+
+        if( current_ul.css('display') == 'none')
+            current_ul.css('display', 'block');
+        else
+            current_ul.css('display', 'none');
+
+    }
+
+    /*
+        serializeMySortable is responsible for saving the drag and drop informations
+    */
+    function serializeMySortable(from, to){
+
+        var root_list = $('#root');
+
+        root_list.NestedSortable('refresh');
+
+        _from = new Array();
+        from_parentID = from.attr('pageid') == undefined ? 0 : from.attr('pageid');
+
+        $("li[parentid='" + from_parentID + "']", root_list).each(function(){
+            if( $(this).attr('pageid') != currentID )
+               _from.push($(this).attr('pageid'));
+        });
+
+        _to = new Array();
+        to_parentID = to.attr('pageid') == undefined ? 0 : to.attr('pageid');
+
+        $("li[parentid='" + to_parentID + "']", root_list).each(function(){
+            _to.push($(this).attr('pageid'));
+        });
+
+        $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'update-position')) ?>', 'updateID=' + currentID + '&from_parentID=' + from_parentID + '&to_parentID=' + to_parentID + '&from_childs=' + $.toJSON(_from) + '&to_childs=' + $.toJSON(_to) , function(data){
+
+        });
+    }
+
+    function formatSortableTree(){
+        $('#root:first').find('ul').each(function(){
+            if( $(this).children('li').size() == 0 ){
+                $(this).remove();
+            }
+        });
+
+        $('#root:first').find('li').each(function(){
+
+            var child_list = $(this).find('ul:first');
+
+            if( child_list.size() > 0){
+                $(this).find('a.empty_state:first').removeClass('empty_state').addClass('state');
+                if( child_list.css('display') != 'none' ){
+                    $(this).removeClass('collapsed').addClass('expanded');
+                } else {
+                    $(this).removeClass('expanded').addClass('collapsed');
+                }
+            } else {
+                $(this).find('a.state:first').removeClass('state').addClass('empty_state');
+            }
+        });
+    }
+
+    // On Dom loaded
+    $(function() {
+
+        $('#root').NestedSortable({
+            accept: 'sortable_items',
+            handle: '.drag_handle',
+            helperclass: 'helper',
+            noNestingClass: '.home',
+            nestingPxSpace: '25',
+            onStart : function(){
+                from = to = currentID = null;
+                currentID = $(this).attr('pageid');
+                from = $(this).parents('li.sortable_items:first');
+            },
+            onStop : function() {
+
+                to = $(this).parents('li.sortable_items:first');
+
+                if(to && to.attr('pageid') !== null)
+                    $(this).attr('parentid', to.attr('pageid'));
+                else
+                    $(this).attr('parentid', 0);
+
+                // Loops through parents to flags parent li as open (expanded)
+                $(this).parents('li.sortable_items').each(function(){
+                    var _li = $(this);
+                     if(_li.hasClass('collapsed')){
+                        _li.removeClass('collapsed').addClass('expanded');
+                     }
+                });
+
+                applyNestedSortable();
+                serializeMySortable(from, to);
+
+                formatSortableTree();
+            }
+        });
+
+        formatSortableTree();
+
+        $('#add').click(function(){
+            // Loads the form to be able to add a new page
+            getEditPage(0, 'add');
+        });
+        var option = new Array();
+        option['zIndex']=4990;
+        overlay = new CSAOverlay('overlay', option);
+
+        var loading_el = $("#loading");
+
+        loading_el.ajaxStart(function(){
+            overlay.show();
+            $(this).show();
+        });
+
+        loading_el.ajaxStop(function(){
+            overlay.hide();
+            $(this).hide();
+        });
+
+        var loading_top = ($(window).height() - 50) / 2;
+        var loading_left = ($(window).width() - 100) / 2;
+        loading_el.css({'position' : 'absolute',
+            'top' :  loading_top,
+            'left' : loading_left
+        });
+    });
+
+<?php $this->headScript()->captureEnd() ?>
+
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('page_website_sitemap_title'),
+    'pageDescription' => $this->getCibleText('page_website_sitemap_description'),
+    'breadcrumb' => $this->getCibleText('breadcrumb_default_text')
+));
+?>
+
+<div id="default_form">
+    <div id="action_panel" style="text-align:right">
+        <ul class="buttons">
+            <li><a id="add" class="action_submit add"><?php echo $this->getCibleText('button_add_root_page') ?></a></li>
+        </ul>
+    </div>
+</div>
+<div style="height:20px;">
+
+</div>
+<div id="parent" class="listArborescence">
+    <ul id="root" class="zone tree-view" style="padding-bottom: 60px; padding-top:10px">
+        <?php echo $this->menu ?>
+    </ul>
+</div>
+<?php
+if(($this->hasHeaderImages)||($this->hasBackgroundImages)){
+?>
+<div class="tree_view_images">
+    <h2 class=""><?php echo $this->getCibleText('dashboard_administration_images') ?></h2>
+    <ul class="imageUL">
+     <?php
+        if($this->hasHeaderImages){?>
+        <li>
+            <a href="<?php echo $this->baseUrl() ?>/page/manage/header">
+                <?php echo $this->getCibleText('dashboard_administration_header_images_description'); ?>
+            </a>
+        </li>
+            <!--<li><a href="javascript:mcImageManager.open('','','','',{rootpath : '{0}/page/header/'});">
+                    <?php echo $this->getCibleText('dashboard_administration_header_images_description'); ?>
+                </a>
+            </li>        -->
+        <?php
+        }
+        if($this->hasBackgroundImages){?>
+            <li>
+                <a href="<?php echo $this->baseUrl() ?>/page/manage/background">
+                <?php echo $this->getCibleText('dashboard_administration_background_images_description'); ?>
+            </a>
+            </li>
+           <!-- <li><a href="javascript:mcImageManager.open('','','','',{rootpath : '{0}/page/background/'});">
+                    <?php echo $this->getCibleText('dashboard_administration_background_images_description'); ?>
+                </a>
+            </li>
+           -->
+        <?php
+        }
+        ?>
+    </ul>
+</div>
+<?php
+}
+?>
+<?php echo $this->partial('partials/loading.phtml'); ?>
+<div id="page_edit">
+    <div id="header">
+        <?php
+        echo $this->partial('partials/header.pageDetails.phtml', array(
+            'pageTitle' => $this->getCibleText('page_website_sitemap_title'),
+            'pageDescription' => $this->getCibleText('page_website_sitemap_description'),
+            'breadcrumb' => '&nbsp;'
+        ));
+        ?>
+    </div>
+    <div id="page_content">
+
+    </div>
+    <div id="dialog-message" style="display: none;" title="<?php echo $this->getCibleText('cant_delete'); ?>"><?php echo $this->getCibleText('alert_still_linked_blocks'); ?></div>
+</div>

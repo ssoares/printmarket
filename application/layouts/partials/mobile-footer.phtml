@@ -1,0 +1,89 @@
+<?php
+$section = $this->section;
+$lang = $this->view->languageId;
+$baseUrl = Zend_Registry::get('web_root');
+$config = Zend_Registry::get('config');
+$edith_logo = $this->link('#', $this->clientImage('logo-edith.png', array('alt' => "Edith", 'title' => "Edith")));
+$array_replace = array(
+    '%%%GET_DATE_YEAR%%%' => date('Y'),
+    '%%%SITE_NAME%%%' => $config->site->title->$lang);
+$copyrightText = strip_tags($this->getClientText('footer_copyright', null, $array_replace), '<span>');
+$options = array('class' => 'displayStandard');
+?>
+<div class="site-footer-site">
+    <?php echo $this->link('#', $this->getCibleText('footer_site_standard'), $options); ?>
+</div>
+<div class="site-footer-edith">
+    <?php echo str_replace('##edith##', $edith_logo, $this->getCibleText('footer_cible_propulse')); ?>
+</div>
+<div class='site-footer-copyright'>
+    <?php echo $copyrightText; ?>
+</div>
+<?php if ($config->zIndexCalculator->embeded): ?>
+    <script type="text/javascript" src="<?php echo $this->locateFile('zIndexGenerator.js'); ?>"></script>
+<?php endif; ?>
+<?php if ($config->searchbox->embeded) echo $this->partial('partials/jsSearchBox.phtml') ?>
+<?php if (Zend_Registry::isRegistered('disabledFieldStatus') && !Zend_Registry::get('disabledFieldStatus')): ?>
+    <script type="text/javascript" src="<?php echo $this->locateFile('manageChangedFields.js', null, 'back'); ?>"></script>
+<?php endif; ?>
+<?php echo $this->placeholder('footerScript'); ?>
+<script>
+//<![CDATA[
+    $().ready(function() {
+        //polyfill activation
+//        $("[placeholder]").not('[data-sticky-ignore]').stickyPlaceholders();
+//        $("[placeholder][data-sticky-alt]").stickyPlaceholders({placeholderOpacity: 1});
+        $('select').selectpicker();
+        $('select').live('cible.creation', function() {
+            $(this).selectpicker();
+        })
+        $('select').live('cible.destruction', function() {
+            $(this).selectpicker('destroy');
+        })
+        $('select').live('cible.modification', function() {
+            $(this).selectpicker('refresh');
+        })
+        $('[type=checkbox], [type=radio]').each(function() {
+            $(this).prettyCheckable();
+        });
+        $('.google-map').cibleGoogleMaps({icon: "<?php echo $this->locateFile('map-icon.png'); ?>"});
+        //script qui permet de rajouter des data-toggle sur des éléments html
+        var options = {'eventsMap': [
+                {'name': 'open', 'events': 'click', 'className': 'open', 'typeName': 'toggle', 'touch': true},
+                {'name': 'modal', 'events': 'click', 'className': 'modal', 'typeName': 'modal', 'touch': true},
+                {'name': 'collapse', 'events': 'click', 'className': 'collapse', 'typeName': 'collapse', 'touch': true}
+            ]};
+        $('html').cibletoggle(options);
+        $('[type=number],[data-type-number]').inputNumber();
+        $('[type=number],[data-type-number]').live('cible.creation', function() {
+            $(this).inputNumber()
+        })
+        //ajoute une classe empty lorsqu'un champ est vide
+        setInterval(function() {
+            $('input[type=text], textarea').each(function() {
+                $this = $(this);
+                $this.toggleClass('empty', ($this.val() == ""));
+            });
+        }, 100);
+    });
+    $(document).ready(function() {
+        $('.displayStandard').click(function(e) {
+            e.preventDefault();
+            createCookie('displayStandard', '<?php echo session_id(); ?>');
+        });
+    });
+    function createCookie(name, value, days) {
+        path = "<?php echo $this->registryGet('web_root') ?>";
+        document.cookie = name + "=" + value + "; path=" + path;
+        window.location.reload();
+    }
+
+    function eraseCookie(name) {
+        createCookie(name, '', -1);
+    }
+
+    function logout() {
+        eraseCookie("authentication");
+    }
+//]]>
+</script>

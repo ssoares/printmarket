@@ -1,0 +1,35 @@
+//transform l'élément en triangle'
+.caret-down(@base:3px,@color:black) when (default()) {
+    .caret-base();
+    border-top:   @base solid @color;
+    border-right: @base solid transparent;
+    border-bottom:0;
+    border-left:  @base solid transparent;
+}
+.caret-up(@base:3px,@color:black) when (default()) {
+    .caret-base();
+    border-top:   0;
+    border-right: @base solid transparent;
+    border-bottom:   @base solid @color;
+    border-left:  @base solid transparent;
+}
+.caret-left(@base:3px,@color:black) when (default()) {
+    .caret-base();
+    border-top: @base solid transparent;
+    border-right:   @base solid @color;
+    border-bottom:  @base solid transparent;
+    border-left:   0;
+}
+.caret-right(@base:3px,@color:black) when (default()) {
+    .caret-base();
+    border-top: @base solid transparent;
+    border-right:   0;
+    border-bottom:  @base solid transparent;
+    border-left:   @base solid @color;
+}
+.caret-base() {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+}

@@ -1,0 +1,58 @@
+<?php $this->headScript()->appendFile($this->baseUrl() . '/js/tinymce/tinymce.min.js') ?>
+<?php $this->headScript()->appendFile($this->baseUrl() . "/js/csa/overlay.js") ?>
+<?php
+
+$_currentlangID      = Zend_Registry::get('currentEditLanguage');
+$_availableLanguages = Cible_FunctionsGeneral::getExtranetLanguage();
+$_questionType      = $this->questionType;
+
+echo $this->partial(
+        'partials/header.pageDetails.phtml',
+        array(
+            'pageTitle' => str_replace(
+                    '%EDIT_FORM_TITLE%',
+                    $this->form->getValue('FI_Title'),
+                    $this->getCibleText('header_edit_form_text')
+                ),
+            'pageDescription' => $this->getCibleText('header_edit_form_description'),
+            'breadcrumb'      => ''
+            )
+        );
+?>
+<?php echo $this->partial('partials/overlayEditPage.phtml', array('view' => $this));
+?>
+<div id="default_form">
+    <div id="form_panel">
+        <div id="form_header">
+            <?php echo $this->formBack;?>
+            <div id="button_zone">
+                <img alt="scroll_down" class="" id="scrollDownFormHeader"
+                     src="<?php echo $this->locateFile('treeview-open.png')?>"
+                     title="<?php echo $this->getCibleText('form_show_params')?>"
+                />
+                <img alt="scroll_up" class="" id="scrollUpFormHeader"
+                     src="<?php echo $this->locateFile('treeview-close.png') ?>"
+                     title="<?php echo $this->getCibleText('form_hide_params')?>"
+                />
+            </div>
+            <div id="headerZone">
+                <div id="formData">
+                    <input type="hidden" id="langSelector" value="<?php echo $_currentlangID?>"/>
+                    <?php echo $this->form;?>
+                </div>
+                <p id='currentTitle'></p>
+                <input id="newTitle" value="" />
+            </div>
+
+        </div>
+        <div id="form_sections">
+            <?php echo $this->partial(
+                    'partials/add-FormSections.phtml',
+                    array('questionsType' => $_questionType)
+                    );
+            ?>
+        </div>
+        <?php echo $this->partial('partials/js-headerFormActions.phtml');?>
+        <?php echo $this->partial('partials/js-elementFormActions.phtml', array('labelColor' => $this->labelColor));?>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<!-- Start : Print Button -->
+<div id="print-button"><a href="">
+    <a class="addthis_button_print" href="javascript:void(0);" title="<?php echo $this->getClientText('share_print_text') ?>"><img src="<?php echo $this->baseUrl() ?>/themes/default/images/common/print-button.jpg" border="0" alt="<?php echo $this->getClientText('share_print_text') ?>" />&nbsp;&nbsp;<?php echo $this->getClientText('share_print_text') ?></a>
+</div>
+<!-- End : Print Button -->
+
+<div class="clear_both spacerSmall"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+    var addthis_config = {
+        services_compact: 'email, favorites, facebook, delicious, digg, google, myspace, live, twitter, stumbleupon',
+        ui_header_color: "#666666",
+        ui_header_background: "#E7E7E7",
+        ui_offset_top: 10,
+        ui_offset_left: 4,
+        ui_delay: 300,
+        ui_language: "fr"
+    }
+//]]>
+</script>
+
+<div id="share-button" class="addthis_toolbox addthis_default_style">
+    <a class="addthis_button" href="https://www.addthis.com/bookmark.php" title="<?php echo $this->getClientText('share_share_text') ?>"><img src="<?php echo $this->baseUrl() ?>/themes/default/images/common/add-this-plus-button.jpg" border="0" alt="<?php echo $this->getClientText('share_share_text') ?>" />&nbsp;&nbsp;<?php echo $this->getClientText('share_share_text') ?>&nbsp;&nbsp;<img src="<?php echo $this->baseUrl() ?>/themes/default/images/common/share-button.jpg" border="0" alt="<?php echo $this->getClientText('share_share_text') ?>" /></a>
+</div>
+<script type="text/javascript" src="<?php echo "{$this->baseUrl()}/js/addthis_widget.js" ?>"></script>

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+        <base href="<?php echo Zend_Registry::get('absolute_web_root'); ?>" />
+        
+        <?php
+        // Liste des styles à composer
+        $fontfamily='font-family:Arial,Helvetica,sans-serif;line-height:normal;';
+        $fontsize='font-size:16px;';
+        $colortext='color:#404040;';
+        $colorlink='color:#888888;';
+        $underline='text-decoration:underline;';
+        $nounderline='text-decoration:none;';
+        $colorTitre='color:#1854be;';
+        $formatageTitre=$fontfamily.$colorTitre.'font-size:23px;font-weight:bold;text-align:center;';
+        $formatageSlogan=$fontfamily.$colorTitre.'font-size:28px;font-weight:bold;text-align:center;';
+        $attributsImage=array('border'=>'0','style'=>'display:block;');
+        $spacer='font-size:1px;line-height:1px;-webkit-text-size-adjust:none;';
+        ?>
+        <style type="text/css">
+            p,ul,ol{margin-top:0;margin-bottom:16px;font-size:16px;<?php echo $fontfamily; ?>}
+            li{font-size:16px;<?php echo $fontfamily; ?>}
+        </style>
+    </head>
+    <?php
+    $domain = 'http://' . $_SERVER['SERVER_NAME'];
+    $date_string = $this->dateString;
+    $date_string_url = $this->parutionDate;
+    $titleParution = $this->newsletterTitle;
+    $NR_ModelID = $this->NR_ModelID;
+
+    $tplFirstZone = 'partials/articles/tplOneArticleFirst.phtml';
+    $tplZones = 'partials/articles/tplOneArticles.phtml';
+    $tplPublicite = 'partials/articles/tplOnePublicite.phtml';
+    
+    $absolute_web_root = Zend_Registry::get('absolute_web_root');
+    $themeImgPath = $absolute_web_root . "themes/default/images/common/";
+    $imgHeader = 'header.jpg';
+
+    if (isset($this->imageHeader))
+        $sourceHeader = $this->imageHeader;
+    else
+        $sourceHeader = $themeImgPath . "header-{$this->moduleId}-{$this->newsletterID}-{$this->memberId}.jpg";
+    
+    $repertoireLangueImages='/'.Cible_FunctionsGeneral::getLanguageSuffix($this->languageRelease);
+    
+    $imageFleche = $themeImgPath . "linkReadMore.jpg";
+    $imgHeaderBottom = $themeImgPath . "roundBottom.jpg";
+    $btnPlus = $themeImgPath . "btnPlus.jpg";
+    $dotLineLargeShort = $themeImgPath . 'dotLineLargeShort.jpg';
+    $dotLineLargeLong = $themeImgPath . 'dotLineLargeLong.jpg';
+    $dotLineSmallShort = $themeImgPath . 'grayDottedLine.jpg';
+    $dotLineSmallLong = $themeImgPath . 'dotLineSmallLong.jpg';
+
+    $subscribeLink = $this->subscribeLink . '/uid/' . $this->memberId . '/newsletterID/' . $this->newsletterID;
+    $unsubscribeLink = $this->unsubscribeLink . '/uid/' . $this->memberId . '/newsletterID/' . $this->newsletterID;
+    $countA = $countB = $countC = 0;
+    
+    $logoPath = rtrim(Zend_Registry::get('absolute_web_root'), '/') . $this->locateFile('logo.png', $repertoireLangueImages, 'front');
+    $logo = $this->image($logoPath, null, true);
+    
+    foreach ($this->articles as $article)
+    {
+        if ($article['NA_ZoneID'] == 1)
+            $countA++;
+        if ($article['NA_ZoneID'] == 2)
+            $countB++;
+        if ($article['NA_ZoneID'] == 3)
+            $countC++;
+
+        $articles[$article['NA_ZoneID']][] = $article;
+    }
+    ?>
+    <body>
+        <div style="background-color:#FFFFFF;">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;">
+                <tr>
+                    <td width="10"></td>
+                    <td align="center" style="text-align:center;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="615" align="center" style="margin-left:auto;margin-right:auto;text-align:left;">
+                            <tr>
+                                <td style="<?php echo('text-align:center;'); ?>">
+                                    <?php
+                                    if ($this->isOnline != 2)
+                                    {
+                                        echo "<a style='".$fontfamily."color:#888888;font-size:12px;text-decoration: underline;' href='" ;
+                                        echo Zend_Registry::get('absolute_web_root') . $this->details_release;
+                                        echo "'>";
+                                        echo $this->getCibleText('email_not_show_go_online2', $this->languageRelease);
+                                        echo "</a>";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="20"></td></tr>
+                            <tr>
+                                <td style="text-align:center;" style="margin:0px;"><?php echo($logo); ?></td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="35"></td></tr>
+                            <tr>
+                                <td style="margin:0px;"><?php echo $this->intro;?></td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="20"></td></tr>
+                            <?php
+                            if (isset($articles[1])){
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                        echo $this->partial(
+                                            $tplFirstZone, array(
+                                                'articles' => $articles[1],
+                                                'currentSite' => $this->currentSite,
+                                                'newsletterID' => $this->newsletterID,
+                                                'details_page' => $this->details_page,
+                                                'dateStringUrl' => $date_string_url,
+                                                'parutionValUrl' => $this->parutionValUrl,
+                                                'memberId' => $this->memberId,
+                                                'repertoireLangueImages' => $repertoireLangueImages,
+                                            )
+                                        );
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="20"></td></tr>
+                            <?php
+                            }
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php if (isset($articles[2])){ ?>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="294" align="left">
+                                            <tr>
+                                                <td>
+                                                <?php
+                                                if (isset($articles[2]))
+                                                    echo $this->partial(
+                                                        $tplZones, array(
+                                                            'articles' => $articles[2],
+                                                            'dotLineSmallLong' => $dotLineSmallLong,
+                                                            'currentSite' => $this->currentSite,
+                                                            'newsletterID' => $this->newsletterID,
+                                                            'details_page' => $this->details_page,
+                                                            'dateStringUrl' => $date_string_url,
+                                                            'parutionValUrl' => $this->parutionValUrl,
+                                                            'memberId' => $this->memberId,
+                                                            'repertoireLangueImages' => $repertoireLangueImages,
+                                                        )
+                                                    );
+                                                ?>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    <?php } ?>
+
+                                    <?php if (isset($articles[3])){ ?>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="294" align="right">
+                                            <tr>
+                                                <td>
+                                                <?php
+                                                if (isset($articles[3]))
+                                                    echo $this->partial(
+                                                        $tplZones, array(
+                                                            'articles' => $articles[3],
+                                                            'dotLineSmallLong' => $dotLineSmallLong,
+                                                            'currentSite' => $this->currentSite,
+                                                            'newsletterID' => $this->newsletterID,
+                                                            'details_page' => $this->details_page,
+                                                            'dateStringUrl' => $date_string_url,
+                                                            'parutionValUrl' => $this->parutionValUrl,
+                                                            'memberId' => $this->memberId,
+                                                            'repertoireLangueImages' => $repertoireLangueImages,
+                                                        )
+                                                    );
+                                                ?>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <?php if (isset($articles[4])){ ?>
+                            <tr>
+                                <td bgcolor="#edeeef" style="background-color:#edeeef;">
+                                    <table cellpadding="0" cellspacing="0" border="0" width="615">
+                                        <tr>
+                                            <td style="<?php echo $spacer; ?>" colspan="3" height="20"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20"></td>
+                                            <td>
+                                                <?php
+                                                    echo $this->partial(
+                                                        $tplPublicite, array(
+                                                            'articles' => $articles[4],
+                                                            'dotLineSmallLong' => $dotLineSmallLong,
+                                                            'currentSite' => $this->currentSite,
+                                                            'newsletterID' => $this->newsletterID,
+                                                            'details_page' => $this->details_page,
+                                                            'dateStringUrl' => $date_string_url,
+                                                            'parutionValUrl' => $this->parutionValUrl,
+                                                            'memberId' => $this->memberId,
+                                                            'repertoireLangueImages' => $repertoireLangueImages,
+                                                        )
+                                                    );
+                                                ?>
+                                            </td>
+                                            <td width="20"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="<?php echo $spacer; ?>" colspan="3" height="20"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                            <tr><td style="<?php echo $spacer; ?>" height="37"></td></tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="1" bgcolor="#edeeef" style="background-color:#edeeef;"></td></tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="37"></td></tr>
+                            <tr>
+                                <td style="text-align:center;font-size:14px;<?php echo $colorTitre.$fontfamily; ?>;font-weight:bold;text-transform:uppercase;">
+                                    <?php echo $this->getCibleText('follow_us'); ?>
+                                </td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="10"></td></tr>
+                            <tr>
+                                <td>
+                                    <table cellpadding="0" cellspacing="0" border="0" width="152" align="center">
+                                        <tr>
+                                            <td>
+                                                <a href="https://www.facebook.com/pages/Suite-interactive-donna/665660646875581?fref=ts"><?php echo $this->image($this->locateFile('icon-facebook-newsletter.gif', null,'front'), array('direct' => true, 'alt' => 'Facebook', 'style' => 'display:block;')); ?></a>
+                                            </td>
+                                            <td width="12"></td>
+                                            <td>
+                                                <a href="https://twitter.com/suite_donna"><?php echo $this->image($this->locateFile('icon-twitter-newsletter.gif', null,'front'), array('direct' => true, 'alt' => 'Twitter', 'style' => 'display:block;')); ?></a>
+                                            </td>
+                                            <td width="12"></td>
+                                            <td>
+                                                <a href="https://www.linkedin.com/company/9375757?trk=tyah&trkInfo=clickedVertical%3Ashowcase%2Cidx%3A3-1-8%2CtarId%3A1430226346665%2Ctas%3Asuite%20inter"><?php echo $this->image($this->locateFile('icon-pinterest-newsletter.gif', null,'front'), array('direct' => true, 'alt' => 'Pinterest', 'style' => 'display:block;')); ?></a>
+                                            </td>
+                                            <td width="12"></td>
+                                            <td>
+                                                <a href="https://www.youtube.com/channel/UCrxTXCeMWSE20RVAjUFYuhA"><?php echo $this->image($this->locateFile('icon-googleplus-newsletter.gif', null,'front'), array('direct' => true, 'alt' => 'Google+', 'style' => 'display:block;')); ?></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="37"></td></tr>
+                            <tr>
+                                <td style="background-color:#EDEEEF;" bgcolor="#EDEEEF">
+                                    <table cellpadding="0" cellspacing="0" border="0" width="615" align="center">
+                                        <tr><td style="<?php echo $spacer; ?>" height="19"></td></tr>
+                                        <tr>
+                                            <td style="<?php echo($fontfamily.'font-size:12px;color:#525252;text-align:center;'); ?>">
+                                                <a target="_blank" style="<?php echo($fontfamily.$underline.'font-size:12px;color:#525252;'); ?>" href="<?php echo Zend_Registry::get('absolute_web_root') . $subscribeLink; ?>">
+                                                    <?php echo($this->getCibleText('newsletter_button_subscribe', $this->languageRelease)); ?>
+                                                </a>
+                                                &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                                                <a target="_blank" style="<?php echo($fontfamily.$underline.'font-size:12px;color:#525252;'); ?>" href="<?php echo Zend_Registry::get('absolute_web_root') . $unsubscribeLink; ?>">
+                                                    <?php echo($this->getCibleText('newsletter_button_unsubscribe', $this->languageRelease)); ?>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr><td style="<?php echo $spacer; ?>" height="19"></td></tr>
+                                        <tr>
+                                            <td style="<?php echo($fontfamily.'font-size:14px;color:#525252;text-align:center;text-transform:uppercase;'); ?>">
+                                                2014 © Fondation Du Coeur
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="<?php echo($fontfamily.'font-size:14px;color:#525252;text-align:center;'); ?>">
+                                                4545, Blvd De La Fondation, Montréal (Québec)  J1J 1J1
+                                            </td>
+                                        </tr>
+                                        <tr><td style="<?php echo $spacer; ?>" height="19"></td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="29"></td></tr>
+                            <tr>
+                                <td>
+                                    <?php echo $this->getClientText('footer_partnership_newsletter'); 
+                                    /*<table cellpadding="0" cellspacing="0" border="0" width="410" align="center">
+                                        <tr>
+                                            <td width="90" height="40" valign="bottom" style="font-family:Arial,Helvetica,sans-serif;line-height:normal;font-size:11px;color:#525252;text-align:right;">Propulsé par:</td>
+                                            <td width="13" rowspan="2"></td>
+                                            <td rowspan="2" width="90"><img src="http://donna-ml.dev.ciblesolutions.com/themes/default/images/fr/logo-donna-newsletter.gif" border="0" style="display:block;" alt="" /></td>
+                                            <td width="122" height="40" valign="bottom" style="font-family:Arial,Helvetica,sans-serif;line-height:normal;font-size:11px;color:#525252;text-align:right;">Sécurisé par:</td>
+                                            <td width="13" rowspan="2"></td>
+                                            <td rowspan="2" width="85"><img src="http://donna-ml.dev.ciblesolutions.com/themes/default/images/common/logo-eaccept-newsletter.gif" border="0" style="display:block;" alt="" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size:1px;line-height:1px;-webkit-text-size-adjust:none;" height="4"></td>
+                                            <td style="font-size:1px;line-height:1px;-webkit-text-size-adjust:none;" height="4"></td>
+                                        </tr>
+                                    </table>*/?>
+                                </td>
+                            </tr>
+                            <tr><td style="<?php echo $spacer; ?>" height="29"></td></tr>
+                        </table>
+                    </td>
+                    <td width="10"></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

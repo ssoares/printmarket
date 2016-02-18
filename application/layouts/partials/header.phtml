@@ -1,0 +1,77 @@
+<?php
+$config = Zend_Registry::get("config");
+$lang = $this->view->languageId;
+$replace = array('<p>' => '', '<P>' => '', '</p>' => '', '</P>' => ''
+    , '%%%SITE_NAME%%%' => $config->site->title->$lang);
+$imgAlt = $this->getClientText('home_page_link_title', null, $replace);
+$imageFirstALT = "";
+if (Zend_Registry::isRegistered('altImageFirst')) {
+    $imageFirstALT = Zend_Registry::get('altImageFirst');
+}
+if ($imageFirstALT == "") {
+    if (Zend_Registry::isRegistered('pageTitle')) {
+        $imageFirstALT = Zend_Registry::get('pageTitle');
+    } else if ($imgAlt != "") {
+        $imageFirstALT = $imgAlt;
+    } else {
+        $imageFirstALT = $config->site->title->$lang;
+    }
+}
+?>
+<div class="site-header-container container">
+    <div class="site-name">
+        <?php
+        $homeDetails = Cible_FunctionsPages::getHomePageDetails();
+        $logo = $config->clientLogo->src;
+        echo $this->link(
+                $this->baseUrl() . '/' . $homeDetails['PI_PageIndex'], $this->clientImage($logo, array('alt' => $imageFirstALT)), array('title' => $imageFirstALT, 'class' => 'site-logo')
+        );
+        ?>
+        <span class="site-baseline"><?php echo $this->getClientText('site_baseline') ?></span>
+    </div>
+    <button aria-controls="navbar" aria-expanded="false" data-target='.site-menu-principal' data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    </button>
+    <nav class="site-menu-principal navbar navbar-default navbar-collapse collapse" role="navigation">
+        <?php
+        echo $this->menu(
+                'principal', array(
+            'class' => 'nav navbar-nav',
+            'id' => 'menu-principal',
+            'maxLevel' => 3,
+            'dropdownMenuClass' => 'dropdown-menu',
+            'dropdownClass' => 'dropdown',
+            'parentAltId' => 'parentIdTop-')
+        );
+        echo $this->languageSwitcher(array('use_suffix' => true));
+        ?>
+        <?php
+        echo $this->menu(
+                'header', array(
+            'class' => 'site-menu-icons nav navbar-nav',
+            'id' => 'menu-secondaire',
+            'isDropdownMenu' => true,
+            'dropdownMenuClass' => 'dropdown-menu',
+            'dropdownClass' => 'dropdown',
+            'parentAltId' => 'parentIdTop-')
+        );
+        ?>
+        <ul class="site-menu-icons site-menu-cart nav navbar-nav">
+            <li class="">
+                <a href="#" class="icon icon-cart">Cart</a>
+                <!--<span class="cart-number">3</span>-->
+            </li>
+        </ul>
+        <!--    <ul class="navbar-form navbar-left" role="search" id="search-box">
+                <li><input type="hidden" id="search-url" value="<? echo ($this->baseUrl()."/".Cible_FunctionsCategories::getPagePerCategoryView(0,'index',10)."/words");?>"/><input type="text" id="search-box-terme" name="search-box-terme" value="" /><a id="searchLink" href="#"><?php echo $this->clientImage('btn-search-' . Zend_Registry::get("languageSuffix") . '.png') ?></a></li>
+            </ul>-->
+    </nav>
+    <div class="cart-icon-data col-md-1 hidden">
+        <?php $cartPage = '/' . Cible_FunctionsCategories::getPagePerCategoryView(0,
+                'cart_details', 15, null, false); ?>
+        <?php echo $this->link($this->baseUrl() . $cartPage,'<span class="icon-icon icon-cart"></span><span class="cart-icon-arrow"><span class="cart-item-count"></span></span>', array('class' =>'')); ?>
+</div>
+</div>

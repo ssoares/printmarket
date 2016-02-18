@@ -1,0 +1,33 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('input[type=radio][id^=retailerForm-isDistributeur]').click(function(){
+        if($('#retailerForm-isDistributeur-2').is(':checked'))
+            $('fieldset[id^=fieldset-retailerForm]').children().children().each(function(){
+                var label = "";
+                var child = $(this).children().find('input[type=radio][id^=retailerForm-isDistributeur]');
+                if ($(this).children().length)
+                    label = $(this).children().get(0).htmlFor;
+                if(child.length != 2 || label != 'retailerForm-isDistributeur')
+                    $(this).show();
+            });
+        else
+            $('fieldset[id^=fieldset-retailerForm]').children().children().each(function(){
+                var label = "";
+                if ($(this).children().length)
+                    label = $(this).children().get(0).htmlFor;
+                
+                var child = $(this).children().find('input[type=radio][id^=retailerForm-isDistributeur]');
+
+                if(child.length != 2 && label != 'retailerForm-isDistributeur')
+                    $(this).hide();
+            });
+      });
+      $(window).load(function(){
+
+          $('input[type=radio][id^=retailerForm-isDistributeur]').each(function(){
+              if($(this).is(':checked'))
+                  $(this).click();
+          });
+      });
+  });
+</script>

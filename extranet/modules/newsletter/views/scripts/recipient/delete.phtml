@@ -1,0 +1,27 @@
+
+<?php
+
+    $recipient  = $this->recipient;
+?>
+<div id="container_middle_full">    
+<?php
+    if ($recipient):
+?>      <h3><?php echo($recipient['firstName']) ?>&nbsp;<?php echo($recipient['lastName']) ?></h3>
+
+        <p><?php echo str_replace('%MEMBER_NAME%', "<i><b>".$recipient['firstName']." ".$recipient['lastName']."</b></i>", $this->getCibleText('newsletterMember_delete_message_confirmation')) ?></p>
+        <form action="<?php echo $this->url(array('action'=>'delete')); ?>" method="post">
+            <div>
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+        
+    <?php else: ?>
+
+        <p><?php echo $this->getCibleText('module_element_nout_found') ?></p>
+        <a href="<?php echo ($this->return); ?>"><?php echo $this->getCibleText('button_return') ?></a>
+    
+<?php
+    endif;
+?>
+</div>

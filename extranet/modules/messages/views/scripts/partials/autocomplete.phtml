@@ -1,0 +1,17 @@
+<script type="text/javascript">
+/*
+ * Autocomplete actions.
+ * Autocomplete field for the products
+ */
+$(document).ready(function(){
+    var url = "<?php echo $this->baseUrl() ?>/<?php echo $this->module . '/' . $this->controller ?>/autocomplete";
+
+    $('#PV_Description').autocomplete(url);
+    $('#PV_Description').result(function(event, data, formatted){
+        if (data)
+        {
+            $('#PV_ProduitID').val(data[1]);
+        }
+    });
+})
+</script>

@@ -1,0 +1,23 @@
+<div id="login_form">
+    <div id="login_form_header">
+        <?php
+        $config = Zend_Registry::get('config');
+        $src = $this->locateFile($config->clientLogo->src, null, null, $this->currentSite);
+        $logoPath = Zend_Registry::get('fullDocumentRoot') . $src;
+        if (!file_exists($logoPath)){
+            $src = $this->locateFile($config->clientLogo->src);
+        }
+        echo $this->image($src, array(
+//            'height' => $config->clientLogo->height,
+//            'width' => $config->clientLogo->width,
+            'alt' => $config->clientLogoAlt,
+        )); ?>
+        <h1><?php echo $this->getCibleText('form_title_login') ?></h1>
+    </div>
+    <div id="login_form_content">
+        <?php if( isset($this->error) ): ?>
+            <p id="login_form_error"><?php echo $this->error ?></p>
+        <?php endif; ?>
+        <?php echo $this->form; ?>
+    </div>
+</div>

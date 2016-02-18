@@ -1,0 +1,40 @@
+
+//input number
+.input-number-container {
+    position:relative;
+    display:inline-block;
+    input {
+        margin-bottom:0;
+        padding-right: 26px;
+        &::-ms-clear {
+            display: none;
+        }
+    }
+    .input-number-arrow {
+        height:10px;
+        line-height:10px;
+        width:12px;
+        position:absolute;
+        right:14px;
+        .non-responsive-font(12px);
+        color:@brand-grey;
+        cursor:pointer;
+        &:after { 
+            .import-icon-base();
+        }
+        &.arrow-up {
+            &:after { 
+                content:"";
+                .caret-up(10px,@brand-black);
+            }
+            top:6px;
+        }
+        &.arrow-down {
+            &:after { 
+                content:"";
+                .caret-down(10px,@brand-black);
+            }
+            bottom:6px;
+        }
+    }
+}

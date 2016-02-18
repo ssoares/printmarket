@@ -1,0 +1,37 @@
+<?php
+    if( $this->isXmlHttpRequest ){
+        if($this->deleted){
+            if($this->success){
+?>              <div id="result">
+                    <span id="action" style="display: none">deleteGallery</span>
+                    <span id="success" style="display: none">true</span>
+                    <span id="galleryID" style="display: none"><?php echo $this->galleryID ?></span>
+                </div>
+<?php       }
+            else{
+?>              <p>Cette galerie n'existe plus dans le système</p>
+                <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                    <div>
+                        <input type="submit" id="delete" name="delete" value="OK" />
+                    </div>
+                </form>
+<?php       }
+        }
+        elseif( $this->success ){
+?>          <div id="result">
+                <span id="action" style="display: none">addImage</span>
+                <span id="success" style="display: none">true</span>
+                <span id="galleryID" style="display: none"><?php echo $this->galleryID ?></span>
+                <span id="imageID" style="display: none"><?php echo $this->imageID ?></span>
+                <span id="orginalName" style="display: none"><?php echo $this->orginalName ?></span>
+                <span id="thumbName" style="display: none"><?php echo $this->thumbName ?></span>
+                <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                <span id="imageTitle" style="display: none"><?php echo $this->imageTitle ?></span>
+            </div>
+<?php   }
+        else{
+?>          <div id="container_middle_full">
+                <?php  echo($this->form); ?>
+            </div>
+<?php   }
+    }

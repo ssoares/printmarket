@@ -1,0 +1,90 @@
+<script type="text/javascript">
+$(document).ready(function(){
+
+    var baseUrl      = "<?php echo $this->baseUrl() ?>";
+    var currentTitle = $("input#FI_Title").val();
+    var currentLang = $("#langSelector").val();
+
+    $(window).load(function() {
+        $("#formData").hide();
+        $("#currentTitle").html(currentTitle);
+        $('#scrollUpFormHeader').hide();
+
+        if($('#F_Notification').is(':checked'))
+        {
+            $('#FN_Email').slideUp('display', 'inline');
+        }
+        else
+        {
+            $('#FN_Email').css('display', 'none');
+        }
+
+    });
+
+//    manageLanguage.init(baseUrl, currentLang);
+    //**update form title with simple click**
+    // Hide the text and create an input field
+    $("#currentTitle").click(function(){
+        currentTitle = $("#currentTitle").text();
+        $(this).hide();
+        $('input#newTitle').val(currentTitle);
+        $('input#newTitle').css('display', 'block');
+        $('input#newTitle').focus();
+    });
+    // send data
+    $('input#newTitle').live('blur', function(event){
+        updateParam.init($(this), baseUrl, event);
+    });
+    $('#FI_Title').blur(function(event){
+        updateParam.init($(this), baseUrl, event);
+    });
+    $('#F_Notification').click(function(event){
+        updateParam.init($(this), baseUrl, event);
+    });
+    $('#F_Profil').click(function(event){
+        updateParam.init($(this), baseUrl, event);
+    });
+    $('#F_Captcha').click(function(event){
+        updateParam.init($(this), baseUrl, event);
+    });
+
+    $('#FN_Email').blur(function(event){
+        updateParam.init($(this), baseUrl, event);
+    });
+
+    // Display form for parameters modification
+    $('#button_zone').click(function(){
+        var elem = $(this).find('img:visible').attr('id');
+        displayForm.click(elem);
+    });
+
+    // Enter keypress deactivated
+    $('#FI_Title').live('keydown', function(e) {
+        if(e.keyCode == 13) {
+            e.preventDefault();
+            
+            return false;
+        }
+    });
+
+    $('#F_Notification').live('click', function(){
+        if($('#FN_Email').is(':visible'))
+        {
+            $('#FN_Email').css('display', 'none');
+        }
+        else
+        {
+            $('#FN_Email').css('display', 'inline');
+        }
+    });
+
+     // Display form for parameters modification
+//    $('#langSwitcher').click(function(){
+//        var elem = $(this).find('img:visible');
+//
+//        manageLanguage.switchLang(elem, baseUrl);
+//    });
+
+
+});
+</script>

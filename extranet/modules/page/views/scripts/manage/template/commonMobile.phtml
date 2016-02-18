@@ -1,0 +1,52 @@
+<div id="template" style="width: 958px; text-align: center;" >
+<?php
+    // One place_holder template, so grab only the first place_holder elements
+    $ph1_blocks = isset($this->blocks[1]) ? $this->blocks[1] : array();
+    $ph2_blocks = isset($this->blocks[2]) ? $this->blocks[2] : array();
+?>
+
+    <table width="320px" style="margin: 0 auto">
+    <tr>
+        <td valign="top" width="320px">
+            <!-- Placeholder Left Menu
+            <div class="zone_panel zone_desactive_panel block_title">
+                Menu de gauche<br><br>
+            </div>-->
+
+            <!-- Placeholder 1 -->
+            <div class="zone_panel zone_1_panel">
+                <ul id="zone_1" class="zone connectedSortable">
+
+                    <?php
+
+                    $rows = $ph1_blocks;
+                    $totalRow = count($rows);
+                    $i = 1;
+
+                    foreach ($rows as $block):
+                        $module         = $block['M_MVCModuleTitle'];
+                        $param = array(
+                            'ID'         => $block['B_ID'],
+                            'pageID'     => $block['B_PageID'],
+                            'position'   => $i,
+                            'totalBlock' => $totalRow,
+                            'blockTitle' => $block['BI_BlockTitle'],
+                            'status'     => $block['B_Online'],
+                            'secured'    => $block['B_Secured']
+                            );
+
+                        ?>
+                        <li id="module-<?php echo $module ?>" class="ui-state-default" module="<?php echo $module ?>" pageid="<?php echo $param['pageID'] ?>" blockid="<?php echo $param['ID'] ?>" zoneid="1"><?php echo $this->action('manage-block','index',$module, $param); ?></li>
+
+                        <?php
+
+                        $i++;
+                    endforeach; ?>
+
+                 </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+
+</div>

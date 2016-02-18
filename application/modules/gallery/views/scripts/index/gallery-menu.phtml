@@ -1,0 +1,32 @@
+<div class="galleries_menu">    
+    <ul id="ul_submenu" class="open">
+        <input class="urlDisplayNone" type="hidden" value = "parentid-<?php echo $this->menuSelectedItem; ?>">        
+        <?php      
+        foreach($this->arrayLinks as $links){
+            if($this->parentID==$links['ID']){
+                echo "<li id='subMenu-" . $links['ID'] . "' class='level-1 selected'>";
+                echo "<a href='" . $links['link'] . "'>";
+                echo $links['title'];
+                echo "</a></li>";
+                ?>
+                
+                <?php
+            }
+            else{
+                echo "<li id='subMenu-" . $links['ID'] . "' class='level-1'>";
+                echo "<a href='" . $links['link'] . "'>";
+                echo $links['title'];
+                echo "</a></li>";
+            }           
+        }       
+        ?>
+    </ul>
+    <li id="subMenu-18" class="selected first level-1">    
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+    
+        var menuID = $(".urlDisplayNone").val();    
+        $('ul#ul_main-menu li#' + menuID).addClass("selected");
+    });
+</script>

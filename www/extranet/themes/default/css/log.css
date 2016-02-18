@@ -1,0 +1,30 @@
+/*
+    Document   : log
+    Created on : 2011-09-27, 15:01:46
+    Author     : soaser
+    Description:
+        Style for the statistics of the newsletter
+    $Id: log.css 835 2012-02-07 15:23:22Z ssoares $
+*/
+@import url("dataTable.css");
+
+#log {
+    width: 100%;
+}
+.dataTables_wrapper{
+/*    text-align: center;*/
+}
+#log th {
+    width: 12% !important;
+}
+#log th.last{
+    width: 64% !important;
+}
+
+.ui-tabs .ui-tabs-nav li.logTab{
+    float: right;
+}
+.alignLeft{
+    text-align: left;
+    padding: 5px
+}

@@ -1,0 +1,104 @@
+<?php
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{#upload.title}</title>
+<!--[if IE]><script type="text/javascript" src="js/utils/fixpng.js"></script><![endif]-->
+<!--
+
+-->
+</head>
+<body>
+<div class="dialog">
+<?php
+    $returnPath = $this->returnPath;
+    $picToCrop = $this->picToCrop;
+    echo $picToCrop;
+?>
+</div>
+
+<div align="center">
+        <img src="<?php echo $picToCrop; ?>" style="float: left; margin-right: 10px;" id="thumbnail" alt="Create Thumbnail" />
+        <div id="smallThumb" style="border:1px #e5e5e5 solid; float:left; position:relative; overflow:hidden;">
+                <img src="<?php echo $picToCrop; ?>" style="position: relative;" alt="Thumbnail Preview" />
+        </div>
+        <form name="thumbnail" action="crop.phtml" method="get" >
+                <input type="hidden" name="x1" value="" id="x1" />
+                <input type="hidden" name="y1" value="" id="y1" />
+                <input type="hidden" name="x2" value="" id="x2" />
+                <input type="hidden" name="y2" value="" id="y2" />
+                <input type="hidden" name="w" value="" id="w" />
+                <input type="hidden" name="h" value="" id="h" />
+                <input type="hidden" name="fileName" id="fileName" value="<?php echo $picToCrop; ?>" />
+                <input type="submit" name="upload_thumbnail" value="Save Thumbnail" id="save_thumb" />
+        </form>
+</div>
+
+    <script type="text/javascript" src="<?php echo $this->locateFile('moxman.loader.min.js', 'tinymce/plugins/moxiemanager/js'); ?>"></script>
+<script type="text/javascript" src="js/jquery/jquery-pack.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.imgareaselect.min.js"></script>
+
+<script type="text/javascript">
+
+    var heightT = $('#thumbnail').height();
+    var widthT = $('#thumbnail').width();
+    var cinqWidth = widthT/5;
+    var cinqHeight = heightT/5;
+    $('#smallThumb').height(cinqHeight);
+    $('#smallThumb').width(cinqWidth);
+function preview(img, selection) {
+
+	var scaleX = cinqWidth / selection.width;
+	var scaleY = cinqHeight / selection.height;
+
+	$('#thumbnail + div > img').css({
+		width: Math.round(scaleX * widthT) + 'px',
+		height: Math.round(scaleY * heightT) + 'px',
+		marginLeft: '-' + Math.round(scaleX * selection.x1) + 'px',
+		marginTop: '-' + Math.round(scaleY * selection.y1) + 'px'
+	});
+	$('#x1').val(selection.x1);
+	$('#y1').val(selection.y1);
+	$('#x2').val(selection.x2);
+	$('#y2').val(selection.y2);
+	$('#w').val(selection.width);
+	$('#h').val(selection.height);
+}
+
+$(document).ready(function () {
+
+
+        if(widthT>heightT){
+            var ratio = widthT/heightT + ":1";
+        }
+        else{
+            var ratio = "1:" + heightT/widthT;
+        }
+
+        $('#thumbnail').imgAreaSelect({ aspectRatio: ratio, onSelectChange: preview });
+	$('#save_thumb').click(function() {
+		var x1 = $('#x1').val();
+		var y1 = $('#y1').val();
+		var x2 = $('#x2').val();
+		var y2 = $('#y2').val();
+		var w = $('#w').val();
+		var h = $('#h').val();
+		if(x1=="" || y1=="" || x2=="" || y2=="" || w=="" || h==""){
+			alert("You must make a selection first");
+			return false;
+		}else{
+			return true;
+		}
+	});
+});
+
+
+
+
+
+</script>
+</body>
+</html>

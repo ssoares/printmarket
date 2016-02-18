@@ -1,0 +1,44 @@
+/*
+    Document   : imagesfiles
+    Created on : 2013-01-25, 14:57:44
+    Author     : soaser
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+div#form_panel.list input[type=checkbox]{
+    vertical-align: middle;
+    margin: 8px 0;
+}
+div#form_panel.list label.label_after_checkbox{
+    display: inline;
+}
+div#form_panel.list img{
+    display: block;
+    margin: 0 auto;
+}
+
+div#form_panel.list ul li{
+    display: inline;
+    border: 0;
+    border-right: 1px solid #B7B9BA;
+    margin: 2px;
+}
+div#form_panel.list ul li.last{
+    border: 0;
+}
+
+fieldset#fieldset-groupLeft{
+    float: left;
+    margin-right: 25px;
+    min-width: 270px;
+}
+
+fieldset#fieldset-groupRight{
+    float: left;
+    margin-top: 20px;
+}
+
+dd.left{
+    float: left;
+}

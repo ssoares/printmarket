@@ -1,0 +1,17 @@
+<?php
+    echo $this->partial('partials/header.pageDetails.phtml', array(
+        //'pageTitle' => 'Gestion de la structure des pages',
+        //'pageDescription' => 'Sur cette page, vous pouvez gérer la structure des pages en y ajoutant les blocs désirés. Pour ajouter un bloc, faites glisser l\'icône vers l\'endroit désiré.'
+        'pageTitle' => str_replace('%MODULE_NAME%', $this->getCibleText('module_' . $this->current_module),$this->getCibleText('categories_add_page_title')),
+        'pageDescription' => $this->getCibleText('categories_page_description')
+    ));
+    
+    
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo $this->form ?>    
+    </div>
+</div>
+

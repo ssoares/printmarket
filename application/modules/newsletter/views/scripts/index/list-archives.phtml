@@ -1,0 +1,62 @@
+<section class="newsletter module list-archives">
+    <?php echo $this->showBlockTitle('h2', array('class' => 'newsletter-title'));?>
+    <div class="newsletter-list-archives">
+        <?php
+        if (count($this->listArchives) > 0) {
+            ?>
+            <?php
+            foreach ($this->listArchives as $archive) {
+                $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+                $date = new Zend_Date($archive['NR_Date'], null, $langSuffix);
+                $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG_NO_DAY, '.');
+                $date_string_url = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SQL, '-');
+                ?>
+                <div class="newsletter-archives">
+                    <a class="newsletter-archives-header" href="<?php echo $this->baseUrl() . '/' . $this->detailsRelease . "/" . $date_string_url . "/" . $archive['NR_ValUrl'] ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+                    <!--<a href="<?php echo $this->detailsRelease . '/ID/' . $archive['NR_ID'] ?>" class="archives-date">-->
+                        <?php echo($date_string); ?>
+                    </a>
+                    <a class="newsletter-archives-description" href="<?php echo $this->baseUrl() . '/' . $this->detailsRelease . "/" . $date_string_url . "/" . $archive['NR_ValUrl'] ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+                        <?php echo($archive['NR_Title']); ?>
+                    </a>
+                </div>
+                <?php
+            }
+            ?>
+            <?php
+        } else {
+            ?>
+            <div class="newsletter-no-archive"><?php echo($this->getClientText('newsletter_no_archives_client')); ?></div>
+            <?php
+        }
+        ?>
+    </div>
+
+    <div class="newsletter-archives-select">
+        <?php
+        echo $this->formSelect;
+        ?>
+    </div>
+    <nav class="newsletter-options">
+        <a href="<?php echo $this->subscribeLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_subscribe')); ?>
+        </a>
+        <a href="<?php echo $this->unsubscribeLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_unsubscribe')); ?>
+        </a>
+        <a href="<?php echo $this->archivesLink; ?>">
+            <?php echo($this->getCibleText('newsletter_button_archives')); ?>
+        </a>
+    </nav>
+</section>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        $('#listeFiltre').change(function() {
+            $('#filterByDate').submit();
+        });
+    });
+    //]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

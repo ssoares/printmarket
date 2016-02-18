@@ -1,0 +1,76 @@
+<?php $x = 1; ?>
+<?php
+foreach ($this->articles as $article):
+    if (!empty($article['NA_ImageSrc'])):
+
+        $config = Zend_Registry::get('config')->toArray();
+        $thumbMaxHeight = $config['newsletter']['image']['medium']['maxHeight'];
+        $thumbMaxWidth = $config['newsletter']['image']['medium']['maxWidth'];
+    endif;
+    ?>
+    <table border="0" cellpadding="0" cellspacing="0">
+        <?php if ($article['NA_Category'] != "" && $x < 2): ?>
+            <tr>
+                <td height="15" width="264" bgcolor="#EAEEF3" style="text-transform: uppercase;height:15px;border-bottom:3px solid #9CB346; background-color:#EAEEF3; color: #000000;font-family: arial;font-size: 16px;font-weight: normal;padding: 4px 10px 5px;">
+                    <?php echo($article['NA_Category']); ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+        <tr>
+            <td style="padding-top:8px;padding-left:10px;padding-right:10px;">
+                <table>
+                    <tr>
+                        <?php if (!empty($article['NA_ImageSrc'])): ?>
+                        <td valign="top" style="padding-right:0px;width:90px" rowspan="3">
+                                <p>
+                                    <?php $show = true; ?>
+                                    <?php if ($article['NA_TextLink'] == 2): ?>
+                                        <a style="border-bottom: 0px;text-decoration:none;font-family:arial;font-size: 11px;line-height: 11px;color: #CC7643;" href="<?php echo $article['NA_URL']; ?>" target="_blank">
+                                    <?php endif; ?>
+                                            <img style="width: 90px" src="<?php echo Zend_Registry::get('absolute_web_root') ?>/data/images/newsletter/<?php echo($this->newsletterID); ?>/<?php echo($article['NA_ID']); ?>/<?php echo(str_replace($article['NA_ImageSrc'], $thumbMaxWidth . 'x' . $thumbMaxHeight . '_' . $article['NA_ImageSrc'], $article['NA_ImageSrc'])); ?>" alt="<?php echo($article['NA_ImageAlt']); ?>"/>
+                                    <?php if ($article['NA_TextLink'] == 2): ?>
+                                        </a>
+                                    <?php endif; ?>
+                                    <br />
+                                    <span style="font-family: arial;font-size: 11px;color: #9DB54B; font-weight: bold;line-height: 11px;">
+                                        <?php echo $article['NA_ImageAlt']; ?>
+                                    </span>
+                                </p>
+                            </td>
+                            <td width="15" rowspan="3">&nbsp;</td>
+                        <?php endif; ?>
+                        <td valign="top" >
+                            <p class="artTitle" style="font-family:arial;font-size:14px;font-weight: bold;padding-bottom: 5px;">
+                                <?php echo($article['NA_Title']); ?>
+                            </p>
+                            <?php
+                            if ($article['NA_Resume'])
+                                echo str_replace('src="/data/images/', 'src="' . Zend_Registry::get('absolute_web_root') . '/data/images/', $article['NA_Resume']);
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:0px;padding-top:30px;" colspan="2">
+                            <?php if (!empty($article['NA_ImageSrc'])): ?>
+                            <img src="<?php echo $this->dotLineSmallShort; ?>" alt="" border="0">
+                        <?php else: ?>
+                            <img src="<?php echo $this->dotLineSmallLong; ?>" alt="" border="0">
+                        <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-top:10px;">
+                            <?php if ($article['NA_TextLink'] == 2): ?>
+                                <a style="text-transform: uppercase;font-family:arial;font-size: 13px;font-weight: bold;line-height: 11px;color: #98AA5E;" href="<?php echo $article['NA_URL']; ?>" target="_blank">
+                                    <?php echo $this->getClientText('newsletter_subscribe_event'); ?>
+                                    <img style="vertical-align: -20%;" src="<?php echo $this->btnPlus;?>" alt="" border="0">
+                                </a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <?php $x++; ?>
+<?php endforeach; ?>

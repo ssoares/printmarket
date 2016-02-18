@@ -1,0 +1,164 @@
+<?php
+$_viewscript = $this->viewscript ? $this->viewscript : 'partials/generic.paginator.phtml';
+$fc = Zend_Controller_Front::getInstance();
+$request = $this->view->request;
+$params = $request->getParams();
+$defaults = array_slice($params, 0, 3);
+$defaults['page'] = isset($params['page']) ? $params['page'] : null;
+$defaults['perPage'] = isset($params['perPage']) ? $params['perPage'] : null;
+$defaults['order'] = isset($params['order']) ? $params['order'] : null;
+$defaults['order-direction'] = isset($params['order-direction']) ? $params['order-direction'] : null;
+$resetSearchUrl = $this->view->url($defaults, null, true);
+?>
+<?php if ($this->disable_export_to_excel != 'true' || !empty($this->commands)): ?>
+    <div id="action_panel" class="list_action_panel">
+        <?php if ($this->disable_export_to_excel != "true"): ?>
+            <div class="exporter">
+                <a href="<?php echo $this->url(array('action' => $this->to_excel_action)) ?>" id="export_to_excel" class="export_to_excel"><?php echo $this->getCibleText('export_to_excel') ?></a>
+            </div>
+        <?php endif; ?>
+        <?php if ($this->commands): ?>
+            <ul class="buttons">
+                <?php foreach ($this->commands as $command): ?>
+                    <li><?php echo $command ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+<div class="searchable-list">
+    <div id="form_panel" class="list">
+        <?php if (count($this->paginator)): ?>
+            <?php $i = 1; ?>
+            <?php foreach ($this->paginator as $item): ?>
+                <?php $i == 0 ? $i = 1 : $i = 0; ?>
+                    <?php
+                    $id = $item[$this->field_list['idField']];
+                    $img = $item[$this->field_list['filenameField']];
+                    ?>
+                <div class="image">
+                    <?php
+                    $id = $item[$this->field_list['idField']];
+                    $img = $item[$this->field_list['filenameField']];
+                    echo $this->moduleImage(
+                        $this->moduleName, $id, $img, $this->field_list['format'], array('class' => '')
+                    );
+                    ?>
+                    <ul>
+                        <?php $classLast = ''; ?>
+                        <?php $count = 1; ?>
+                        <?php foreach ($this->action_links as $key => $value): ?>
+                            <?php
+                            if ($count == count($this->action_links))
+                                $classLast = ' last';
+                            if (!empty($value['findReplace']))
+                            {
+                                if (isset($value['findReplace']['search']) && isset($value['findReplace']['replace']))
+                                {
+                                    $value['url'] = str_replace($value['findReplace']['search'], $item[$value['findReplace']['replace']], $value['url']);
+                                }
+                                elseif (count($value['findReplace']) > 0)
+                                {
+                                    foreach ($value['findReplace'] as $operation)
+                                        $value['url'] = str_replace($operation['search'], $item[$operation['replace']], $value['url']);
+                                }
+                            }
+                            ?>
+                            <li class="<?php echo $classLast; ?>">
+                                <?php if ($count == 1): ?>
+                                    <input type="hidden" id="urlPost" value="<?php echo $value['url'] ?>" />
+                                    <a id="listLink" href="<?php echo $value['url'] ?>" style="display: none;"></a>
+                                <?php endif; ?>
+                                <?php if ($key == 'edit-list'): ?>
+                                    <span class="label_after_checkbox action_<?php echo $key ?>">
+                                        <input type="checkbox" value="<?php echo $item['IL_ID'] ?>" id="addToList-<?php echo $item['IL_ID'] ?>" name="addToList">
+                                        <label class="optional label_after_checkbox" for="addToList"><?php echo $value['label'] ?></label>
+                                    </span>
+                                <?php else: ?>
+                                    <a class="action_<?php echo $key ?>" href="<?php echo $value['url'] ?>"><?php echo $value['label'] ?></a>
+                                <?php endif; ?>
+                            </li>
+                            <?php $count++; ?>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endforeach; ?>
+            <?php
+        else:
+            echo $this->getCibleText('gallery_no_gallery');
+        endif;
+        ?>
+    </div>
+    <?php echo $this->paginationControl($this->paginator, 'sliding', $_viewscript); ?>
+</div>
+<div id="alertListEmpty" style="display: none;" title="<?php echo $this->getCibleText('alert_list_empty_title') ?>">
+    <?php echo $this->getCibleText('alert_list_empty_text'); ?>
+</div>
+<?php
+$idsList = array();
+if (!empty($_SESSION['idsList']))
+    $idsList = $_SESSION['idsList'];
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function() {
+        var checkboxSelect = $('input[id^=addToList-]');
+        $('#selectAll').click(function() {
+            var list = new Array();
+            var data = {'idsList': 0};
+            var url = $('#urlPost').val();
+            if ($(this).is(':checked'))
+            {
+                $('input[id^=addToList-]').attr('checked', 'checked');
+                checkboxSelect.each(function() {
+                    if ($(this).is(':checked'))
+                        list.push($(this).val());
+                });
+            }
+            else
+            {
+                $('input[id^=addToList-]').removeAttr('checked');
+            }
+
+            data.idsList = list;
+            $.post(url, data, function(success) {
+            }, 'json');
+        });
+
+        $('#edit-list').click(function(e) {
+            if ($(this).attr('href') === '#')
+                e.preventDefault();
+
+            var list = new Array();
+            var data = {'idsList': 0};
+            var url = $('#urlPost').val();
+            checkboxSelect.each(function() {
+                if ($(this).is(':checked'))
+                    list.push($(this).val());
+            });
+
+            data.idsList = list;
+            if (list.length > 0)
+                $.post(url, data, function(success) {
+                    if (success)
+                        $(location).attr('href', url + '/redirect/1');
+                }, 'json');
+            else
+                $('#alertListEmpty').dialog();
+
+        });
+
+        var nbChecked = 0;
+        var idsList = <?php echo json_encode($idsList); ?>;
+        $.each(idsList, function(i, id) {
+            $('input[id^=addToList-' + id + ']').attr('checked', 'checked');
+            nbChecked = i + 1;
+        });
+        var nbCheckbox = checkboxSelect.length;
+        if (nbCheckbox === nbChecked)
+            $('#selectAll').attr('checked', 'checked');
+
+    });
+    //]]>
+</script>

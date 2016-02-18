@@ -1,0 +1,171 @@
+<?php
+$langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+$date = new Zend_Date($this->parution_date, null, $langSuffix);
+$date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG, ' ');
+$date_string_url = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SQL, '-');
+
+$zones_secondaires = array(2, 3);
+?>
+<section class="details-release newsletter module content">
+    <h1 class="newsletter-parution-title">
+        <?php
+        echo $this->parution_title;
+        ?>
+    </h1>
+    <div class="newsletter-parution-date date">
+        <?php echo $date_string; ?>
+    </div>
+    <article class="newsletter-top-news newsletter-news">
+        <?php
+        foreach ($this->articles as $article) {
+            if ($article['NA_ZoneID'] == 1) {
+                $linkToArticle = $this->baseUrl() . '/' . $this->details_page . "/" . $date_string_url . "/" . $this->parutionValURL . "/" . $article['NA_ValUrl'];
+                ?>
+                <div class="newsletter-news-image image-placeholder">
+                    <?php
+                    $large = $this->moduleImage(
+                            'newsletter', $article['NA_ReleaseID'] . "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'medium', array('class' => 'news-article-image-image', 'getSource' => true));
+                    $normal = $this->moduleImage(
+                            'newsletter', $article['NA_ReleaseID'] . "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'medium', array('class' => 'newsletter_photo news_photo_list', 'border' => '0'));
+                    echo $this->link($large, $normal, array('class' => 'newsletter-article-image-link thumbnail prettyPhoto'));
+                    ?>
+                </div>
+                <h2 class="newsletter-news-title content-h3-style">
+                    <?php
+                    if ($article['NA_Title']) {
+                        echo($article['NA_Title']);
+                    }
+                    ?>
+                </h2>
+                <p class="newsletter-top-news-content content-h2-style">                            
+                    <?php
+                    if ($article['NA_Blue']) {
+                        $text = Cible_FunctionsGeneral::html2text($article['NA_Blue']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 350);
+                        echo $this->decorateImage($text);
+                        ?>
+                    <?php } ?>
+                </p>
+                <p class="newsletter-top-news-content">
+                    <?php
+                    if ($article['NA_Resume']) {
+                        $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 350);
+                        echo $this->decorateImage($text);
+                    }
+                    ?>
+                </p>
+                <div class="newsletter-top-news-more newsletter-more">
+                    <?php
+                    if ($article['NA_TextLink'] == 1) {
+                        ?>
+                        <a class="link-button link-plus" href="<?php echo $linkToArticle ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+                            <?php echo($this->getClientText('see_details_newsletter_text')); ?>
+                        </a>
+                        <?php
+                    } else if ($article['NA_TextLink'] == 2) {
+                        ?>
+                        <div class="newsletter_details_lire_suite">
+                            <a href="<?php echo $article['NA_URL']; ?>" target="_blank">
+                                <?php echo($this->getClientText('see_details_newsletter_text')); ?>&nbsp;
+                            </a>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <?php
+            }
+        }
+        ?>
+    </article>
+
+    <div class="row">       
+        <?php foreach ($zones_secondaires as $zone): ?>
+            <article class="newsletter-zone-news newsletter-news col-md-6 newsletter-zone-<?php echo $zone ?> <?php echo ($zone % 2 == 0) ? "even" : "odd" ?>">
+                <?php
+                foreach ($this->articles as $article) {
+                    if ($article['NA_ZoneID'] == $zone) {
+                        ?>
+                        <?php if ($article['NA_ImageSrc'] != '') { ?>
+                            <div class="newsletter-news-image image-placeholder">  
+                                <?php
+                                $large = $this->moduleImage(
+                                        'newsletter', $article['NA_ReleaseID'] . "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'medium', array('class' => 'news-article-image-image', 'getSource' => true));
+                                $normal = $this->moduleImage(
+                                        'newsletter', $article['NA_ReleaseID'] . "/" . $article['NA_ID'], $article['NA_ImageSrc'], 'medium', array('class' => 'newsletter_photo news_photo_list', 'border' => '0'));
+                                echo $this->link($large, $normal, array('class' => 'newsletter-article-image-link thumbnail prettyPhoto'));
+                                ?>
+
+                            </div>
+                            <?php
+                        }
+                        ?>
+                        <h2 class="newsletter-news-title content-h3-style">
+                            <?php
+                            if ($article['NA_Title']) {
+                                echo($article['NA_Title']);
+                            }
+                            ?>
+                        </h2>
+                        <p class="newsletter-news-content">                            
+                            <?php
+                            if ($article['NA_Resume']) {
+                                $text = Cible_FunctionsGeneral::html2text($article['NA_Resume']);
+                                $text = Cible_FunctionsGeneral::truncateString($text, 350);
+                                echo $this->decorateImage($text);
+                                ?>
+                            <?php } ?>
+                        </p>
+                        <?php
+                        if ($article['NA_TextLink'] == 1) {
+                            ?>
+                            <div class="newsletter-more">
+
+                                <a class="link-button link-plus" href="<?php echo $this->baseUrl() . '/' . $this->details_page . "/" . $date_string_url . "/" . $this->parutionValURL . "/" . $article['NA_ValUrl'] ?>" title="<?php echo $this->getClientText('see_details_news_text') ?>">
+                                    <?php echo($this->getClientText('see_details_newsletter_text')); ?>
+                                </a>
+                            </div>
+                            <?php
+                        } else if ($article['NA_TextLink'] == 2) {
+                            ?>
+                            <div class="newsletter-more">
+
+                                <a class="link-button link-plus" href="<?php echo $article['NA_URL']; ?>" target="_blank">
+                                    <?php echo($this->getClientText('see_details_newsletter_text')); ?>
+                                </a>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                        <?php
+                    }
+                }
+                ?>
+            </article>
+        <?php endforeach; ?>
+    </div>
+    <?php /*
+      <nav class="newsletter-options">
+      <a href="<?php echo $this->subscribeLink; ?>">
+      <?php echo($this->getCibleText('newsletter_button_subscribe')); ?>
+      </a>
+      <a href="<?php echo $this->unsubscribeLink; ?>">
+      <?php echo($this->getCibleText('newsletter_button_unsubscribe')); ?>
+      </a>
+      <a href="<?php echo $this->back_to_release; ?>">
+      <?php echo($this->getCibleText('newsletter_button_previous'));
+      ?>
+      </a>
+      <a href="<?php echo $this->archivesLink; ?>">
+      <?php echo($this->getCibleText('newsletter_button_archives'));
+      ?>
+      </a>
+      </nav>
+     * */ ?>
+    <div class="newsletter-parution-bottom">
+        <?php
+        echo($this->messageConfidentialite);
+        ?>
+    </div>
+</section>

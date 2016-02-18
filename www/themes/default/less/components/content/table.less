@@ -1,0 +1,55 @@
+//editor only
+#tinymce.mce-content-body {    
+    td { 
+        font-size:inherit;
+        line-height:inherit;
+        font-family:inherit;
+    }    
+}
+//back-end and front-end
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .front-end {
+    
+}
+//back-end and content
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content { 
+    table {
+        max-width:100%;
+        margin:0 0 10px 0;
+        border-collapse:collapse;  
+        height:auto !important; 
+        & when (@device-type = 'desktop') {
+            width:100%;
+        }
+        & when (@device-type = 'mobile') {
+            display:block;
+            overflow:auto;
+            width:100% !important;
+            tbody, thead {
+                display:inline-block;
+                td {
+                    min-width:160px;
+                    padding: 5px 10px;
+                }
+            }
+        }
+        @media @mq-phone {
+            display:block;
+            overflow:auto;
+            width:100% !important;
+            tbody, thead {
+                display:inline-block;
+                td {
+                    min-width:160px;
+                }
+            }
+        }
+    }
+    tr td {
+        padding: 5px 10px;
+        vertical-align: top;
+        border:1px solid @brand-grey-light;
+        min-width: 195px;
+    }
+    tr+tr td {
+    }
+}

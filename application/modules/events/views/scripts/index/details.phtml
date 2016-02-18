@@ -1,0 +1,92 @@
+<div class="block">
+    <?php $classSite = isset($this->events[0]['site'])?$this->events[0]['site']:$this->currentSite; ?>
+    <div class="<?php echo $classSite; ?>  events events_details">
+        <?php
+        $viewAllList = $this->getClientText('see_all_events_text');
+        if ($this->eventsCategoryDetails['CI_ReturnToList']!=""){
+            $viewAllList = $this->eventsCategoryDetails['CI_ReturnToList'];
+        }
+
+        $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+
+        if ($this->events) :
+            foreach ($this->events as $event) :
+                $this->headTitle($event['EI_Title']);
+                $this->pageTitle($event['EI_Title']);
+                $date_string = '';
+                foreach($event['dates'] as $date){
+                    $langSuffix = Zend_Registry::get('languageSuffix') . '_CA';
+                    $startDate = new Zend_Date($date['EDR_StartDate'],null, $langSuffix);
+                    $endDate = new Zend_Date($date['EDR_EndDate'],null, $langSuffix);
+
+                    if( !empty($date_string) ){
+                        $date_string .= $this->getCibleText('events_s_and_s');
+                    }
+
+                    if( $startDate->get(Zend_Date::MONTH) == $endDate->get(Zend_Date::MONTH) && $startDate->get(Zend_Date::YEAR) == $endDate->get(Zend_Date::YEAR) ){
+                        if( $startDate->get(Zend_Date::DAY) != $endDate->get(Zend_Date::DAY) )
+                            $date_string .= sprintf("%d-%d %s %d", $startDate->get(Zend_Date::DAY), $endDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR));
+                        else
+                            $date_string .= sprintf("%d %s %d", $startDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR));
+                    }
+                    else{
+                        $dateElse = "%d %s %d" . $this->getCibleText('events_s_to_s') . "%d %s %d";
+                        $date_string .= sprintf($dateElse, $startDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR), $endDate->get(Zend_Date::DAY), $endDate->get(Zend_Date::MONTH_NAME), $endDate->get(Zend_Date::YEAR));
+                    }
+                }
+                ?>
+                <h1 id="title" class="blue005FAB">
+                    <?php echo $event['EI_Title'] ?>
+                </h1>
+                 <?php if (!empty($event['ED_ImageSrc'])) : ?>
+                    <div class="events_half_full_texts_right">
+                    <?php else : ?>
+                        <div class="events_full_texts">
+                        <?php endif; ?>
+                       <p class="date">
+                            <?php echo $date_string ?>
+                        </p>
+                        <?php
+                         if (!empty($event['EI_Location'])){
+                         ?>
+                         <div class="lieu"><?php echo $event['EI_Location']; ?></div>
+                         <?php
+                         }
+                         ?>
+                        <div class="events_full_text">
+                            <?php echo $this->decorateImage($event['EI_Text']); ?>
+                        </div>
+                        <span class="before_arrow">
+                            <?php
+                                $backLink = $this->baseUrl() . '/' . $this->listall_page;
+                            ?>
+                            <?php echo $this->link($backLink, $viewAllList, array('class' => 'view-all-image', 'title' => $viewAllList)); ?>
+                        </span>
+                    </div>
+                        <?php if (!empty($event['ED_ImageSrc'])) : ?>
+                    <div class="events_full_image_left">
+                        <?php
+                        echo $this->eventImage($event['ED_ID'], $event['ED_ImageSrc'], 'original', array(
+                            'noGroup' => 'true',
+                            'class' => 'events_photo_list',
+                            'border' => '0',
+                            'prettyPhoto' => array('size' => 'original')
+                            )
+                        );
+                        ?>
+                    </div>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div>
+                <?php if ($this->otherData): ?>
+                    <?php $options = array('type' => 'page', 'message' =>$this->getClientText('empty_data_disclaimer')); ?>
+                    <p><?php echo $this->languageSwitcher($options); ?></p>
+                <?php else: ?>
+                    <p><?php echo $this->getCibleText('events_no_events') ?></p>
+                <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

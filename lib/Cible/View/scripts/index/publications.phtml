@@ -1,0 +1,106 @@
+<?php if ($this->addCheckbox): ?>
+<?php foreach ($this->publications as $key => $values): ?>
+<tr>
+    <td>
+        <p class="label">[<?php echo $values['PU_Year']; ?>] <span class="type"><?php echo $values['typeLabel']; ?></span></p>
+        <?php echo $values['PUI_Description']; ?>
+    </td>
+    <td>
+    <?php $options = array(); ?>
+        <?php ($values['RP_Listed'] == 1)? $options['checked'] = 'checked' : $options['checked'] = ''; ?>
+    <?php $chckBox = $this->formCheckbox('publication-' .$key, 1, $options); ?>
+    <?php echo $chckBox; ?>
+    </td>
+</tr>
+<?php endforeach; ?>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+overlay = new CSAOverlay(overlay);
+$(document).ready(function(){
+    $(document).ajaxStart(function() {
+        overlay.show();
+        }).ajaxStop(function() {
+            overlay.hide();
+        });
+    var url = "<?php echo $this->url(array('action' => 'update-checkbox', 'actionKey' => null)); ?>";
+    $('input[id^=publication-]').click(function(){
+        var id = $(this).attr('id').replace('publication-', '' );
+        var value = 0;
+        if ($(this).is(':checked'))
+            value = 1;
+        var data = {'RP_PublicationId' : id,
+            'RP_ResearcherId' : <?php echo $this->request->getParam('id'); ?>,
+            'RP_Listed' : value
+        };
+        $.post(
+            url,
+            data,
+            function(data){},
+            'json'
+        );
+    });
+});
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureend(); ?>
+
+<?php echo $this->partial('partials/loading.phtml'); ?>
+<?php else: ?>
+    <div class="publicationsList">
+        <?php if ($this->total > 0 || $this->display): ?>
+        <?php $labelFound = $this->total > 1 ? $this->getClientText('found_results') : $this->getClientText('found_result'); ?>
+            <?php echo $this->total; ?> <?php echo $labelFound; ?>
+            <?php foreach ($this->publications as $pubId => $value):?>
+               <div class="publication">
+                    <?php $title = !empty($value['PUI_Title'])? $value['PUI_Title'] : $value['typeLabel']; ?>
+                    <?php $typeStr = !empty($value['PUI_Title'])? $value['typeLabel'] . '<br />' : ''; ?>
+                   <div class="dateType">[<?php echo $value['PU_Year']; ?>] <?php echo $title; ?></div>
+                   <div class="description">
+                        <?php echo $typeStr; ?>
+                        <?php echo $value['PUI_Description']; ?>
+                   </div>
+                   <div class="chercheursIcons">
+                   <?php if ($this->showCoworkers): ?>
+                       <div class="chercheurs">
+                           <?php if(!empty($value['researchers'])): ?>
+                               <?php echo count($value['researchers'])>1 ? $this->getCibleText('chercheurs') : $this->getCibleText('chercheur');?>
+                               <?php foreach($value['researchers'] as $reVal):?>
+                                   <div class="chercheur">
+                                       <script type="text/javascript">
+                                           //<![CDATA[
+                                           var string = <?php echo $tmp; ?>;
+                                           string = string[0]+'@'+string[1];
+                                           var act = 'mail';
+                                           var ion = 'to:';
+                                           document.write('<a href=' + act+ ion + string + '>' + string + '</a>');
+                                           //]]>
+                                       </script>
+                                       <?php $detailPage = '/' . Cible_FunctionsCategories::getPagePerCategoryView(0, 'detailsResearcher', 1002, $this->languageId, true); ?>
+                                       <?php $detailPage .= '/' . $reVal['RE_ID'] . '-' . $reVal['REI_ValUrl']; ?>
+                                       <?php $nameLabel = $reVal['RE_LastName'] . ", " . $reVal['RE_FirstName']; ?>
+                                       <?php echo $this->link($detailPage, $nameLabel);?>
+                                   </div>
+                               <?php endforeach;?>
+                           <?php  endif;?>
+                       </div>
+                   <?php endif;
+
+
+
+                   ?>
+                       <div class="icons">
+                            <?php if(!empty($value['PUI_UrlPubMed'])): ?>
+                               <div class="url"><a href="<?php echo $value['PUI_UrlPubMed']; ?>" target="_blank"></a></div>
+                           <?php endif;?>
+                           <?php if(!empty($value['PU_FilePDF'])):?>
+                               <div class="pdf"><a href="<?php echo $value['PU_FilePDF']; ?>" target="_blank"></a></div>
+                           <?php endif;?>
+                       </div>
+                   </div>
+               </div>
+           <?php endforeach;?>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+

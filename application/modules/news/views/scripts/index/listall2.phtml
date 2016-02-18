@@ -1,0 +1,114 @@
+<?php echo $this->showBlockTitle('h2'); ?>
+<div class="block news2Cols">
+<?php if ($this->params[7]): ?>
+    <?php echo $this->formSelect; ?>
+<?php endif; ?>
+        <div class="heightContainer">
+    <?php
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+    if ($this->paginator):
+        $count = 1;
+        foreach ($this->paginator as $news):
+            $date = new Zend_Date($news['ND_Date'], null, $langSuffix);
+            $date_string_url = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_SQL, '-');
+            $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG, '.');
+            $href = $this->baseUrl() . '/' . $this->details_page . "/" . $date_string_url . "/" . $news['NI_ValUrl'];
+
+
+            $espace = $count % 2 ? 'espace' : '';
+            ?>
+            <div class="news whiteBox2 <?php echo $espace; ?>">
+                <?php //echo $this->link($href, '<img class="photo" width="289" height="193" src="../c3s/themes/images/common/img-news2.jpg">', array('title' => $this->getClientText('see_details_news_text'))); ?>
+
+                <?php  if (!empty($news['NI_ImageSrc'])) : ?>
+                        <?php
+                        echo $this->link($href,
+                            $this->newsImage(
+                                $news['ND_ID'],
+                                $news['NI_ImageSrc'],
+                                'thumb',
+                                array(
+                                    'class' => 'photo',
+                                    'border' => '0',
+                                )
+                           )
+                        );
+                        ?>
+                <?php  endif; ?>
+                <div class="text">
+                    <h6 class="news_title">
+                        <?php // echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text'))); ?>
+                        <?php echo $news['NI_Title']; ?>
+                    </h6>
+                    <?php if ($this->params['5']): ?>
+                        <p class="date"><?php echo $date_string; ?></p>
+                    <?php endif; ?>
+                    <?php
+                    if ($this->params['3'] && !empty($news['NI_Brief']))
+                    {
+                        // Show brief text
+                        $text = $news['NI_Brief'];
+                    }
+                    else
+                    {
+                        // If not, show long text
+                        $text = Cible_FunctionsGeneral::html2text($news['NI_Text']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 150);
+                    }
+                    ?>
+                    <p class="briefText">
+                        <?php // echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text'))); ?>
+                        <?php echo $text; ?>
+                    </p>
+                    <span class="suite_arrow">
+                        <?php echo $this->link($href, $this->getClientText('see_details_news_text'), array('title' => $this->getClientText('see_details_news_text'))); ?>
+                    </span>
+                </div>
+            </div>
+
+            <?php if ($count % 2 == 0 ): ?>
+
+                </div>
+                <div class="heightContainer">
+                <?php endif; ?>
+                <?php $count++; ?>
+        <?php endforeach; ?>
+    </div>
+        <div class="clear_both"></div>
+        <?php echo $this->paginationControl($this->paginator, 'sliding', 'partials/products.paginator.phtml'); ?>
+    <?php else: ?>
+        <div class="news_brief_home_page">
+        <?php if ($this->otherData): ?>
+            <?php $options = array('type' => 'page', 'message' =>$this->getClientText('empty_data_disclaimer')); ?>
+            <p><?php echo $this->languageSwitcher($options); ?></p>
+        <?php else: ?>
+            <p><?php echo $this->getCibleText('news_no_news') ?></p>
+        <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php echo $this->partial('partials/filterDates.phtml'); ?>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function(){
+
+    $('.heightContainer').each(function(){
+        var height = 0;
+        $(this).find('.whiteBox2').each(function(){
+            if ($(this).innerHeight() > height){
+                height = $(this).innerHeight();
+            }
+        });
+        $(this).find('.whiteBox2').each(function(){
+            $(this).css('height', height);
+        });
+    });
+
+    $('.news.whiteBox2').click(function(){
+            window.location.href = $(this).find('a').attr('href');
+        });
+});
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

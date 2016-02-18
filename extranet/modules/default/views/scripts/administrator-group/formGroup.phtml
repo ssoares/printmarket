@@ -1,0 +1,171 @@
+<?php
+// get pages data
+$pagesArray = Cible_FunctionsPages::getAllPagesDetailsArray();
+?>
+
+<form method="post" style="margin:0px; padding:0px">
+    <?php echo $this->element->actions ?>
+    <table cellpadding="0" cellspacing="0" width="100%" border="0">
+        <tr>
+            <td valign="top" width="30%">
+            <?php echo $this->element->EGI_Name->render() ?>
+            <?php echo $this->element->EGI_Description->render() ?>
+            <?php echo $this->element->EG_Status ?>
+            </td>
+            <td valign="top" style="border-left:solid 1px #C4C4C4; padding-left:10px">
+                <?php if ($this->aclIsAllowed('page', 'edit')) : ?>
+                Gestion de la structure des pages (cocher les pages dont l'administrateur peut faire la gestion de la structure)
+                    <ul>
+                        <li>
+<!--                            <input type="checkbox" id="checkbox_structure_0" name="checkbox_structure_0" onclick="checkChild('structure_0')">-->
+                            <a id="parent_structure_0_open" href="javascript:void();" onclick="showChild('structure_0')"><?php echo $_SERVER['HTTP_HOST'] ?>&nbsp;+</a>
+                            <a id="parent_structure_0_close" href="javascript:void();" onclick="hideChild('structure_0')" style="display:none;"><?php echo $_SERVER['HTTP_HOST'] ?>&nbsp;-</a>
+
+                            <a id="checkbox_structure_tick" href="javascript:void();" onclick="checkChild('structure_0', 'tick')">Tout cocher</a>
+                            <a id="checkbox_structure_untick" href="javascript:void();" onclick="checkChild('structure_0', 'untick')" >Tout décocher</a>
+
+                    <?php   checkBoxChildConstruct($this->element->groupID->getValue(), $pagesArray, 0, 'structure'); ?>
+                        </li>
+                    </ul>
+
+                    Gestion du contenus des pages (cocher les pages dont l'administrateur peut faire la gestion du contenu)
+                    <ul>
+                        <li>
+<!--                            <input type="checkbox" id="checkbox_data_0" name="checkbox_data_0" onclick="checkChild('data_0')">-->
+                            <a id="parent_data_0_open" href="javascript:void();" onclick="showChild('data_0')"><?php echo $_SERVER['HTTP_HOST'] ?>&nbsp;+</a>
+                            <a id="parent_data_0_close" href="javascript:void();" onclick="hideChild('data_0')" style="display:none;"><?php echo $_SERVER['HTTP_HOST'] ?>&nbsp;-</a>
+
+                            <a id="checkbox_data_tick" href="javascript:void();" onclick="checkChild('data_0', 'tick')">Tout cocher</a>
+                            <a id="checkbox_data_untick" href="javascript:void();" onclick="checkChild('data_0', 'untick')" >Tout décocher</a>
+
+                    <?php   checkBoxChildConstruct($this->element->groupID->getValue(), $pagesArray, 0, 'data'); ?>
+                        </li>
+                    </ul>
+                    <div style="clear:both;text-align: center;">---------------------------</div>
+                <?php endif; ?>
+            <?php showRolesResourcesPermissions($this->element->groupID->getValue());?>
+            </td>
+        </tr>
+    </table>
+
+</form>
+
+<?php
+function showRolesResourcesPermissions($groupID = null)
+{
+    $resourcesData = getAllResources();
+    $helper = new Cible_View_Helper_aclIsAllowed();
+    foreach ($resourcesData as $resources){
+        if ($helper->aclIsAllowed($resources['ER_ControlName'], 'edit')){
+            echo ("<div style='width:100%;font-weight:bolder;'>".$resources["ERI_Name"]."</div>");
+            // get all roles associated to the resources
+            $rolesResourcesSelect = new ExtranetRolesResources();
+            $select = $rolesResourcesSelect->select()->setIntegrityCheck(false);
+            $select->from('Extranet_RolesResources')
+            ->join('Extranet_RolesResourcesIndex', 'ERRI_RoleResourceID = ERR_ID')
+            ->where('ERR_ResourceID = ?', $resources["ERI_ResourceID"])
+            ->where('ERRI_LanguageID = ?',Zend_Registry::get("languageID"));
+
+            $rolesData = $rolesResourcesSelect->fetchAll($select)->toArray();
+
+            echo ("<ul>");
+            echo("<li>");
+                echo("<input type='radio' id='radio_role_0' name='radio_resource_".$resources["ERI_ResourceID"]."' value='0' checked='checked'>");
+                echo(Cible_Translation::getCibleText('form_label_noRight'));
+            echo("</li>");
+            foreach ($rolesData as $role){
+               echo("<li>");
+               if (checkGroupRoleResource($groupID,$role["ERRI_RoleResourceID"])){
+                echo("<input type='radio' id='radio_role_".$role["ERRI_RoleResourceID"]."' name='radio_resource_".$resources["ERI_ResourceID"]."' value='".$role["ERRI_RoleResourceID"]."' checked='checked'>");
+               }
+               else{
+                   echo("<input type='radio' id='radio_role_".$role["ERRI_RoleResourceID"]."' name='radio_resource_".$resources["ERI_ResourceID"]."' value='".$role["ERRI_RoleResourceID"]."'>");
+               }
+
+               echo($role["ERRI_Name"] . " (" .$role["ERRI_Description"]. ")");
+               echo("</li>");
+            }
+            echo ("</ul>");
+        }
+
+    }
+}
+
+
+function checkBoxChildConstruct($groupID = null, $pages, $parentID = 0, $name = 'structure'){
+?>  <ul>
+        <div id="group_<?php echo($name)?>_<?php echo($parentID)?>" style="display: none;">
+<?php           foreach ($pages as $page){
+                $childTotal = count($page['child']);
+?>                  <li>
+<?php                   if ($childTotal > 0){
+                        if (Cible_FunctionsAdministrators::CheckGroupPagesPermissions($groupID,$page['P_ID'], $name)){
+?>                              <input type="checkbox" id="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" name="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" checked="checked" onclick="checkChild('<?php echo($name."_".$page['P_ID'])?>')">
+<?php                       }
+                        else{
+?>                              <input type="checkbox" id="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" name="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" onclick="checkChild('<?php echo($name."_".$page['P_ID'])?>')">
+<?php                       }
+?>                          <a id="parent_<?php echo($name)?>_<?php echo($page['P_ID']); ?>_open" href="javascript:void();" onclick="showChild('<?php echo($name."_".$page['P_ID'])?>')"><?php echo($page['PI_PageTitle'])?>&nbsp;+</a>
+                        <a id="parent_<?php echo($name)?>_<?php echo($page['P_ID']); ?>_close" href="javascript:void();" onclick="hideChild('<?php echo($name."_".$page['P_ID'])?>')" style="display:none;"><?php echo($page['PI_PageTitle'])?>&nbsp;-</a><br/>
+<?php                       checkBoxChildConstruct($groupID,$page['child'], $page['P_ID'], $name);
+                    }
+                    else{
+                        if (Cible_FunctionsAdministrators::CheckGroupPagesPermissions($groupID,$page['P_ID'], $name)){
+?>                              <input type="checkbox" id="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" name="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" checked="checked">
+<?php                       }
+                        else{
+?>                              <input type="checkbox" id="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>" name="checkbox_<?php echo($name)?>_<?php echo($page['P_ID'])?>">
+<?php                       }
+?>
+                        <?php echo($page['PI_PageTitle'])?><br/>
+<?php                   }
+?>                  </li>
+<?php           }
+?>          </div>
+    </ul>
+<?php
+}
+
+function getAllResources()
+{
+    // get all resources
+    $resourcesSelect = new ExtranetResources();
+    $select = $resourcesSelect->select()
+        ->setIntegrityCheck(false)
+        ->from($resourcesSelect->info('name'))
+        ->joinLeft('Extranet_ResourcesIndex','ERI_ResourceID = ER_ID')
+        ->where('ERI_LanguageID = ?',Zend_Registry::get("languageID"))
+        ->order('ERI_Name');
+    return $resourcesSelect->fetchAll($select)->toArray();
+}
+
+function checkGroupRoleResource($groupID, $roleResourceID)
+{
+    if($groupID == null)
+        return false;
+
+    $groupRoleResourceSelect = new ExtranetGroupsRolesResources();
+    $select = $groupRoleResourceSelect->select();
+    $select->where('EGRRP_GroupID = ?', $groupID)
+    ->where('EGRRP_RoleResourceID = ?', $roleResourceID);
+
+    $groupRoleResourceData = $groupRoleResourceSelect->fetchRow($select);
+    if (count($groupRoleResourceData) == 0)
+        return false;
+    else
+        return true;
+}
+?>
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function(){
+    var chkbStruct = $('#parent_structure_0_open');
+    var chkbData   = $('#parent_data_0_open');
+
+    $(window).load(function(){
+        chkbStruct.click();
+        chkbData.click();
+    });
+});
+//]]>
+</script>

@@ -1,0 +1,48 @@
+<?php 
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_add_profile_text'),
+    'pageDescription' => $this->getCibleText('header_add_profile_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<?php $this->headStyle()->captureStart() ?>
+
+    button#editProfile,
+    button#searchAgain{
+        width: 250px;
+    }
+
+<?php $this->headStyle()->captureEnd() ?>
+
+<?php $cancel_url = empty($this->returnModule) && empty($this->returnAction) ? $this->url(array('module'=>'profile', 'controller'=>'index', 'action'=>'list')) : $this->url(array('module'=>$this->returnModule, 'controller'=>'index', 'action'=>$this->returnAction)) ?>
+
+<div id="default_form">
+    <div id="action_panel" style="margin-bottom: 15px">
+        <fieldset id="fieldset-actions" style="border: none; padding: 0px; margin: 0px;">
+            <?php echo $this->formButton('cancel', $this->getCibleText('button_cancel'), array('class' => 'stdButton','onclick'=> "document.location.href='{$cancel_url}'")) ?>
+        </fieldset>
+    </div>
+    <div style="margin-bottom: 5px;"><?php echo $this->getCibleText('form_label_email') ?></div>
+    <strong><?php echo $this->member_email ?></strong>
+    
+    <p>
+        <div style="margin-bottom: 5px;"><?php echo $this->getCibleText('profile_message_email_already_exists') ?></div>
+        <div style="margin-bottom: 5px;">
+            <?php echo $this->formButton('editProfile',$this->getCibleText('button_modify_existing_profile'), array(
+                'onclick' => "document.location.href='{$this->url(array('module'=>'profile', 'controller'=>'index', 'action'=>'edit', 'ID'=>$this->member_id))}'",
+                'class' => 'blueish-button',
+                'onmouseover' => "this.className = 'blueish-button-over'",
+                'onmouseout' => "this.className = 'blueish-button'"
+            )) ?>
+        </div>
+        <div style="margin-bottom: 5px;">
+            <?php echo $this->formButton('searchAgain', $this->getCibleText('button_search_another_profile_email'), array(
+                'onclick'=> "document.location.href='{$this->url()}'",
+                'class' => 'blueish-button',
+                'onmouseover' => "this.className = 'blueish-button-over'",
+                'onmouseout' => "this.className = 'blueish-button'"
+            )) ?>
+        </div>
+    </p>
+</div>

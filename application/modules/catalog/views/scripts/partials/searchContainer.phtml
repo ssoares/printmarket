@@ -1,0 +1,97 @@
+<div class="col-lg-12">
+<?php echo $this->view->formSearch;?>
+</div>
+<?php $this->headScript()->appendFile($this->locateFile('typeahead.bundle.min.js')); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function () {
+        var delimiter = <?php echo json_encode($this->view->kwDelimiter); ?>;
+        $('select').trigger('cible.modification');
+        var el = $("[data-autocomplete]");
+        var urlSrc = el.attr('data-url');
+        var url = urlSrc;
+
+//        var engine = new Bloodhound({
+//            local: url,
+//            datumTokenizer: function(d) {
+//                console.log(d); return false;
+//                return Bloodhound.tokenizers.whitespace(d.value);
+//            },
+//            queryTokenizer: Bloodhound.tokenizers.whitespace
+//        });
+//
+//        engine.initialize();
+//
+//        $('.tokenfield-typeahead').tokenfield({
+//            typeahead: [null, { source: engine.ttAdapter() }],
+//        }).on('tokenfield:edittoken', function (e) {
+//
+//        });
+        var kwId = $('#keywordsId');
+        $('#keywords').on('tokenfield:createdtoken', function (e) {
+            if (e.attrs.id > 0){
+                var token = $(e.relatedTarget);
+                token.attr('data-id', e.attrs.id);
+                var values = kwId.val();
+                var ids = [];
+                if (values.length > 0){
+                    ids = values.split(',');
+                }
+                ids.push(e.attrs.id);
+                kwId.val(ids.join(','))
+            }
+        })
+        .on('tokenfield:removetoken', function (e) {
+            var token = $(e.relatedTarget);
+            var id = token.attr('data-id');
+            if (id > 0){
+                var ids = kwId.val().split(',');
+                var index = ids.indexOf(id);
+                if (index > -1) {
+                    ids.splice(index, 1);
+                }
+                kwId.val(ids.join(','));
+            }
+        })
+        .tokenfield({
+            delimiter : delimiter,
+            autocomplete: {source: url, delay: 100},
+            showAutocompleteOnFocus: true
+        });
+        $('#category').change(function(){
+            var value = parseInt($(this).val());
+            if (value > 0){
+                url = urlSrc + '/category/' + $(this).val();
+            }else{
+                url = urlSrc;
+            }
+            $('#keywords').data('bs.tokenfield').$input.autocomplete({source: url})
+        }).change();
+
+        $('#searchCatalog').click(function(e){
+            e.preventDefault();
+            var form = $(this).parents('form');
+            var formData = form.serializeArray();
+            var urlPart = window.location.href.split('/');
+            var hasFilter = false;
+            $.each(formData, function(i,data){
+                var index = urlPart.indexOf(data.name);
+                if (index < 0 && data.value.length > 0){
+                    urlPart.push(data.name);
+                    urlPart.push(encodeURIComponent(data.value));
+                    hasFilter = true;
+                }else if (data.value.length > 0){
+                    urlPart[index+1] = encodeURIComponent(data.value);
+                    hasFilter = true;
+                }else if (index > 0){
+                    urlPart.splice(index, 2);
+                }
+            });
+            if (hasFilter){
+                window.location.href = urlPart.join('/');
+            }
+        });
+    });
+
+//]]>
+</script>

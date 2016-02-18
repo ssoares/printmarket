@@ -1,0 +1,48 @@
+<?php if ($this->events): ?>
+
+    <?php $first = true; ?>
+
+    <?php foreach($this->events as $event): ?>
+        <?php
+            $class = $first ? 'class = "first-event"' : '';
+            $first = false;
+        ?>
+        <div <?php echo $class ?>>
+            <?php echo $this->image($event['ED_ID'], $event['ED_ImageSrc'], 'medium', array('class'=>'events-list-photo')) ?>
+            <?php
+                $date_string = '';
+                foreach($event['dates'] as $date){
+                    $langSuffix = Zend_Registry::get('languageSuffix') . '_CA';
+                    $startDate = new Zend_Date($date['EDR_StartDate'],null, $langSuffix);
+                    $endDate = new Zend_Date($date['EDR_EndDate'],null, $langSuffix);
+
+                    if( !empty($date_string) )
+                        $date_string .= ' et ';
+
+                    if( $startDate->get(Zend_Date::MONTH) == $endDate->get(Zend_Date::MONTH) && $startDate->get(Zend_Date::YEAR) == $endDate->get(Zend_Date::YEAR) ){
+                        if( $startDate->get(Zend_Date::DAY) != $endDate->get(Zend_Date::DAY) )
+                            $date_string .= sprintf("%d-%d %s %d", $startDate->get(Zend_Date::DAY), $endDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR));
+                        else
+                            $date_string .= sprintf("%d %s %d", $startDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR));
+                    }
+                    else
+                        $date_string .= sprintf("%d %s %d au %d %s %d", $startDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR), $endDate->get(Zend_Date::DAY), $endDate->get(Zend_Date::MONTH_NAME), $endDate->get(Zend_Date::YEAR));
+                }
+            ?>
+            <div class="date"><?php echo $date_string ?></div>
+            <div class="title"><?php echo $event['EI_Title'] ?></div>
+            <div class="brief"><?php echo $event['EI_Brief'] ?></div>
+            <div class="view-all"><?php echo $this->link( "{$this->baseUrl()}/{$this->details_page}/ID/{$event['ED_ID']}",'voir détails') ?></div>
+        </div>
+    <?php endforeach; ?>
+
+<?php else: ?>
+    <div>
+        <?php if ($this->otherData): ?>
+            <?php $options = array('type' => 'page', 'message' =>$this->getClientText('empty_data_disclaimer')); ?>
+            <p><?php echo $this->languageSwitcher($options); ?></p>
+        <?php else: ?>
+            <p><?php echo $this->getCibleText('events_no_events') ?></p>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

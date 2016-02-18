@@ -1,0 +1,118 @@
+<?php echo $this->showBlockTitle('h2'); ?>
+<div class="block eventsList1col">
+<?php
+    $flag = 1;
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+    if ($this->paginator):
+        foreach ($this->paginator as $event):
+
+
+            $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+            $date = new Zend_Date($event['EDR_StartDate'],null, $langSuffix);
+            $date_string_url = Cible_FunctionsGeneral::dateToString($date,Cible_FunctionsGeneral::DATE_SQL,'-');
+            $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG, '.');
+//            $href = $this->baseUrl() . $this->details_page . "/" . $date_string_url . "/" . $event['EI_ValUrl'];
+            $href = $event['URL'];
+            ?>
+            <div class="<?php echo $event['site']; ?> events events1col">
+                    <?php  if (!empty($event['ED_ImageSrc'])){ ?>
+                    <div class="image">
+                        <?php
+                        echo $this->link($href,
+                            $this->eventsImage(
+                                $event['ED_ID'],
+                                $event['ED_ImageSrc'],
+                                'thumb',
+                                array(
+                                    'class' => 'photo',
+                                    'border' => '0'
+                                )
+                           )
+                        );
+                        ?>
+                    </div><div class="text_avec_image">
+                <?php  }
+                else{?>
+                    <div class="text">
+                  <?php
+                  }
+                  ?>
+                    <h2 class="events_title">
+                        <?php // echo $this->link($href, $event['NI_Title'], array('title' => $this->getCibleText('see_details_events_text'))); ?>
+                        <?php echo $event['EI_Title']; ?>
+                    </h2>
+                        <?php
+                        $date_string = '';
+                        foreach($event['dates'] as $date){
+                            $langSuffix = Zend_Registry::get('languageSuffix') . '_CA';
+                            $startDate = new Zend_Date($date['EDR_StartDate'],null, $langSuffix);
+                            $endDate = new Zend_Date($date['EDR_EndDate'],null, $langSuffix);
+
+                            if( !empty($date_string) ){
+                                $date_string .= $this->getCibleText('events_s_and_s');
+                            }
+
+                            if( $startDate->get(Zend_Date::MONTH) == $endDate->get(Zend_Date::MONTH) && $startDate->get(Zend_Date::YEAR) == $endDate->get(Zend_Date::YEAR) ){
+                                if( $startDate->get(Zend_Date::DAY) != $endDate->get(Zend_Date::DAY) )
+                                    $date_string .= sprintf("%d-%d %s %d", $startDate->get(Zend_Date::DAY), $endDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR));
+                                else
+                                    $date_string .= sprintf("%d %s %d", $startDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR));
+                            }
+                            else{
+                                $dateElse = "%d %s %d" . $this->getCibleText('events_s_to_s') . "%d %s %d";
+                                $date_string .= sprintf($dateElse, $startDate->get(Zend_Date::DAY), $startDate->get(Zend_Date::MONTH_NAME), $startDate->get(Zend_Date::YEAR), $endDate->get(Zend_Date::DAY), $endDate->get(Zend_Date::MONTH_NAME), $endDate->get(Zend_Date::YEAR));
+                            }
+                        }
+                    ?>
+                     <p class="date"><?php echo $date_string; ?></p>
+
+                    <?php
+
+                    $text = Cible_FunctionsGeneral::html2text($event['EI_BriefText']);
+                     $text = Cible_FunctionsGeneral::truncateString($text, 150);
+
+                    ?>
+                    <p class="briefText">
+                        <?php echo $text; ?>
+                    </p>
+                    <span class="suite_arrow">
+                        <?php echo $this->link($href, $this->getCibleText('see_details_events_text'), array('title' => $this->getCibleText('see_details_events_text'))); ?>
+                    </span>
+                </div>
+            </div>
+
+                <?php
+                if ($this->paginator->getItemCountPerPage() != $flag) :
+                    $flag++;
+                ?>
+        <?php endif; ?>
+    <?php endforeach; ?>
+        <div class="clear_both test"></div>
+        <div class="paginatorOuter">
+        <?php echo $this->paginationControl($this->paginator, 'sliding', 'partials/products.paginator.phtml'); ?>
+        </div>
+    <?php else: ?>
+        <div>
+        <?php if ($this->otherData): ?>
+            <?php $options = array('type' => 'page', 'message' =>$this->getClientText('empty_data_disclaimer')); ?>
+            <p><?php echo $this->languageSwitcher($options); ?></p>
+        <?php else: ?>
+            <p><?php echo $this->getCibleText('events_no_events') ?></p>
+        <?php endif; ?>
+        </div>
+    <?php
+    endif;
+    ?>
+</div>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function(){
+
+    $('.events1col').click(function(){
+            window.location.href = $(this).find('a').attr('href');
+        });
+});
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

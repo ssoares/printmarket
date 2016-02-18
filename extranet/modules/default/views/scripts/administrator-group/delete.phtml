@@ -1,0 +1,32 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('dashboard_administration_administrators_groups_management'),
+    'pageDescription' => $this->getCibleText('dashboard_administration_administrators_groups_management_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="container_middle_full">
+<?php 
+    if ($this->group) { 
+        $group = $this->group;
+?>
+        <h3><?php echo($group->EGI_Name) ?></h3>
+        <p><?php echo str_replace('%GROUP_NAME%', $group->EGI_Name, $this->getCibleText('administrator_group_delete_message_confirmation')) ?></p>
+        
+
+        <form action="<?php echo $this->url(array('action'=>'delete')); ?>" method="post">
+            <div>
+                <input type="hidden" name="administratorID" value="<?php echo $group->EGI_GroupID; ?>" />
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+<?php 
+    }
+    else { ?>
+        <p><?php echo $this->getCibleText('page_delete_message_cant_find_page') ?></p>
+<?php 
+    }?>
+    
+</div>

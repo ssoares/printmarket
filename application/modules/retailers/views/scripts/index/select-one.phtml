@@ -1,0 +1,15 @@
+<div id="div-retailers">
+    <div id="retailers-title">
+        <?php echo $this->getClientText('form_label_select_retailer'); ?>
+    </div>
+    <div id="retailers-form">
+        <?php  echo $this->form; ?>
+        
+        <input id="selectedState" name="selectedState" type="hidden" value="<?php echo($this->selectedState); ?>"/>
+        <input id="selectedCity" name="selectedCity" type="hidden" value="<?php echo($this->selectedCity); ?>"/>
+        <input id="selectedRetailer" name="selectedRetailer" type="hidden" value="<?php echo($this->selectedRetailer); ?>"/>
+    </div>
+    <div id="retailer-data">
+        
+    </div>
+</div>

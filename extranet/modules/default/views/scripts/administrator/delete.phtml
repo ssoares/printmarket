@@ -1,0 +1,32 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('dashboard_administration_administrators_administrator_management'),
+    'pageDescription' => $this->getCibleText('dashboard_administration_administrators_administrator_management_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="container_middle_full">
+<?php 
+    if ($this->administrator) { 
+        $administrator = $this->administrator;
+?>
+        <h3><?php echo($administrator->EU_LName . ", " . $administrator->EU_FName) ?></h3>
+        <p><?php echo str_replace('%ADMINISTRATOR_NAME%', $administrator->EU_LName . ", " . $administrator->EU_FName, $this->getCibleText('administrator_delete_message_confirmation')) ?></p>
+        
+
+        <form action="<?php echo $this->url(array('action'=>'delete')); ?>" method="post">
+            <div>
+                <input type="hidden" name="administratorID" value="<?php echo $administrator->EU_ID; ?>" />
+                <input type="submit" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                <input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />
+            </div>
+        </form>
+<?php 
+    }
+    else { ?>
+        <p><?php echo $this->getCibleText('page_delete_message_cant_find_administrator') ?></p>
+<?php 
+    }?>
+    
+</div>

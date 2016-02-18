@@ -1,0 +1,94 @@
+<?php
+$imagesData = !empty($this->mylist) ? $this->mylist : $this->imagesData;
+$random = rand(1, 100000000);
+if (isset($_SESSION['imgIndex']))
+    $imgIndex = $_SESSION['imgIndex'];
+else
+    $imgIndex = $_SESSION['imgIndex'] = 1;
+
+$countImages = count($imagesData->getCurrentItems());
+
+
+if ($countImages > 0):
+    ?>
+    <section data-magnificcontainer="<?php echo $random ?>" class="imageslibrary carrousel module block <?php echo ($this->vertical) ? 'verticalslider' : 'horizontalslider' ?> ">
+        <?php echo $this->showBlockTitle('h2', array('class' => 'imageslibrary-title'));?>
+        <div class="imageslibrary-container">
+            <?php if ($this->navi) : ?>
+                <nav class='imageslibrary-nav'>
+                    <div class="imageslibrary-prev" id="leftCycle-<?php echo $random; ?>">prev</div>
+                    <div class="imageslibrary-next" id="rightCycle-<?php echo $random; ?>">next</div>
+                </nav>
+            <?php endif; ?>
+            <div class="imageslibrary-slidelist" id="slideshow-<?php echo $random; ?>">
+                <?php
+                foreach ($imagesData as $index => $image):
+                    $imageS = $this->moduleImage('imageslibrary', $image['IL_ID'], $image['IL_Filename'], 'thumbList', array('getSource' => 'true', 'prettyPhoto' => array()));
+                    $imageSFull = ($image['ILI_Link'] == '') ? $this->moduleImage('imageslibrary', $image['IL_ID'], $image['IL_Filename'], 'original', array('getSource' => 'true', 'prettyPhoto' => array())) : $image['ILI_Link'];
+                    $href = $this->url(
+                            array(
+                                'controller' => $this->detailsPage,
+                                'action' => 'infos',
+                                'img' => $image['IL_ID'],
+                                'album' => $this->keywordsIds
+                            )
+                    );
+                    ?>
+
+                    <?php if ($this->prettyPhoto): ?>
+                        <a data-magnific="<?php echo $random ?>" title='<?php echo Cible_FunctionsGeneral::truncateString(strip_tags($image['ILI_Description']), 500) ?>' class='imageslibrary-slide <?php if ($image['ILI_Link'] == '') echo 'prettyPhoto' ?>' href='<?php echo $imageSFull; ?>'>
+                        <?php else: ?>
+                            <a class='imageslibrary-slide' href='<?php echo $href; ?>'>
+                            <?php endif; ?>
+                            <span class="imageslibrary-slide-container">
+                                <img class='imageslibrary-slide-image' src='<?php echo $imageS; ?>' alt='Test' />
+                                <?php if ($image['ILI_Label1'] != ""): ?>
+                                    <span class='imageslibrary-slide-label1' ><?php echo $image['ILI_Label1'] ?></span>
+                                <?php endif; ?>
+                                <?php if ($image['ILI_Label2'] != ""): ?>
+                                    <span class='imageslibrary-slide-label2' ><?php echo $image['ILI_Label2'] ?></span>
+                                <?php endif; ?>
+                                <?php if ($image['ILI_Description'] != ""): ?>
+                                    <span class='imageslibrary-slide-description' ><?php echo Cible_FunctionsGeneral::truncateString(strip_tags($image['ILI_Description']), 150) ?></span>
+                                <?php endif; ?>
+                            </span>
+                        </a>
+
+                    <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+<?php else: ?>
+    <div class="imageslibrary-empty"><?php echo $this->getCibleText('gallery_no_gallery'); ?></div>
+<?php endif; ?>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+//<![CDATA[
+    $(window).load(function() {
+    var $slideshow = $('#slideshow-<?php echo $random; ?>');
+            $slideshow.cycle({
+            fx: "carousel",
+<?php if ($this->navi) : ?>
+                prev : '#leftCycle-<?php echo $random; ?>',
+                        next : '#rightCycle-<?php echo $random; ?>',
+<?php endif; ?>
+            slides : "> a",
+                    speed : <?php echo $this->delais * 1000 ?>,
+                    timeout : <?php echo ($this->autoPlay && $this->transition) ? $this->transition : 0 ?>,
+<?php if ($this->vertical) : ?>
+                carouselVertical : true,
+<?php endif; ?>
+<?php if (!$this->vertical) : ?>
+                swipe: true,
+<?php endif; ?>
+            carouselFluid : true,
+                    log: false
+            });
+    })
+//]]>
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>
+
+
+
+

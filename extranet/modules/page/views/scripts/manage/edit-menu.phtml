@@ -1,0 +1,20 @@
+<?php if( $this->isXmlHttpRequest ): ?>
+
+        <?php if( $this->success ): ?>
+
+                <div id="result">
+                    <span id="buttonAction" style="display: none"><?php echo $this->buttonAction; ?></span>
+                    <span id="menuID" style="display: none"><?php echo $this->menuID ?></span>
+                </div>
+    
+        <?php else: 
+
+            echo $this->form;
+
+             endif ?>
+        
+    <?php else:
+
+        echo $this->form;
+
+endif ?>

@@ -1,0 +1,80 @@
+<section class="news detailswithpreviousnext module block">
+    <?php
+    if ($this->showTitle) {
+        echo $this->showBlockTitle('h2', array('class' => 'news-title'));
+    } else {
+        echo $this->showBlockTitle('h1', array('class' => 'news-title'));
+    }
+
+    $viewAllList = $this->getClientText('see_all_news_text');
+    if (!empty($this->newsCategoryDetails['CI_ReturnToList'])) {
+        if (trim($this->newsCategoryDetails['CI_ReturnToList']) != "") {
+            $viewAllList = $this->newsCategoryDetails['CI_ReturnToList'];
+        }
+    }
+
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+
+    if (count($this->paginator)):
+        ?>
+        <div class="news-article-list">
+            <?php
+            foreach ($this->paginator as $news):
+                $this->headTitle($news['NI_Title']);
+                $this->pageTitle($news['NI_Title']);
+                $date = new Zend_Date($news['ND_Date'], null, $langSuffix);
+                $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG, '.');
+                ?>
+                <?php if (!empty($news['NI_ImageSrc'])) : ?>
+                    <article class="news-article with-image">
+                    <?php else : ?>
+                        <article class="news-article">
+                        <?php endif; ?>
+                        <header class='news-header'>
+                            <?php if ($this->params['5']): ?>
+                                <span class="news-article-date date"><?php echo $date_string; ?></span>
+                            <?php endif; ?>                        
+
+                            <h1 class="news-article-title"><?php echo $news['NI_Title'] ?></h1>
+                        </header>
+                        <?php if ($this->params['6']): ?>
+                            <?php
+                            if (!empty($news['NI_ImageSrc'])) {
+                                $class = '';
+                            } else {
+                                $class = 'image-placeholder';
+                            }
+                            ?>
+                            <div class='news-article-image <?php echo $class ?>'>
+                                <?php
+                                if (!empty($news['NI_ImageSrc'])) {
+                                    $normal = $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'medium', array('class' => 'news-article-image-image'));
+                                    $large = $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'original', array(
+                                        'getSource' => true,
+                                    ));
+                                    echo $this->link($large, $normal, array('class' => 'news-article-image-link thumbnail prettyPhoto'));
+                                }
+                                ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="news-article-content content">
+                            <?php echo $this->decorateImage($news['NI_Text']); ?>
+                        </div>
+                        <div class="news-article-navigation navigation">
+                            <?php echo $this->link($this->listall_page, $viewAllList, array('class' => 'link-button news-article-link-button', 'title' => $viewAllList)); ?>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+        </div>
+        <?php echo $this->paginationControl($this->paginator, 'sliding', 'partials/news.details.paginator.phtml'); ?>
+    <?php else: ?>
+        <div class="news-no-article">
+            <?php if ($this->otherData): ?>
+                <?php $options = array('type' => 'page', 'message' => $this->getClientText('empty_data_disclaimer')); ?>
+                <p><?php echo $this->languageSwitcher($options); ?></p>
+            <?php else: ?>
+                <p><?php echo $this->getCibleText('news_no_news') ?></p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</section>

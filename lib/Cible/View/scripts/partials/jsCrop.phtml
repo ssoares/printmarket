@@ -1,0 +1,117 @@
+<div id="boxes"></div>
+<?php
+$urlBase = $this->view->url(array('action' => 'cropimage'));
+?>
+<?php $this->placeholder('footerScript')->captureStart(); ?>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(window).load(function () {
+        $('table#TD_DraftText_tbl').height(600);
+        $('td.mceIframeContainer').height(600);
+        $('td.mceIframeContainer').find('iframe').height(600);
+    });
+    var path = '<?php echo $urlBase; ?>';
+    var mode = '<?php echo $this->view->params['actionKey']; ?>';
+    var module = '<?php echo $this->view->current_module; ?>';
+    var showCrop = '<?php echo $this->view->showCrop; ?>';
+    var imgField = '#<?php echo $this->view->imageSrc; ?>';
+    if(showCrop == 1){
+        var splitST = $(imgField).val();
+        if(splitST.length > 0){
+           $('.trigger_crop').show();
+        }
+        $(imgField + '_preview').load(function(){
+            var splitST = $(this).attr('src').search("image_non_ disponible.jpg");
+            if(splitST < 0){
+               $('.trigger_crop').show();
+            }else{
+                $('.trigger_crop').hide();
+            }
+        });
+
+        $('.trigger_crop').click(function(e){
+            var imageScr = $(imgField).val();
+            var imageSrc_original = $(imgField + '_original').val();
+//            var imageSrc_crop = $(imgField + '_cropImage').val();
+
+            if(imageScr!=""){
+                var dialogJ = $('#boxes');
+                var isNew = null;
+                if(imageSrc_original!=""){
+                    isNew = 'Y';
+                    var pathYN = path + '/new/Y/';
+                    var myArray = imageSrc_original.split('/');
+                    imageScr = myArray[myArray.length-1];
+                }else{
+                    isNew = 'N';
+                    var pathYN = path + '/new/N/';
+                    var myArray = imageScr.split('/');
+                    imageScr = myArray[myArray.length-1];
+                }
+                pathYN = pathYN + 'mode/' + mode;
+//                if (mode == 'edit'){
+//                    pathYN = pathYN + '/id/' + '<?php echo $this->view->id; ?>';
+//                }
+                $('#cropImage').val(imageScr);
+                $.get(pathYN +'/image/' + imageScr,{},function(html){
+                    var winW = 1000;
+                    if ($(window).width() < 960){
+                        winW = $(window).width() - 60;
+                    }
+                    var winH = $(window).height() - 60;
+                    if (winH > 750){
+                        winH = 750;
+                    }
+                    dialogJ.html('');
+                    dialogJ.append(html);
+                    dialogJ.dialog({
+                       'modal':true,
+                        width:winW,
+                        height:winH,
+                        buttons:{
+                            '<?php echo $this->getCibleText('button_cancel'); ?>':function(){$(this).dialog("close");
+                                $('.imgareaselect-outer').css('visibility','hidden');
+                                    $('.imgareaselect-selection').parent().css('visibility','hidden');
+                                },
+                            '<?php echo $this->getCibleText('crop'); ?>':function(){
+                                var params = {
+                                    id:'<?php echo $this->view->id; ?>',
+                                    image: imageScr,
+                                    ImageSrc: $('#imageCropForm #ImageSrc').val(),
+                                    ImageDestination: $('#ImageDestination').val(),
+                                    x1: $('#x1').val(),
+                                    x2: $('#x2').val(),
+                                    y1: $('#y1').val(),
+                                    y2: $('#y2').val(),
+                                    w: $('#w').val(),
+                                    h: $('#h').val(),
+                                    rh: $('#rh').val(),
+                                    rw: $('#rw').val(),
+                                    maxWShow: $('#maxWShow').val(),
+                                    maxHShow: $('#maxHShow').val(),
+                                    maxWPreShow: $('#maxWPreShow').val(),
+                                    maxHPreShow: $('#maxHPreShow').val(),
+                                    realHShow: $('#realHShow').val(),
+                                    realWShow: $('#realWShow').val(),
+                                    sizeXWanted: $('#sizeXWanted').val(),
+                                    sizeYWanted: $('#sizeYWanted').val(),
+                                    returnPage: $('#returnPage').val(),
+                                    new: isNew,
+                                    'mode' : '<?php echo $this->view->params['actionKey']; ?>'
+                                }
+                                $.post(pathYN , params, function(data){
+                                    $('.imgareaselect-outer').css('visibility','hidden');
+                                    $('.imgareaselect-selection').parent().css('visibility','hidden');
+                                    $(imgField + "_preview").attr("src", data + "?timestamp=" + new Date().getTime());
+                                    dialogJ.dialog("close");
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    }
+});
+</script>
+<?php $this->placeholder('footerScript')->captureEnd(); ?>

@@ -1,0 +1,451 @@
+<?php echo $this->headScript()->appendFile($this->baseUrl() . '/js/jquery/jquery.json-2.2.min.js'); ?>
+<?php $this->headScript()->appendFile("{$this->baseUrl()}/js/csa/overlay.js") ?>
+
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_menu_structure_management_text'),
+    'pageDescription' => $this->getCibleText('header_menu_structure_management_description'),
+    'breadcrumb' => ''
+));
+?>
+
+<?php //$this->headScript()->captureStart() ?>
+<script type="text/javascript">
+	function pretty_header_format(){
+        var actions_panel = $('#page_edit #fieldset-actions');
+        var language_switcher = $('#page_edit #language-switcher');
+        var header_height = $('#page_edit #header').height() + 10;
+
+        actions_panel.css('top', header_height);
+        language_switcher.css('top', header_height);
+
+        return header_height;
+    }
+    if (typeof(loadTinyMce) == "object")
+                loadTinyMce.load('GI_Description', 'advanced');
+    /*
+        This method is responsible for loading the form and display it to screen
+    */
+    function getEditPage(menuID, parentID, action){
+
+        var _action = action;
+
+        $.get('<?php echo $this->baseUrl() ?>/page/manage/'+_action+'/menuID/'+menuID+'/parentID/' + parentID, function(data){
+
+            var window_height = $(window).height();
+            var window_width = $(window).width();
+
+            overlay.show();
+            if ($('#overlay').is(':hidden'))
+                    $('#overlay').show();
+            var page_edit = $('#page_edit');
+            var page_content = $('#page_content');
+
+            loadContent(page_content, data, menuID, parentID, _action);
+
+            var page_height = page_edit.height();
+            var acceptable_popup_height = window_height - (window_height / 10);
+
+            if( page_height > acceptable_popup_height ){
+                page_height = acceptable_popup_height;
+            }
+
+            var page_edit_top = Math.round((window_height - page_height ) / 2);
+
+            page_edit.css({
+                'top': page_edit_top + 'px',
+                'left': Math.round((window_width - 700) / 2) + 'px',
+                'width': '700px',
+                'height': page_height + 'px'
+            }).slideDown('fast');
+
+            header_height = pretty_header_format();
+            page_height = page_height - header_height;
+            page_content.css('height',  page_height + 'px');
+
+            var actions_panel = $('#page_edit #fieldset-actions');
+            page_content.css('margin-top', actions_panel.height() + 'px');
+
+            //page_edit.css('top', page_edit_top - header_height);
+
+        });
+    }
+
+    /*
+        loads data content into destination html element, after, catches the submission of the form added to destination
+    */
+    function loadContent(dest, data, menuID, parentID, action){
+        if(dest){
+            dest.html(data);
+            catchSubmit(dest, menuID, parentID, action);
+        }
+    }
+    /*
+        catchSubmit is responsible for trapping the submission of the ajax retrieved form and reloading them on error
+    */
+    function catchSubmit(parent, menuID, parentID, action){
+
+        // check if we've successfully added our page
+        var resultPane = $('#result');
+        var currentAction = $('span#buttonAction').text();
+        // if not empty resultPane, we've got a result, else, we need to fill in the form
+        if(resultPane.size() > 0)
+        {
+//                var _parentID      = resultPane.find('#parentID').text();
+                var _menuID        = resultPane.find('#menuID').text();
+//                var _menuTitleName = resultPane.find('#pageTitle').text();
+//                var _menuLangID    = resultPane.find('#pageLangID').text();
+
+            if (currentAction == 'submitSaveClose')
+            {
+             $('#page_edit').slideUp('slow');
+                //overlay.hide();
+                $('#overlay').hide();
+//                if (action == "add-menu")
+                    window.location.reload( true );
+            }
+            else
+            {
+                getEditPage(menuID, _menuID, 'edit-menu');
+            }
+
+        } else {
+
+            $('ul#language-switcher a', parent).each(function(){
+                var currentLink = $(this);
+
+                currentLink.click(function(){
+
+                    var preconfigured_action = '';
+
+                    if( currentLink.attr('href') != 'javascript:void(0);' ){
+                        preconfigured_action = currentLink.attr('href');
+                        currentLink.data('link', preconfigured_action);
+                        currentLink.attr('href','javascript:void(0);');
+                    } else {
+                        preconfigured_action = currentLink.data('link');
+                    }
+
+                    $.get(preconfigured_action, function(data){
+                        loadContent($('#page_content'), data, menuID, parentID, action);
+                        pretty_header_format();
+                    });
+                });
+
+            });
+
+            $('form button#cancel').click(function(){
+                $('#page_edit').slideUp('slow', function(){
+                    overlay.hide();
+                    if (!$('#overlay').is(':hidden'))
+                        $('#overlay').hide();
+                    $('#page_content').empty();
+                });
+                window.location.reload( true );
+            });
+            var button = '';
+            $('form input[type=submit][id^=submit]', parent).click(function(){
+                button = $(this).attr('id');
+
+            });
+           if ($('#loadImage').is(':checked'))
+               $('fieldset.imageGroup').show();
+
+           $('#loadImage').click(function(){
+                if ($('fieldset.imageGroup').is(':hidden'))
+                    $('fieldset.imageGroup').show();
+                else
+                    $('fieldset.imageGroup').hide();
+            });
+            // Catch submit
+            $('form', parent).submit(function(){
+                var submitData = 'buttonAction=' + button + '&' + $(this).serialize();
+                $.post('<?php echo $this->baseUrl() ?>/page/manage/'+action+'/menuID/'+menuID+'/parentID/' + parentID, submitData, function(data){
+
+                    var success = false;
+                    var pageID = '';
+                    var pageTitle = '';
+
+                    loadContent(parent, data, menuID, parentID, action);
+                    pretty_header_format();
+                });
+                return false;
+            });
+
+        }
+
+    }
+
+    function save_tree(serialized) {
+        overlay.show();
+        loading_el.show();
+        json = $.toJSON( serialized[0].o );
+        $.post('<?php echo $this->baseUrl() ?>/page/manage/update-menu-position/', 'order=' + json, function(){
+            loading_el.hide();
+            overlay.hide();
+        });
+
+        settingActionLinks();
+    }
+
+    function sortable_onReceive(event, ui){
+
+    }
+
+    function sortable_onStop(event, ui){
+
+    }
+
+    function showActionMenu(actionMenu){
+        actionMenu.slideDown('fast');
+    }
+
+    function hideActionMenu(actionMenu){
+        actionMenu.slideUp('fast');
+    }
+
+    function settingActionLinks(){
+        $('a.root_autogenerate_recursive').click(function(){
+            if( confirm('Vous êtes sur le point de générer le menu à partir de la structure, souhaitez-vous poursuivre?') ){
+                menu_id = $(this).attr('menuid');
+                current_id = 0;
+                $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'autogenerate-from-id')) ?>/menuID/'+menu_id+'/itemID/' + current_id,'autogenerate_recursive=true',function(data){
+//                    window.location.reload( true );
+                });
+            }
+
+        });
+        $('a.root_autogenerate').click(function(){
+            if( confirm('Vous êtes sur le point de générer le menu à partir de la structure, souhaitez-vous poursuivre?') ){
+                menu_id = $(this).attr('menuid');
+                current_id = 0;
+                $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'autogenerate-from-id')) ?>/menuID/'+menu_id+'/itemID/' + current_id,'autogenerate_recursive=false',function(data){
+                    window.location.reload( true );
+                });
+            }
+        });
+        $("a.root_add").click(function(){
+            menu_id = $(this).attr('menuid');
+            getEditPage(menu_id, 0, 'add-menu');
+        });
+        $("ul.sortable_menus li a[class!='submenu_add']").each(function(){
+            var a = $(this);
+            a.attr('href','javascript:void(0);');
+            var _li = a.parent();
+            var _id = _li.attr('id');
+            var _action_panel = _li.find('#actions-dialog-' + _id);
+            _action_panel.find('a.submenu_autogenerate').click(function(e){
+
+                var current_li = $(this).parents('li:first');
+
+                var menu_id = current_li.parents('ul.sortable_menus[menuid]:first').attr('menuid');
+
+                var current_id = current_li.attr('id');
+                $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'autogenerate-from-id')) ?>/menuID/'+menu_id+'/itemID/' + current_id,'autogenerate_recusive=true',function(data){
+                    window.location.reload( true );
+                });
+
+                var action_panel = $(this).parents('div.actions-dialog:first');
+                hideActionMenu(action_panel);
+
+            });
+            _action_panel.find('a.submenu_add').click(function(e){
+
+                var current_li = $(this).parents('li:first');
+
+                var menu_id = current_li.parents('ul.sortable_menus[menuid]:first').attr('menuid');
+
+                var current_id = current_li.attr('id');
+                getEditPage(menu_id, current_id, 'add-menu');
+
+                var action_panel = $(this).parents('div.actions-dialog:first');
+                hideActionMenu(action_panel);
+
+            });
+            _action_panel.find('a.submenu_edit').click(function(e){
+
+                var current_li = $(this).parents('li:first');
+
+                var menu_id = current_li.parents('ul.sortable_menus[menuid]:first').attr('menuid');
+
+                var current_id = current_li.attr('id');
+                getEditPage(menu_id, current_id, 'edit-menu');
+
+                var action_panel = $(this).parents('div.actions-dialog:first');
+                hideActionMenu(action_panel);
+
+            });
+            _action_panel.find('a.submenu_delete').click(function(e){
+
+                var current_li = $(this).parents('li:first');
+                var menu_id = current_li.parents('ul.sortable_menus[menuid]:first').attr('menuid');
+
+                var current_id = current_li.attr('id');
+
+                item_title = current_li.find('a:first').text();
+                has_sub_items = current_li.children('ul:first');
+
+                if( has_sub_items.size() > 0 ){
+                    message = "<?php echo $this->getCibleText('page_delete_item_and_children_message_confirmation'); ?>";
+                } else {
+                    message = "<?php echo $this->getCibleText('page_delete_item_message_confirmation'); ?>";
+                }
+
+                message = message.replace('%ITEM_NAME%', item_title);
+
+                // confirm and delete
+                if( confirm(message)){
+                    $.post('<?php echo $this->url(array('module'=>'page','controller'=>'manage', 'action'=>'delete-menu')) ?>/menuID/'+menu_id+'/itemID/' + current_id, 'delete=true', function(data){
+                        current_li.hide('fast', function(){
+                            $(this).remove();
+                        });
+                    });
+                }
+
+                var action_panel = $(this).parents('div.actions-dialog:first');
+                hideActionMenu(action_panel);
+
+            });
+        });
+    }
+    $(function(){
+        $('a[id^=menuTitle_]').click(function(e)
+        {
+            current_li = $(this).parents('li:first');
+            var action_panel = current_li.children('.actions-dialog:first');
+
+            if( action_panel.css('display') == 'block' )
+            {
+                hideActionMenu(action_panel);
+            }
+            else
+            {
+                $('.actions-dialog').each(function()
+                {
+                    var current_panel = $(this);
+
+                    if( current_panel.css('display') == 'block' )
+                        hideActionMenu( current_panel );
+                });
+                action_panel.css('top', e.pageY);
+                action_panel.css('left', e.pageX + 15);
+                showActionMenu(action_panel);
+            }
+        });
+    });
+    $(function(){
+
+        settingActionLinks();
+
+        overlay = new CSAOverlay('overlay');
+
+        loading_el = $("#loading");
+
+        loading_el.ajaxStart(function(){
+            $(this).show();
+            overlay.show();
+        });
+
+        loading_el.ajaxStop(function(){
+            $(this).hide();
+            overlay.hide();
+        });
+
+        var loading_top = ($(window).height() / 2) - 50;
+        var loading_left = ($(window).width() / 2) - 100;
+        loading_el.css({'position' : 'absolute',
+            'top' :  loading_top,
+            'left' : loading_left
+        });
+    });
+
+</script>
+
+<?php //$this->headScript()->captureEnd() ?>
+
+<?php
+    $menus = $this->menus;
+    $counter = 0;
+
+    foreach($menus as $menu){
+        ?>
+        <div id="default_form">
+            <div id="action_panel">
+                        <span class='menu-title'><?php echo $this->getCibleText("menu_{$menu['Title']}") ?></span>
+                <ul class="buttons">
+                    <li>
+                </li>
+                    <li><a href="javascript:void(0);" class="root_add action_submit add" menuid="<?php echo $menu['ID'] ?>"><?php echo $this->getCibleText('menu_add_root_item') ?></a></li>
+
+                    <?php
+                    if($this->isAdministrator()==1){
+                        if( $menu['Type'] == 1 ):
+                            ?><li><a href="javascript:void(0);" class="root_autogenerate_recursive action_submit add" menuid="<?php echo $menu['ID'] ?>"><?php echo $this->getCibleText('menu_generate_from_structure') ?></a></li><?php
+                        else:
+                            ?><li><a href="javascript:void(0);" class="root_autogenerate action_submit add" menuid="<?php echo $menu['ID'] ?>"><?php echo $this->getCibleText('menu_generate_from_structure') ?></a></li><?php
+                        endif;
+                    }
+                    ?>
+
+                </ul>
+            </div>
+        </div>
+        <?php
+        if(($menu['Type'] == 1)&&($this->isAdministrator()==1)){
+            $actions = array( 'submenu_autogenerate' => $this->getCibleText('menu_submenu_action_generate') ,'submenu_add' => $this->getCibleText('menu_submenu_action_add'), 'submenu_edit' => $this->getCibleText('menu_submenu_action_edit'), 'submenu_delete' => $this->getCibleText('menu_submenu_action_delete') );
+        }
+        else  if(($menu['Type'] == 1)){
+            $actions = array('submenu_add' => $this->getCibleText('menu_submenu_action_add'), 'submenu_edit' => $this->getCibleText('menu_submenu_action_edit'), 'submenu_delete' => $this->getCibleText('menu_submenu_action_delete') );
+        }
+        else{
+            $actions = array('submenu_edit' => $this->getCibleText('menu_submenu_action_edit'), 'submenu_delete' => $this->getCibleText('menu_submenu_action_delete'));
+        }
+        $custom_li_classes = $menu['Type'] == 1 ? "{$menu['Title']}_sortable_items sortable_items" : "{$menu['Title']}_sortable_items sortable_items no-nesting";
+        /*echo "<span class='menu-title'>{$menu['Title']}</span> (";
+        if( $menu['Type'] == 1 ):
+            ?>
+                <a href="javascript:void(0);" class="root_autogenerate_recursive" menuid="<?php echo $menu['ID'] ?>"><?php echo $this->getCibleText('menu_generate_from_structure') ?></a>
+            <?php
+        else:
+            ?>
+                <a href="javascript:void(0);" class="root_autogenerate" menuid="<?php echo $menu['ID'] ?>"><?php echo $this->getCibleText('menu_generate_from_structure') ?></a>
+            <?php
+        endif;
+        ?>|&nbsp;<a href="javascript:void(0);" class="root_add" menuid="<?php echo $menu['ID'] ?>"><?php echo $this->getCibleText('menu_add_root_item') ?></a> )<?php
+        */
+        echo $this->sortableTree( $menu['Menu'], array(
+            'stripHtml' => true,
+            'id' => $menu['Title'],
+            'class' => 'sortable_menus',
+            'attribs' => array(
+                'menuid' => $menu['ID']
+            ),
+            'acceptClass' => "{$menu['Title']}_sortable_items",
+            'customLiClass' => $custom_li_classes,
+            'onChange' => 'save_tree',
+            'receive' => 'sortable_onReceive',
+            'stop' => 'sortable_onStop',
+            'actions' => $actions
+        ));
+
+        $counter++;
+    }
+
+?>
+
+<?php echo $this->partial('partials/loading.phtml'); ?>
+
+<div id="page_edit">
+    <div id="header">
+         <?php
+            echo $this->partial('partials/header.pageDetails.phtml', array(
+                'pageTitle' => $this->getCibleText('page_menu_title'),
+                'pageDescription' => $this->getCibleText('page_menu_description'),
+                'breadcrumb' => '&nbsp;'
+            ));
+            ?>
+    </div>
+    <div id="page_content">
+
+    </div>
+</div>

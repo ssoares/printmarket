@@ -1,0 +1,20 @@
+
+<section class="forms module formsnewsletterfooter">
+    <?php
+
+    $inscriptionValidate = $this->inscriptionValidate;
+    echo $this->showBlockTitle('h2', array('class' => 'forms-title'));
+
+    if (!$inscriptionValidate) {
+
+        echo $this->form;
+    } else {
+        ?>
+        <p class="forms-contact-succeed">
+            <?php
+            echo($this->getClientText('form_contact_sent_tank_you_message'));
+            ?>
+        </p>
+    <?php }
+    ?>
+</section>

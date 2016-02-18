@@ -1,0 +1,100 @@
+//editor only
+#tinymce.mce-content-body { 
+}
+//back-end and front-end
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .front-end {
+    
+}
+//back-end and content
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content {     
+    ul, ol {
+        list-style:none;
+        & when (@device-type = 'desktop') {
+            margin: 0 0 10px 0;
+            padding: 10px 0 10px 0;
+        }
+        & when (@device-type = 'mobile') {
+            margin: 0 0 10px * @mobile-divider  0;
+            padding: 10px * @mobile-divider 0 10px * @mobile-divider 0;
+        }
+    }
+    ul ul, ol ol {
+        padding:0;
+        & when (@device-type = 'desktop') {
+            margin:4px 0 0 20px;
+        }
+        & when (@device-type = 'mobile') {
+            margin:4px 0 0 20px * @mobile-divider;
+        }
+    }    
+    li {
+        position:relative;
+        &:before {
+            content:"\2022";
+            position:absolute;
+            left:0;
+            top:0px;
+            width:18px;
+            display:inline-block;
+            font-weight:bold;
+            padding:0;
+            color:@brand-grey;
+            .responsive-font(@font-size-base + 3);
+            & when (@device-type = 'desktop') {
+                width:18px;
+                .responsive-font(@font-size-base + 3);
+            }
+            & when (@device-type = 'mobile') {
+                width:18px * @mobile-divider-text;
+                .responsive-font(@font-size-base * @mobile-divider-text);
+            }
+        }
+        & when (@device-type = 'desktop') {
+            margin-bottom:4px;
+            padding:0 0 0 18px;
+            min-height:22px;
+        }
+        & when (@device-type = 'mobile') {
+            margin:0 0 4px * @mobile-divider 0;
+            padding:0 0 0 18px * @mobile-divider-text;
+            min-height:22px * @mobile-divider;
+        }
+    }
+    ol {
+        counter-reset:list1;
+        li:before {
+            counter-increment: list1;
+            content:counter(list1) ".";
+            .responsive-font(@font-size-base + 1);  
+            top:0px;
+        }
+        ol {
+            counter-reset:list2;
+            li:before {
+                counter-increment: list2;
+                content:counter(list2, upper-alpha) ".";
+            }
+            ol {
+                counter-reset:list3;
+                li:before {
+                    counter-increment: list3;
+                    content:counter(list3, upper-roman) ".";
+                }
+                ol {
+                    counter-reset:list4;
+                    li:before {
+                        counter-increment: list4;
+                        content:counter(list4, lower-alpha) ".";
+                    }
+                    ol {
+                        counter-reset:list5;
+                        li:before {
+                            counter-increment: list5;
+                            content:counter(list5, lower-roman) ".";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

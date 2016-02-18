@@ -1,0 +1,67 @@
+
+<div class="block common-search-result">
+<?php if (!empty($this->form)) echo $this->form->render();?>
+    <?php
+    $searchCount = $this->searchCount;
+    $webRoot = rtrim(Zend_Registry::get('web_root'));
+    $words = $this->words;
+    ?>
+    <?php if ($searchCount > 0): ?>
+    <?php
+    $messageResults = ($searchCount == 1) ? $this->getCibleText('search_single_result_text') :
+       $this->getCibleText('search_multiple_results_text');
+   ?>
+    <div id='message'><?php echo $searchCount ." ".$messageResults; ?> "<?php echo($words) ?>"</div>
+    <div id='search-result'>
+        <?php foreach ($this->searchResults as $site => $siteResults): ?>
+        <h2 class=""><?php echo $this->getClientText('site_label_' . $site); ?></h2>
+            <?php foreach ($siteResults as $key => $results): ?>
+            <?php $label = $results['label']; unset($results['label'])?>
+            <?php // $id = $results['id']; unset($results['id'])?>
+        <div id='<?php echo $key; ?>'>
+            <span class="font_size_large titilliumRegular colorTwo liStyle"><?php echo $label; ?> (<?php echo(count($results)); ?>)</span>
+            <?php foreach ($results as $data): ?>
+                <?php if (!empty($data['link'])): ?>
+                <?php $url = $site == $this->currentSite ? "$webRoot{$data['link']}" : $this->$site . $data['link']; ?>
+                    <p class="title"><a href="<?php echo($url); ?>"><?php echo $this->splitHighlightSearch($data['title'], true); ?></a></p>
+                    <?php if (!empty($data['excerpt'])): ?>
+                        <p class="content">
+                            <?php echo $this->splitHighlightSearch($data['excerpt']);?>
+                        </p>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+    </div>
+
+    <div id='shortcutLinks'>
+        <?php foreach ($this->searchResults as $site => $siteResults): ?>
+        <h2 class=""><?php echo $this->getClientText('site_label_' . $site); ?></h2>
+        <ul>
+            <?php foreach ($siteResults as $key => $results): ?>
+                <?php $label = $results['label']; unset($results['label'])?>
+            <li class="font_size_large titilliumRegular colorTwo"><?php echo $this->link('#' . $key,$label . '('.count($results).')'); ?> </li>
+        <?php endforeach; ?>
+        </ul>
+        <?php endforeach; ?>
+    </div>
+    <?php else:?>
+        <?php if (!empty($words)): ?>
+    <div id='message'><?php echo($this->getClientText('search_no_result_text')); ?> "<?php echo($words) ?>"</div>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function(){
+<?php if (strlen($this->words) > 0): ?>
+        $(window).load(function(){
+            $('#search-box-terme').val('<?php echo $this->words ?>');
+        });
+<?php endif; ?>
+    });
+    //]]>
+</script>

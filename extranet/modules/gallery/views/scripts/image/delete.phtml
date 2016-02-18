@@ -1,0 +1,53 @@
+<?php
+    $image  = $this->image;
+?>
+<?php
+
+//var_dump($this);
+    if( $this->isXmlHttpRequest ){
+        if($this->deleted){
+            if($this->success){
+?>              <div id="result">
+                    <span id="action" style="display: none">deleteImage</span>
+                    <span id="success" style="display: none">true</span>
+                    <span id="imageID" style="display: none"><?php echo $this->imageID ?></span>
+                </div>                
+<?php       }
+            else{                
+?>              <p>Cette image n'existe plus dans le système</p>
+                <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                    <div>
+                        <input type="submit" id="delete" name="delete" value="OK" />
+                    </div>
+                </form>
+<?php       }
+        }
+        elseif( $this->success ){
+?>          <div id="result">
+                <span id="action" style="display: none">deleteImage</span>
+                <span id="success" style="display: none">true</span>
+                <span id="imageID" style="display: none"><?php echo $this->imageID ?></span>
+            </div>            
+<?php   }
+        else{
+?>          <div id="container_middle_full">    
+<?php           if ($image):
+?>                  <h3><?php echo($image['II_Title']) ?></h3>
+                    <p><?php echo str_replace('%ELEMENT_TITLE%', $image['II_Title'], $this->getCibleText('module_delete_message_confirmation')) ?></p>
+                    <!--<form action="<?php echo $this->url(array('action'=>'delete')); ?>" method="post">-->
+                    <form enctype="application/x-www-form-urlencoded" method="post" action="">
+                        <div>
+                            <input type="submit" id="delete" name="delete" value="<?php echo $this->getCibleText('button_yes') ?>" />
+                            <!--<input type="submit" name="cancel" value="<?php echo $this->getCibleText('button_no') ?>" />-->
+                            <!--<button id="cancel" name="cancel" type="button" onclick="document.location.href='<?php echo($this->return); ?>'"><?php echo $this->getCibleText('button_no') ?></button>-->
+                            <button id="cancel" name="cancel" type="button"><?php echo $this->getCibleText('button_no') ?></button>
+                        </div>
+                    </form>
+<?php           else: ?>
+                    <p><?php echo $this->getCibleText('module_element_nout_found') ?></p>
+                    <a href="<?php echo ($this->return); ?>"><?php echo $this->getCibleText('button_return') ?></a>
+<?php           endif; ?>
+            </div>
+<?php   } 
+    }
+?>

@@ -1,0 +1,52 @@
+<?php $other = (!empty($this->data[0])) ? $this->data[0]['notLogged'] : 0; ?>
+<?php $total = $other; $nbLogged = 0;?>
+<?php
+$colspan = ($this->data['viewType'] == 'noCount') ? 2 : 3;
+$noCount = ($this->data['viewType'] == 'noCount') ? false : true;
+?>
+<table id="viewers">
+    <thead>
+        <tr>
+            <th class="sorting center"><?php echo $this->getCibleText('newsletter_statistic_fisrtlastname_label'); ?></th>
+            <th class="sorting center"><?php echo $this->getCibleText('newsletter_statistic_email_label'); ?></th>
+            <th class="sorting center"><?php echo $this->getCibleText('newsletter_statistic_lastaccess_label'); ?></th>
+            <?php if ($noCount): ?>
+            <th class="sorting center">Vu</th>
+            <?php endif; ?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->data as $key => $value): ?>
+            <?php if ($key > 0): ?>
+            <tr id="nl-<?php echo $key; ?>">
+                <td class="first"><?php echo $value['firstName'] . ' ' . $value['lastName']; ?></td>
+                <td class="middle"><?php echo $value['email']; ?></td>
+                <td class="middle"><?php echo $value['L_Datetime']; ?></td>
+                <?php if ($noCount): ?>
+                    <td class="center last"><?php echo $value['count']; ?></td>
+                    <?php $total += $value['count']; ?>
+                <?php endif; ?>
+            </tr>
+            <?php $nbLogged += 1; ?>
+            <?php endif; ?>
+        <?php
+        endforeach;
+        ?>
+    </tbody>
+    <tfoot>
+            <tr class="">
+                <th class="borders first" colspan="<?php echo $colspan; ?>"><?php echo $this->getCibleText('newsletter_statistic_totallogged_label'); ?></th>
+                <th class="borders bold center"><?php echo $nbLogged; ?></th>
+            </tr>
+            <?php if ($noCount): ?>
+            <tr class="">
+                <th class="borders first" colspan="<?php echo $colspan; ?>"><?php echo $this->getCibleText('newsletter_statistic_notlogged_label'); ?></th>
+                <th class="borders bold center"><?php echo $other; ?></th>
+            </tr>
+            <tr class="">
+                <th class="bold borders first" colspan="<?php echo $colspan; ?>"><?php echo $this->getCibleText('newsletter_statistic_totalview_label'); ?></th>
+                <th class="borders center bold"><?php echo $total; ?></th>
+            </tr>
+            <?php endif; ?>
+    </tfoot>
+</table>

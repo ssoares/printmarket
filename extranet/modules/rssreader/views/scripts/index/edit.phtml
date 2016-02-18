@@ -1,0 +1,13 @@
+<?php
+echo $this->partial('partials/header.pageDetails.phtml', array(
+    'pageTitle' => $this->getCibleText('header_edit_rss_reader_text'),
+    'pageDescription' => $this->getCibleText('header_rss_reader_description'),
+    'breadcrumb' => ''
+));                
+?>
+
+<div id="default_form">
+    <div id="form_panel">
+        <?php echo($this->form);?>        
+    </div>                    
+</div>

@@ -1,0 +1,82 @@
+<div class="block_repertoire_home">    
+    <h2 class="repertoire_title_home">
+        <?php echo $this->getClientText('repertoire_latest_repertoire_text'); ?>
+    </h2>    
+    <?php    
+    if($this->repertoire)
+    {                
+        foreach($this->repertoire as $repertoire)
+        {               
+        ?>  
+            <div class="repertoire">                                               
+                <div class="repertoire_text_container">
+                    <div class="repertoire_title">                        
+                        <a href="<?php echo $this->baseUrl() . '/' . $this->details_page . "/"  . $date_string_url . "/" . $repertoire['RI_ValUrl'] ?>" title="<?php echo $this->getClientText('see_details_repertoire_text') ?>">
+                           <?php echo $repertoire['RI_Secteur']; ?> 
+                        </a>
+                    </div>                        
+                    <?php
+                    if( $this->params['5'] )
+                    {                        
+                        ?>
+                        <div class="repertoire_date">
+                            <?php echo $date_string; ?>
+                        </div>
+                    <?php
+                    }
+                    ?>                        
+                    <?php
+                    if( $this->params['3'] && !empty($repertoire['RI_Brief']) )  
+                    {
+                        // Show brief text
+                        $text = Cible_FunctionsGeneral::html2text($repertoire['RI_Brief']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 150);
+                    }
+                    else
+                    {
+                        // If not, show long text
+                        $text = Cible_FunctionsGeneral::html2text($repertoire['RI_Text']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 150);
+                    }
+                    ?>
+                    <div class="repertoire_brief">
+                        <a href="<?php echo $this->baseUrl() . '/' . $this->details_page . "/"  . $date_string_url . "/" . $repertoire['RI_ValUrl'] ?>" title="<?php echo $this->getClientText('see_details_repertoire_text') ?>">
+                            <?php echo $text ?>
+                        </a>
+                    </div>
+                </div>
+                <?php 
+                if(!empty($repertoire['RI_ImageSrc']))
+                { ?>
+                    <div class="repertoire_photo_container">
+                    <?php 
+                        echo $this->moduleImage("repertoire",$repertoire['RD_ID'], $repertoire['RI_ImageSrc'], 'thumb', array('class'=>'repertoire_photo_list', 'border'=>'0', 'prettyPhoto'=>array('size'=>'original','alt'=>$repertoire['RI_Secteur'],'title'=>$repertoire['RI_Text'])));
+                        //echo $this->moduleImage("repertoire",$repertoire['RD_ID'], $repertoire['RI_ImageSrc'], 'thumb', array('class'=>'repertoire_photo_list', 'border'=>'0', 'prettyPhoto' => array('size'=>'original')));
+                    ?>
+                    </div>     
+                <?php
+                } 
+                ?>   
+            </div>
+        <?php           
+        }
+        ?>
+     <div class="repertoire_view_all">
+        <a href="<?php echo $this->baseUrl() . '/' . $this->listall_page ?>" title="<?php echo $this->getClientText('see_all_repertoire_text') ?>" class="repertoire_view_all">
+            <?php echo $this->getClientText('see_all_repertoire_text') ?>
+        </a>
+    </div>
+    <?php
+    }
+    else
+    {
+    ?>
+    <div class="repertoire_brief_home_page">
+        <p>
+            <?php 
+            echo $this->getCibleText('repertoire_no_repertoire'); ?>
+        </p>
+    </div><?php
+    }
+    ?>
+</div>

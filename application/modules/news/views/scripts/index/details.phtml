@@ -1,0 +1,85 @@
+<section class="news details module block">
+  <div class="container">
+    <div class="row">
+    <?php
+    echo $this->showBlockTitle('h2', array('class' => 'news-title'));
+
+    $viewAllList = $this->getClientText('see_all_news_text');
+    if (!empty($this->newsCategoryDetails['CI_ReturnToList'])) {
+        if (trim($this->newsCategoryDetails['CI_ReturnToList']) != "") {
+            $viewAllList = $this->newsCategoryDetails['CI_ReturnToList'];
+        }
+    }
+
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+
+    if ($this->news) :
+        foreach ($this->news as $news) :
+            $this->headTitle($news['NI_Title']);
+            $this->pageTitle($news['NI_Title']);
+            $date = new Zend_Date($news['ND_Date'], null, $langSuffix);
+            $date_string = Cible_FunctionsGeneral::dateToString($date, Cible_FunctionsGeneral::DATE_LONG, '.');
+            $descr = Cible_FunctionsGeneral::html2text($news['NI_Text']);
+            $this->headMeta()->appendProperty('og:title', $news['NI_Title']);
+            $this->headMeta()->appendProperty('og:description', $descr);
+            ?>
+            <?php if (!empty($news['NI_ImageSrc'])) : ?>
+                <article class="news-article with-image">
+                <?php else : ?>
+                    <article class="news-article">
+                <?php endif; ?>
+                    <div class="col-md-3">
+                          <div class='news-article-image'>
+                              <?php
+                              if (!empty($news['NI_ImageSrc'])) {
+                                    $imgSrc = $this->newsImage($news['ND_ID'],
+                                        $news['NI_ImageSrc'], 'medium',
+                                        array('getSource' => true));
+                                    $img = Zend_Registry::get('absolute_web_root') . ltrim($imgSrc);
+                                    $this->headMeta()->appendProperty('og:image', $img);
+                                    $normal = $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'medium', array('alt' => $news['NI_Title'] , 'title' => $news['NI_ImageAlt'],'class' => 'news-article-image-image'));
+                                    $large = $this->newsImage($news['ND_ID'], $news['NI_ImageSrc'], 'original', array(
+                                        'getSource' => true,
+                                    ));
+                                    echo $this->link($large, $normal, array('title' => $news['NI_ImageAlt'],'class' => 'news-article-image-link prettyPhoto'));
+                                }else{
+                                    echo $this->image($this->locateFile("image-news-default.jpg"), array('alt' => $news['NI_Title'] , 'title' => $news['NI_ImageAlt'],'class' => ''));
+                                }
+                              ?>
+                          </div>
+                        <div class="socialPartial col-md-4 col-lg-12">
+                        <?php echo $this->partial('partials/shares.phtml', array('view' => $this)); ?>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                      <header class='news-header content'>
+                          <?php if ($this->params['5']): ?>
+                              <span class="news-article-date date"><?php echo $date_string; ?></span>
+                          <?php endif; ?>
+
+                          <!-- <h1 class="news-article-title"><?php // echo $news['NI_Title'] ?></h1> -->
+                      </header>
+
+                      <div class="news-article-content content">
+                          <?php echo $this->decorateImage($news['NI_Text']); ?>
+                      </div>
+
+                      <div class="news-article-navigation navigation">
+                          <?php echo $this->link($this->listall_page, $viewAllList, array('class' => 'link-button news-article-link-button', 'title' => $viewAllList)); ?>
+                      </div>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="news-no-article">
+                <?php if ($this->otherData): ?>
+                    <?php $options = array('type' => 'page', 'message' => $this->getClientText('empty_data_disclaimer')); ?>
+                    <p><?php echo $this->languageSwitcher($options); ?></p>
+                <?php else: ?>
+                    <p><?php echo $this->getCibleText('news_no_news') ?></p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+</div>
+</div>
+</section>

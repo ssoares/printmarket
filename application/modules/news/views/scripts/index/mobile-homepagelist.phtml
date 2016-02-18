@@ -1,0 +1,69 @@
+<section class='news homepagelist module block'>
+    <?php
+    echo $this->showBlockTitle('h2', array('class' => 'news-title'));
+    ?>
+    <?php
+    $langSuffix = Cible_FunctionsGeneral::getLocalForLanguage(Zend_Registry::get("languageID"));
+    if ($this->news) :
+        $count = 1;
+        foreach ($this->news as $news) :
+            $date_string_url = Cible_FunctionsGeneral::dateToString($news['ND_Date'], Cible_FunctionsGeneral::DATE_SQL, '-');
+            $date_string = Cible_FunctionsGeneral::dateToString($news['ND_Date'], Cible_FunctionsGeneral::DATE_LONG, '.');
+            $href = $this->baseUrl() . '/' . $this->details_page . "/" . $date_string_url . "/" . $news['NI_ValUrl'];
+            ?>
+            <article class="news-article">
+                <header class='news-header'>
+                    <?php if ($this->params['5']): ?>
+                        <div class="news-article-date">
+                            <?php
+                            echo $date_string;
+                            ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php /*
+                    <h1 class="news-article-title">
+                        <?php echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text'))); ?>
+                    </h1>
+                     */
+                    ?>
+                </header>
+                <div class="news-article-content">
+                    <?php
+                    if ($this->params['3'] && !empty($news['NI_Brief'])) {
+                        // Show brief text
+                        $text = Cible_FunctionsGeneral::html2text($news['NI_Brief']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                    } else {
+                        // If not, show long text
+                        $text = Cible_FunctionsGeneral::html2text($news['NI_Text']);
+                        $text = Cible_FunctionsGeneral::truncateString($text, 130);
+                    }
+                    ?>
+                    <div class="news-article-brief">
+                        <?php // echo $this->link($href, $news['NI_Title'], array('title' => $this->getClientText('see_details_news_text')));   ?>
+                        <?php echo $text; ?>
+                        <?php
+                        echo $this->link(
+                                $href, $this->getClientText('see_details_news_text'), array(
+                            'title' => $this->getClientText('see_details_news_text'),
+                            'class' => 'news-article-link'
+                                )
+                        );
+                        ?>
+                    </div>
+                </div>
+            </article>
+        <?php endforeach; ?>
+
+    <?php else: ?>
+        <div class="news-no-article">
+            <?php if ($this->otherData): ?>
+                <?php $options = array('type' => 'page', 'message' => $this->getClientText('empty_data_disclaimer')); ?>
+                <p><?php echo $this->languageSwitcher($options); ?></p>
+            <?php else: ?>
+                <p><?php echo $this->getCibleText('news_no_news') ?></p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+</section>
