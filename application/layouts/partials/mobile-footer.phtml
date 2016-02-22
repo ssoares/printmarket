@@ -3,7 +3,7 @@ $section = $this->section;
 $lang = $this->view->languageId;
 $baseUrl = Zend_Registry::get('web_root');
 $config = Zend_Registry::get('config');
-$edith_logo = $this->link('#', $this->clientImage('logo-edith.png', array('alt' => "Edith", 'title' => "Edith")));
+$edith_logo = $this->link('#', $this->clientImage('logo.png', array('alt' => "", 'title' => "")));
 $array_replace = array(
     '%%%GET_DATE_YEAR%%%' => date('Y'),
     '%%%SITE_NAME%%%' => $config->site->title->$lang);
@@ -13,7 +13,7 @@ $options = array('class' => 'displayStandard');
 <div class="site-footer-site">
     <?php echo $this->link('#', $this->getCibleText('footer_site_standard'), $options); ?>
 </div>
-<div class="site-footer-edith">
+<div class="site-footer">
     <?php echo str_replace('##edith##', $edith_logo, $this->getCibleText('footer_cible_propulse')); ?>
 </div>
 <div class='site-footer-copyright'>

@@ -23,6 +23,9 @@ $breadCrumb = $this->breadcrumbmenu(array('menuTitle' => 'principal',
 
 <section class="bg-alt">
     <div class="container center991">
+        <?php if ($this->showTitle): ?>
+            <h1 class="site-main-title"><?php echo $this->pageTitle()->toString(null, null, true) ?></h1>
+        <?php endif; ?>
         <?php echo $this->placeholder('zone1') ?>
     </div>
 </section>

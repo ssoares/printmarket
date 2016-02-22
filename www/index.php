@@ -2,7 +2,7 @@
 
 header('X-UA-Compatible: IE=edge');
 ini_set('magic_quotes_gpc', 'off');
-
+ini_set('display_errors', true);
 // define the timezone
 date_default_timezone_set('Canada/Eastern');
 setlocale(LC_CTYPE, 'fr_CA.utf8');
@@ -31,18 +31,17 @@ define('ISCRONJOB', false);
  */
 define("FRONTEND", $application_path . '/');
 
-define("WURFL_DIR", $lib_path . '/Wurfl/'); // WURFL INSTALLATION DIR
-define("RESOURCES_DIR", $rootDir . "/cache/wurfl/"); // DIRECTORY WHERE YOU PUT YOUR CONFIGURATION FILES
-require_once WURFL_DIR . 'Application.php';
+//define("WURFL_DIR", $lib_path . '/Wurfl/'); // WURFL INSTALLATION DIR
+//define("RESOURCES_DIR", $rootDir . "/cache/wurfl/"); // DIRECTORY WHERE YOU PUT YOUR CONFIGURATION FILES
+//require_once WURFL_DIR . 'Application.php';
 // setting up directories and loading of first classes
 set_include_path('.'
     . PATH_SEPARATOR . "{$lib_path}"
     . PATH_SEPARATOR . "{$lib_path}/Cible/Models"
     . PATH_SEPARATOR . "{$lib_path}/QCal"
     . PATH_SEPARATOR . "{$lib_path}/TcPdf"
-    . PATH_SEPARATOR . $lib_path . '/Wurfl/'
-    . PATH_SEPARATOR . $rootDir . "/cache/wurfl/"
-    . PATH_SEPARATOR . $rootDir . "/cache/twig/"
+//    . PATH_SEPARATOR . $lib_path . '/Wurfl/'
+//    . PATH_SEPARATOR . $rootDir . "/cache/wurfl/"
     . PATH_SEPARATOR . get_include_path());
 
 require_once 'Zend/Loader.php';

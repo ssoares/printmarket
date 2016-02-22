@@ -124,7 +124,7 @@ class PageController extends Cible_Controller_Action {
         $layout_file = Cible_FunctionsPages::getLayoutPath($currentPageID);
         $tplName = strtolower($Row['V_Name']);
         $view_template = $Row['V_Path'];
-        $mobile = Zend_Registry::get('isMobile');
+        $mobile = Zend_Registry::isRegistered('isMobile')?Zend_Registry::get('isMobile'):false;
         if ($mobile) {
             $tmpViewTpl = explode('/', $view_template);
             $tmpViewTpl[1] = self::IS_MOBILE . '-' . $tmpViewTpl[1];
