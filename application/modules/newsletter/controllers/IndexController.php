@@ -966,4 +966,29 @@ class Newsletter_IndexController extends Cible_Controller_Action
             }
         }
     }
+
+    public function ajaxAction()
+    {
+        $action = $this->_getParam('actionAjax');
+        $this->disableView();
+        if ($this->_isXmlHttpRequest && $action == 'subscribe'){
+            $data = $this->_request->getPost();
+            $lang = Zend_Registry::get('languageID');
+            $oGP = new GenericProfilesObject();
+            $oNl = new NewsletterProfilesObject();
+            $profile = array('GP_Email' => $data['email'],
+                'GP_FirstName' => 'empty',
+                'GP_LastName' => 'empty',
+                'GP_Salutation' => '0',
+                'GP_Language' => $lang,
+                );
+            $id = $oGP->saveProfile($profile, $lang);
+            $tmp = $oNl->populate($id, $lang);
+            if (empty($tmp)){
+                $oNl->insert(array($oNl->getDataId()=> $id, 'NP_Categories' => 2), $lang);
+            }
+
+            echo true;
+        }
+    }
 }

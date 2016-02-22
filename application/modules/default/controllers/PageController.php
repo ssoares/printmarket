@@ -228,8 +228,11 @@ class PageController extends Cible_Controller_Action {
             if (!is_null($style->ie_version)) {
                 $this->view->headLink()->offsetSetStylesheet((200 + $i), $pathFile, $style->media, $style->ie_version);
                 $this->view->headLink()->prependStylesheet($pathFile, $style->media, $style->ie_version);
-            } else {
+            } elseif (!is_null($style->site)) {
                 $this->view->headLink()->offsetSetStylesheet(-1, $pathFile, $style->media);
+                $this->view->headLink()->prependStylesheet($pathFile, $style->media);
+            } else {
+                $this->view->headLink()->offsetSetStylesheet((200 + $i), $pathFile, $style->media);
                 $this->view->headLink()->prependStylesheet($pathFile, $style->media);
             }
             $i++;
@@ -276,14 +279,13 @@ class PageController extends Cible_Controller_Action {
         }
 
         if ($this->_config->bootstrap->enabled == 1) {
-            $this->view->headScript()->appendFile($this->view->locateFile('bootstrap.min.js'));
+            $this->view->headScript()->appendFile($this->view->locateFile('bootstrap.js'));
             $this->view->headLink()->offsetSetStylesheet(-110, $this->view->locateFile('bootstrap.css'), 'all');
-            $this->view->headLink()->appendStylesheet($this->view->locateFile('bootstrap.css'), 'all');
         }
 
         //doit ABSOLUMENT être en premier
-        $this->view->headLink()->offsetSetStylesheet(-100, $this->view->locateFile('integration.css'), 'all');
-        $this->view->headLink()->appendStylesheet($this->view->locateFile('integration.css'), 'all');
+//        $this->view->headLink()->offsetSetStylesheet(-100, $this->view->locateFile('integration.css'), 'all');
+//        $this->view->headLink()->appendStylesheet($this->view->locateFile('integration.css'), 'all');
 
         if ($this->_config->setBgStyle)
             $this->view->setBgStyle();

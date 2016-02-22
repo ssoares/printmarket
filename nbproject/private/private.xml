@@ -3,9 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/ssoares/workspace/printmarket/extranet/layouts/layout.phtml</file>
-            <file>file:/home/ssoares/workspace/printmarket/application/modules/default/controllers/PageController.php</file>
-            <file>file:/home/ssoares/workspace/printmarket/www/extranet/themes/default/css/site.css</file>
+            <file>file:/home/ssoares/workspace/printmarket/www/themes/default/css/contact-form.css</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/text/views/scripts/index/index.phtml</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/forms/views/scripts/index/forms-contact.phtml</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/forms/models/FormContact.php</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/newsletter/controllers/IndexController.php</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/default/views/scripts/template/two-columns.phtml</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/layouts/main-common.phtml</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/default/views/scripts/template/home.phtml</file>
+            <file>file:/home/ssoares/workspace/printmarket/application/modules/news/views/scripts/index/details.phtml</file>
+            <file>file:/home/ssoares/workspace/printmarket/www/js/tm-scripts.js</file>
         </group>
     </open-files>
 </project-private>

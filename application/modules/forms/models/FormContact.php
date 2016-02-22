@@ -15,17 +15,17 @@ class FormContact extends Cible_Form_GenerateForm
         $this->getDisplayGroup('leftGrp')->setLegend(null);
         $this->getDisplayGroup('rightGrp')->setLegend(null);
         // Add captcha to the form
-        $this->getView()->formAddCaptcha($this, array("class" => "col-md-12",
-            'tagCaptcha' => 'div', 'tagRefresh' => 'div'));
+//        $this->getView()->formAddCaptcha($this, array("class" => "col-md-12",
+//            'tagCaptcha' => 'div', 'tagRefresh' => 'div'));
 
         // Submit button
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setLabel($this->getView()->getCibleText('button_submit'))
-            ->setAttrib('class', 'button-submit')
+            ->setAttrib('class', 'btn btn-primary')
             ->setDecorators(array(
                 'ViewHelper',
                 'Errors',
-                array('row' => 'HtmlTag', array('tag' => 'div', 'class' => 'col-md-12')))
+                array('row' => 'HtmlTag', array('tag' => 'div', 'class' => 'btn-wr col-md-12')))
                 );
 
         $this->addElement($submit);
@@ -37,5 +37,8 @@ class FormContact extends Cible_Form_GenerateForm
         $this->getDisplayGroup('captcha-submit')
             ->setDecorators(array('FormElements', 'Fieldset'))
             ->setOrder(2000);
+
+        $this->setAttrib('class', 'form')
+            ->setDecorators(array('FormElements', 'Form'));
     }
 }

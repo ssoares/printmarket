@@ -1,0 +1,16 @@
+<?php
+// loads the placeholders according to the number of zones
+$emptyPlaceholders = $this->zonesBlocks(array('nbZones' => $this->nbZones));
+?>
+<section class="well9 bg-alt">
+    <div class="container center991">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+            <?php echo $this->placeholder('zone1') ?>
+            </div>
+            <div class="col-md-8 col-sm-12 col-xs-12">
+            <?php echo $this->placeholder('zone2') ?>
+            </div>
+        </div>
+    </div>
+</section>

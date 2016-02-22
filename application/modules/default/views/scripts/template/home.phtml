@@ -4,70 +4,60 @@ $emptyPlaceholders = $this->zonesBlocks(array('nbZones' => $this->nbZones));
 ?>
 <?php if (!isset($emptyPlaceholders[7])): ?>
     <div class="site-banner inverted site-main-home-zone-7">
-        <?php echo $this->placeholder('zone7') ?>
+        <?php // echo $this->placeholder('zone7') ?>
     </div>
 <?php else: ?>
     <div class="site-banner inverted" role="banner">
-        <?php $src = $this->imgHeader; ?>
-        <?php echo $this->image($this->imgHeader, array('class' => 'img-header', 'direct' => true)); ?>
+        <?php // $src = $this->imgHeader; ?>
+        <?php // echo $this->image($this->imgHeader, array('class' => 'img-header', 'direct' => true)); ?>
     </div>
 <?php endif; ?>
-<div class="site-home-main-container container">
-    <div class="site-main-home-zone-1 col-md-12">
+<section class="cont-wr">
+    <div class="parallax well1" data-url="<?php echo $this->locateFile('parallax1.jpg'); ?>" data-mobile="true"></div>
+    <div class="container text-center banner">
+        <?php if ($this->showTitle): ?>
+            <h1 class="site-title"><?php echo $this->pageTitle()->toString(null, null, true) ?></h1>
+        <?php endif; ?>
+        <div class="cnt">
         <?php if (!isset($emptyPlaceholders[1])): ?>
-            <!--<div id="zone1" class="">-->
-            <?php echo $this->placeholder('zone1') ?>
-            <!--</div>-->
+        <?php echo $this->placeholder('zone1') ?>
         <?php endif; ?>
+        </div>
     </div>
-    <div class="row">
-        <?php $style = !isset($emptyPlaceholders[3])? 'col-md-6' : 'col-md-12'; ?>
-        <div class="site-main-home-zone-2 <?php echo $style?>">
-            <?php if ($this->showTitle): ?>
-                <h1 class="site-title"><?php echo $this->pageTitle()->toString(null, null, true) ?></h1>
-            <?php endif; ?>
+</section>
+<section class="parallax parallax2" data-url="<?php echo $this->locateFile('parallax2.jpg'); ?>" data-mobile="true" data-speed="0.7">
+    <div class="container text-center wow fadeIn" data-wow-duration="2s">
+        <h2>Ce que vous cherchiez
+            <small>sera enfin ici!</small>
+        </h2>
+        <div class="row offs">
+            <div class="block-icon box box__mod col-md-6  col-sm-6 col-xs-12">
             <?php if (!isset($emptyPlaceholders[2])): ?>
-                <!--<div id="zone2" class="">-->
-                <?php echo $this->placeholder('zone2') ?>
-                <!--</div>-->
+            <?php echo $this->placeholder('zone2') ?>
             <?php endif; ?>
-        </div>
-        <div class="site-main-home-zone-3 col-md-6">
+            </div>
+            <div class="block-icon box box__mod col-md-6 col-sm-6 col-xs-12">
             <?php if (!isset($emptyPlaceholders[3])): ?>
-                <!--<div id="zone3" class="">-->
-                <?php echo $this->placeholder('zone3') ?>
-                <!--</div>-->
+            <?php echo $this->placeholder('zone3') ?>
             <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
-<div class="site-home-grey site-main-home-zone-4 inverted">
-    <div class="site-home-grey-container container ">
+</section>
+<section class="well3 bg-alt">
+    <div class="container">
+        <h3 class="text-center"><strong>Facilitez-vous </strong>l'impression</h3>
+        <div class="row">
         <?php if (!isset($emptyPlaceholders[4])): ?>
-            <!--<div id="zone4" class="">-->
-            <?php echo $this->placeholder('zone4') ?>
-            <!--</div>-->
+        <?php echo $this->placeholder('zone4') ?>
         <?php endif; ?>
-    </div>
-</div>
-
-<div class="site-home-blue blue-zone site-main-home-zone-5 inverted">
-    <div class="site-home-blue-container container inverted">
-        <?php if (!isset($emptyPlaceholders[5])): ?>
-            <!--<div id="zone5" class="">-->
-            <?php echo $this->placeholder('zone5') ?>
-            <!--</div>-->
-        <?php endif; ?>
-    </div>
-</div>
-<div class="site-home-bottom">
-    <div class="site-home-bottom-container container">
-        <div class="site-main-home-zone-6 col-md-6">
-            <?php if (!isset($emptyPlaceholders[6])): ?>
-                <!--<div id="zone5" class="">-->
-                <?php echo $this->placeholder('zone6') ?>
-                <!--</div>-->
-            <?php endif; ?>
         </div>
     </div>
-</div>
+</section>
+<section class="parallax parallax2" data-url="<?php echo $this->locateFile('parallax3.jpg'); ?>" data-mobile="true" data-speed="0.7" data-direction="inverse">
+    <div class="container text-center wow fadeIn" data-wow-duration="2s">
+    <?php if (!isset($emptyPlaceholders[5])): ?>
+    <?php echo $this->placeholder('zone5') ?>
+    <?php endif; ?>
+    </div>
+</section>

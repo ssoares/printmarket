@@ -45,7 +45,7 @@
                 background-color:@brand-black;
             }
             .no-borderradius & {
-                .import-sprite('banner-circle-fallback-black');
+                /*.import-sprite('banner-circle-fallback-black');*/
             }
             &:after {
                 color:@brand-white;
@@ -67,9 +67,9 @@
             .borderradius & {
                 background-color:@brand-grey;
             }
-            .no-borderradius & {
+/*            .no-borderradius & {
                 .import-sprite('banner-circle-fallback-grey');
-            }
+            }*/
             &:after {
                 color:@brand-white;
             }
@@ -103,7 +103,7 @@
     }
     &:after {
         .responsive-font(@font-size-base * 3);
-        .import-icon-direct(@icon-banner-previous);
+        /*.import-icon-direct(@icon-banner-previous);*/
         vertical-align:middle;
     }
     @media @mq-phone {
@@ -117,7 +117,7 @@
     left:auto;
     right:0;
     &:after {
-        .import-icon-content(@icon-banner-next);
+/*        .import-icon-content(@icon-banner-next);*/
     }
 }
 .banners-nav {

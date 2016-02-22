@@ -1,38 +1,30 @@
-<?php echo $this->doctype();
-?>
+<?php echo $this->doctype();?>
 <!--[if IE 7]>
 <html class="ie ie7 desktop" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
 <![endif]-->
 <!--[if IE 8]>
 <html class="ie ie8 desktop" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
 <![endif]-->
-<!--[if !(IE 7) | !(IE 8) ]><!-->
+<!--[if IE 9]>
+<html class="ie ie9 desktop" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
+<![endif]-->
 <html class="not-ie desktop" lang="<?php echo(Zend_Registry::get("languageSuffix")); ?>">
     <!--<![endif]-->
     <head>
         <title><?php echo $this->headTitle(); ?></title>
-        <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
         <!-- META (START) -->
         <?php echo $this->headMeta() ?>
         <?php echo $this->placeholder('metaOther'); ?>
         <!--[if IE]>
-        <link rel="shortcut icon" href="<?php echo $this->absolute_web_root ?>/favicon.ico" />
+        <link rel="shortcut icon" href="<?php echo $this->locateFile('favicon.ico') ?>" />
         <![endif]-->
-        <link rel="icon" type="image/png" href="<?php echo $this->absolute_web_root ?>/favicon.png" />
-        <?php $this->jQuery()->addJavascriptFile($this->locateFile('modernizr.js')); ?>
-        <?php echo $this->jQuery(); ?>
-        <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-        <script src="http://maps.google.com/maps/api/js?libraries=geometry,drawing&amp;sensor=true&amp;language=fr"></script>
-
-        <?php echo $this->headScript() ?>
-
+        <link rel="icon" type="image/png" href="<?php echo $this->locateFile('favicon.png') ?>" />
         <?php echo $this->headLink(); ?>
-
         <?php echo $this->headStyle(); ?>
+
         <!-- Tag to force the AddThis thumbnail image
         <link rel='image_src' href='<?php echo Zend_Registry::get('addThis') ?>' /> -->
-        <?php //echo $this->partial('partials/google.analytic.phtml'); ?>
-        <?php // echo $this->partial('partials/' .  $this->currentSite . 'google.analytic.phtml'); ?>
+        <?php echo $this->partial('partials/' . $this->analytic); ?>
         <?php
         if (Zend_Registry::isRegistered('bgStyle'))
             $bgStyle = Zend_Registry::get('bgStyle');
@@ -45,26 +37,33 @@
             </style>
         <![endif]-->
         <style>
-/*            .site-wrap {
+            .site-background {
                 background-image:url(<?php echo $this->imgBackHeader; ?>);
-            }*/
+                background-position: 50% 0;
+            }
         </style>
+        <?php echo $this->jQuery(); ?>
+        <?php if (ISDEV): ?>
+        <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+        <?php endif; ?>
+        <?php $this->headScript()->appendFile($this->locateFile('modernizr.js')); ?>
+        <?php echo $this->headScript() ?>
     </head>
 
     <body class="front-end template <?php echo $this->templateName; ?>" <?php echo $bgStyle; ?> >
-        <div class="site-wrap">
+        <div class="page">
             <!-- Start : HEADER -->
             <header class="site-header" role="banner">
                 <?php echo $this->partial('partials/' . $this->header, array('view' => $this)) ?>
             </header>
             <!-- End : HEADER -->
             <!-- Start : MAIN -->
-            <div class="site-main photoPretty_block" role="main">
+            <main>
                 <?php echo $this->layout()->content; ?>
-            </div>
+            </main>
             <!-- End : MAIN -->
             <!-- Start : FOOTER -->
-            <footer class="site-footer" role="contentinfo">
+            <footer class="bg-secondary" role="contentinfo">
                 <?php echo $this->partial('partials/' . $this->footer, array('view' => $this)) ?>
             </footer>
             <!-- END : Footer -->
@@ -73,7 +72,8 @@
 
         <?php echo $this->partial('partials/jsPrettyPhoto.phtml') ?>
         <!--[if lt IE 9]>
-                <script type="text/javascript" src="<?php echo $this->locateFile('respond.min.js'); ?>"></script>
+            <script type="text/javascript" src="<?php echo $this->locateFile('respond.min.js'); ?>"></script>
+            <script src="<?php echo $this->locateFile('html5shiv.min.js'); ?>"></script>
             <![endif]-->
     </body>
 </html>

@@ -1,0 +1,175 @@
+@media print {
+  .slidelist,
+  .carrousel,
+  .imageslibrary-nav {
+    display: none;
+  }
+}
+.imageslibrary-slidelist {
+  font-size: 0;
+  position: relative;
+  z-index: 1;
+}
+.imageslibrary-slide {
+  vertical-align: top;
+}
+.imageslibrary-slide-image {
+  min-width: 100%;
+  min-height: 100%;
+}
+.imageslibrary-slide-container {
+  display: inline-block;
+  position: relative;
+  height: 230px;
+}
+.imageslibrary-container {
+  position: relative;
+}
+.imageslibrary-prev,
+.imageslibrary-next {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 7%;
+  white-space: nowrap;
+  z-index: 10;
+  font-size: 0;
+  text-align: center;
+  background-color: #121212;
+  background-color: rgba(18, 18, 18, 0.7);
+  zoom: 1;
+  background-color: transparent\9;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212);
+  opacity: 0;
+  transition: opacity 0.4s;
+  -webkit-transition: opacity 0.4s;
+  -moz-transition: opacity 0.4s;
+  -ms-transition: opacity 0.4s;
+}
+.imageslibrary-container:hover .imageslibrary-prev,
+.imageslibrary-container:hover .imageslibrary-next {
+  opacity: 1;
+}
+.imageslibrary-prev:before,
+.imageslibrary-next:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.imageslibrary-prev:after,
+.imageslibrary-next:after {
+  content: "<";
+  font-size: 42px;
+  color: #ffffff;
+  vertical-align: middle;
+}
+.imageslibrary-next {
+  left: auto;
+  right: 0;
+}
+.imageslibrary-next:after {
+  content: ">";
+}
+.imageslibrary-slide-label1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #121212;
+  background-color: rgba(18, 18, 18, 0.7);
+  zoom: 1;
+  background-color: transparent\9;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212);
+  padding: 6px;
+  font-size: 12px;
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+.imageslibrary-slide-label2 {
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #121212;
+  background-color: rgba(18, 18, 18, 0.7);
+  zoom: 1;
+  background-color: transparent\9;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212);
+  padding: 6px;
+  font-size: 12px;
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+@media (max-width: 767px) {
+  .imageslibrary-slide-label2 {
+    display: none;
+  }
+}
+.imageslibrary-slide-description {
+  font-size: 14px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #121212;
+  background-color: rgba(18, 18, 18, 0.7);
+  zoom: 1;
+  background-color: transparent\9;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3121212, endColorstr=#b3121212);
+  padding: 6px;
+  font-size: 12px;
+  font-size: 1.2rem;
+  white-space: normal;
+  color: #ffffff;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .imageslibrary-slide-description {
+    display: none;
+  }
+}
+@media (max-width: 767px) {
+  .imageslibrary-slide-description {
+    display: none;
+  }
+}
+.verticalslider.carrousel .imageslibrary-slidelist {
+  height: 1000px;
+}
+.horizontalslider .imageslibrary-slidelist {
+  width: 100%;
+}
+.imageslibrary-image {
+  max-width: 100%;
+}
+.imageslibrary-back {
+  margin-bottom: 10px;
+}
+.imageslibrary-slidelist-group {
+  white-space: nowrap;
+  font-size: 0;
+  overflow: hidden;
+  height: 500px;
+}
+.horizontalslider .imageslibrary-slidelist-group {
+  width: 100%;
+  height: auto;
+}
+.horizontalslider .imageslibrary-slide {
+  display: inline-block;
+}
+.slidelist .imageslibrary-slide {
+  width: 25%;
+}
+.carrousel.verticalslider .imageslibrary-slide-image {
+  max-width: none;
+}
+.details .imageslibrary-image-wrapper img {
+  width: 100%;
+  margin-bottom: 12px;
+}
+/*# sourceMappingURL=data:application/json,%7B%22version%22%3A3%2C%22sources%22%3A%5B%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fimageslibrary.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fbackground-alpha.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fprefixed.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fresponsive-font.less%22%5D%2C%22names%22%3A%5B%5D%2C%22mappings%22%3A%22AAkBA%3BEAJI%3BEAAY%3BEAAY%3BIACpB%3B%3B%3BAAGR%3BEACI%3BEACA%3BEACA%3B%3BAAEJ%3BEACI%3B%3BAAEJ%3BEACI%3BEACA%3B%3BAAEJ%3BEACI%3BEACA%3BEACA%2CaAAA%3B%3BAAGJ%3BEACI%3B%3BAAEJ%3BAAAqB%3BEACjB%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEC1CA%2CyBAAA%3BEACA%2CuCAAA%3BEAGA%3BEACA%2C%2BBAAA%3BEACA%2CYAAa%2C4FAAb%3BEACA%2CkGAAA%3BEDqCA%3BEEjDA%2CwBAAA%3BEACA%2CgCAAA%3BEACA%2C6BAAA%3BEACA%2C4BAAA%3B%3BAFgDA%2CwBAAwB%2CMAAO%3BAAA%5C%2FB%2CwBAAwB%2CMAAO%3BEAC3B%3B%3BAAEJ%2CmBAAC%3BAAAD%2CmBAAC%3BEACG%2CSAAQ%2CEAAR%3BEACA%3BEACA%3BEACA%3B%3BAAEJ%2CmBAAC%3BAAAD%2CmBAAC%3BEACG%2CSAAQ%2CGAAR%3BEACA%3BEACA%2CcAAA%3BEACA%3B%3BAAGR%3BEACI%3BEACA%3B%3BAACA%2CmBAAC%3BEACG%2CSAAQ%2CGAAR%3B%3BAAGR%3BEAEI%3BEACA%3BEACA%3BECzEA%2CyBAAA%3BEACA%2CuCAAA%3BEAGA%3BEACA%2C%2BBAAA%3BEACA%2CYAAa%2C4FAAb%3BEACA%2CkGAAA%3BEDoEA%3BEG%5C%2FEA%2CeAAA%3BEACA%2CiBAAA%3BEHgFA%2CcAAA%3B%3BAAEJ%3BEACI%3BEACA%3BEACA%3BEACA%3BECnFA%2CyBAAA%3BEACA%2CuCAAA%3BEAGA%3BEACA%2C%2BBAAA%3BEACA%2CYAAa%2C4FAAb%3BEACA%2CkGAAA%3BED8EA%3BEGzFA%2CeAAA%3BEACA%2CiBAAA%3BEH0FA%2CcAAA%3B%3BAAIJ%3BEAAA%3BIAFQ%3B%3B%3BAAGR%3BEACI%3BEACA%3BEACA%3BEACA%3BEChGA%2CyBAAA%3BEACA%2CuCAAA%3BEAGA%3BEACA%2C%2BBAAA%3BEACA%2CYAAa%2C4FAAb%3BEACA%2CkGAAA%3BED2FA%3BEGtGA%2CeAAA%3BEACA%2CiBAAA%3BEHuGA%3BEACA%2CcAAA%3B%3BAAIA%3BEAAA%3BIAFI%3B%3B%3BAAKR%3BEAAA%3BIAFQ%3B%3B%3BAAIR%2CeAAe%2CUAAW%3BEACtB%3B%3BAAEJ%2CiBAAkB%3BEACd%3B%3BAAEJ%3BEACI%3B%3BAAEJ%3BEACI%3B%3BAAIJ%3BEACI%3BEACA%3BEACA%3BEACA%3B%3BAAEJ%2CiBAAkB%3BEACd%3BEACA%3B%3BAAEJ%2CiBAAkB%3BEACd%3B%3BAAEJ%2CUAAW%3BEACP%2CUAAA%3B%3BAAKJ%2CUAAU%2CeAAgB%3BEACtB%3B%3BAAEJ%2CQAAS%2C6BAA6B%3BEAClC%3BEACA%22%7D */

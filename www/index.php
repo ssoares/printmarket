@@ -42,6 +42,7 @@ set_include_path('.'
     . PATH_SEPARATOR . "{$lib_path}/TcPdf"
     . PATH_SEPARATOR . $lib_path . '/Wurfl/'
     . PATH_SEPARATOR . $rootDir . "/cache/wurfl/"
+    . PATH_SEPARATOR . $rootDir . "/cache/twig/"
     . PATH_SEPARATOR . get_include_path());
 
 require_once 'Zend/Loader.php';

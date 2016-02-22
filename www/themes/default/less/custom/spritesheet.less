@@ -1,0 +1,29 @@
+.sprite {display:inline-block;overflow:hidden;background-repeat:no-repeat;font-size:0;background-image:url(../../images/common/spritesheet.png) }
+
+.banner-circle-fallback-white { width:128px; height:128px; background-position: -0px -0px } 
+.banner-circle-fallback-grey { width:128px; height:128px; background-position: -128px -0px } 
+.computer-set-desktop { width:480px; height:307px; background-position: -0px -128px } 
+.arrowBottom { width:23px; height:20px; background-position: -256px -0px } 
+.map-marker { width:134px; height:196px; background-position: -480px -128px } 
+.cible { width:24px; height:24px; background-position: -279px -0px } 
+.banner-circle-fallback-black { width:128px; height:128px; background-position: -303px -0px } 
+.computer-set { width:640px; height:409px; background-position: -0px -435px } 
+.arrowTop { width:23px; height:20px; background-position: -256px -20px } 
+.import-sprite(@name) when(@name = 'banner-circle-fallback-white') {.sprite;.banner-circle-fallback-white;}
+.import-sprite-only(@name) when(@name = 'banner-circle-fallback-white') {.banner-circle-fallback-white;}
+.import-sprite(@name) when(@name = 'banner-circle-fallback-grey') {.sprite;.banner-circle-fallback-grey;}
+.import-sprite-only(@name) when(@name = 'banner-circle-fallback-grey') {.banner-circle-fallback-grey;}
+.import-sprite(@name) when(@name = 'computer-set-desktop') {.sprite;.computer-set-desktop;}
+.import-sprite-only(@name) when(@name = 'computer-set-desktop') {.computer-set-desktop;}
+.import-sprite(@name) when(@name = 'arrowBottom') {.sprite;.arrowBottom;}
+.import-sprite-only(@name) when(@name = 'arrowBottom') {.arrowBottom;}
+.import-sprite(@name) when(@name = 'map-marker') {.sprite;.map-marker;}
+.import-sprite-only(@name) when(@name = 'map-marker') {.map-marker;}
+.import-sprite(@name) when(@name = 'cible') {.sprite;.cible;}
+.import-sprite-only(@name) when(@name = 'cible') {.cible;}
+.import-sprite(@name) when(@name = 'banner-circle-fallback-black') {.sprite;.banner-circle-fallback-black;}
+.import-sprite-only(@name) when(@name = 'banner-circle-fallback-black') {.banner-circle-fallback-black;}
+.import-sprite(@name) when(@name = 'computer-set') {.sprite;.computer-set;}
+.import-sprite-only(@name) when(@name = 'computer-set') {.computer-set;}
+.import-sprite(@name) when(@name = 'arrowTop') {.sprite;.arrowTop;}
+.import-sprite-only(@name) when(@name = 'arrowTop') {.arrowTop;}

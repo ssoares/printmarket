@@ -21,6 +21,7 @@ class Cible_Form_GenerateForm extends Cible_Form_Multilingual
     protected $_addDefault = true;
     protected $_forceNoScript = false;
     protected $_decoratorTag = 'dd';
+    protected $_required = false;
 
     public function __construct($options = null)
     {
@@ -63,7 +64,7 @@ class Cible_Form_GenerateForm extends Cible_Form_Multilingual
                 $tmp = $this->getDisplayGroup($key);
                 $tmp->setOrder($order);
                 $tmp->setAttrib('class', $class);
-                $tmp->removeDecorator('DtDdWrapper');
+                $tmp->setDecorators(array('Formelements', 'Fieldset'));
                 $tmp->setLegend($this->getView()->getCibleText('form_group_legend_' . $key));
             }
         }
@@ -109,7 +110,7 @@ EOS;
                     $this->_desc = $params['desc'];
 
             }
-
+            $this->_required = !$meta['NULLABLE'] ? true : false;
             switch ($meta['DATA_TYPE'])
             {
                 case 'decimal':
@@ -234,7 +235,7 @@ EOS;
                     break;
 
                 default:
-                    $classForNumericFormat = 'numeric';
+                    $this->_decoParams['class'] .= 'numeric';
                     $element = new Zend_Form_Element_Text($fieldId);
                     $element->setLabel(
                             $this->getView()->getCibleText('form_label_' . $fieldId))
@@ -245,11 +246,11 @@ EOS;
                         case 'decimal':
                         case 'double':
                         case 'float':
-                            $classForNumericFormat .= ' decimal';
+                            $this->_decoParams['class'] .= ' decimal';
                             break;
 
                         default:
-                            $classForNumericFormat .= ' integer';
+                            $this->_decoParams['class'] .= ' integer';
                             break;
                     }
                    $this->_decoParams['class'] .= 'smallTextInput';
@@ -272,8 +273,6 @@ EOS;
                 $element->setDescription($this->_desc);
             if (!empty($this->_groupName))
                 array_push($this->_grpElements[$this->_groupName], $fieldId);
-
-            $element->setAttrib('class', $classForNumericFormat);
 
             $this->addElement($element);
 
@@ -906,11 +905,15 @@ EOS;
     protected function _setBasicDecorator($element)
     {
         $class = '';
-        if (!empty($this->_decoParams['class']))
+        if ($this->_required){
+            $this->_decoParams['class'] .= 'required-field';
+        }
+        if (!empty($this->_decoParams['class'])){
             $class = $this->_decoParams['class'];
+        }
         $opt = array(
             'ViewHelper',
-            "Errors",
+            array("Errors", array('class' => 'alert alert-danger', 'role' => 'alert')),
             array('label', array('placement' => $this->_decoParams['labelPos'])),
         );
 
@@ -919,8 +922,7 @@ EOS;
 
         array_push($opt, array(
             array('row' => 'HtmlTag'),
-            array(
-                'class' => $class)
+            array('class' => $class)
         ));
 
         if ($element instanceof Cible_Form_Element_DatePicker){

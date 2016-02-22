@@ -341,4 +341,18 @@ class GenericProfilesObject extends DataObject
         return $data;
     }
 
+    public function saveFromContact($data)
+    {
+        $profile = array(
+            'GP_FirstName' => $data['firstName'],
+            'GP_LastName' => $data['lastName'],
+            'GP_Salutation' => 0,
+            'GP_Email' => $data['email'],
+            'GP_Language' => $data['language'],
+        );
+        $this->saveProfile($profile, $data['language']);
+
+        return $this->_profileId;
+    }
+
 }

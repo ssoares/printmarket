@@ -487,6 +487,7 @@ class Page_ManageController extends Cible_Controller_Block_Abstract
 
             if ($form->isValid($formData))
             {
+                $buttonAction = isset($formData['buttonAction'])?$formData['buttonAction'] : null;
                 $formData = $form->getValues();
                 // saving the entry
                 $menuItem = new MenuObject();
@@ -549,7 +550,6 @@ class Page_ManageController extends Cible_Controller_Block_Abstract
                     $this->_redirect('/');
                 else {
                     $this->view->assign('success', true);
-                    $buttonAction = $formData['buttonAction'];
                     $this->view->assign('buttonAction', $buttonAction);
                     $this->view->assign('menuID', $menuId);
                 }
@@ -666,6 +666,7 @@ class Page_ManageController extends Cible_Controller_Block_Abstract
 
             if ($form->isValid($formData))
             {
+                $buttonAction = isset($formData['buttonAction'])?$formData['buttonAction'] : null;
                 $formData = $form->getValues();
                 // saving the entry
                 $menuItem = new MenuObject();
@@ -722,7 +723,6 @@ class Page_ManageController extends Cible_Controller_Block_Abstract
                     $this->_redirect('/');
                 else
                 {
-                    $buttonAction = $formData['buttonAction'];
                     $this->view->assign('buttonAction', $buttonAction);
                     $this->view->assign('success', true);
                     $this->view->assign('menuID', $_parentId);

@@ -202,10 +202,10 @@ abstract class Cible_Controller_Action extends Zend_Controller_Action implements
         if (Zend_Registry::isRegistered('currentSite'))
             $this->_currentSite = Zend_Registry::get('currentSite');
 
-//        if (!preg_match('/extranet/', FRONTEND)) {
-//            $this->setDevice();
-//            $this->setDeviceType();
-//        }
+        if (!preg_match('/extranet/', FRONTEND)) {
+            $this->setDevice();
+            $this->setDeviceType();
+        }
 
         $islogged = Cible_FunctionsGeneral::getAuthentication();
         Zend_Registry::set('user', $islogged);

@@ -1,5 +1,5 @@
 @import "../vendor/bootstrap/variables.less";
-@import "../vendor/bootstrap/mixins.less"; 
+@import "../vendor/bootstrap/mixins.less";
 
 @import "../variables/general-variables.less";
 @import "../variables/custom-icons.less";
@@ -27,7 +27,7 @@
 @import "content/sprite.less";
 @import "content/table.less";
 //récupérer le font-size pour le rem de Bootstrap
-html { 
+html {
     font-size: 62.5%;
 }
 //font de base pour tout les composantes qui en ont besoin
@@ -43,7 +43,7 @@ a:hover {
 #tinymce.mce-content-body {
     img {
         background:@brand-grey-light;
-    }    
+    }
 }
 
 //lignes qui fixent certaines anomalies avec le tinmce
@@ -64,7 +64,7 @@ a:hover {
     h1 {
         .h1-style();
     }
-    h2 {  
+    h2 {
         .h2-style();
     }
     .inverted h2 {
@@ -72,28 +72,28 @@ a:hover {
     }
     a {
         color:@brand-primary;
-        text-decoration:none; 
+        text-decoration:none;
         &:hover {
             text-decoration:underline;
-        }        
+        }
     }
-    h1 a, h2 a, h3 a { 
+    h1 a, h2 a, h3 a {
         color:inherit;
         font-family:inherit;
         &:hover {
             text-decoration:none;
         }
-    }     
+    }
 }
 //permet d'avoir un preview bleu dans le textbox de l'infolettre
 .content-blue {
     .h2-style();
 }
 //back-end and content
-#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content { 
+#preview-box, #compare-box, .content-box, .mce-content-body, .previewText, .content {
     line-height:1.5em;
-    .font-weight('light', "sans-serif");  
-    .inverted & {             
+    .font-weight('light', "sans-serif");
+    .inverted & {
         color:@text-color-inverted;
     }
     & when (@device-type = 'desktop') {
@@ -104,47 +104,47 @@ a:hover {
         .contact & {
             .responsive-font((@font-size-base + 12) * @mobile-divider-text);
             line-height:1.3em;
-        }    
+        }
     }
     h3 {
-        .h3-style();    
+        .h3-style();
     }
-    h4 {       
+    h4 {
         color: @text-color;
         line-height: 1.15em;
-        margin:0 0 0.5em 0; 
+        margin:0 0 0.5em 0;
         & when (@device-type = 'desktop') {
             .responsive-font(@font-size-h4);
-        }    
+        }
         & when (@device-type = 'mobile') {
             .responsive-font(@font-size-h4 * @mobile-divider-text);
-        }    
+        }
     }
     h5 {
         .responsive-font(@font-size-h5);
-        .font-weight('light', "sans-serif");  
+        .font-weight('light', "sans-serif");
         color: @text-color;
         line-height: 1.15em;
-        margin:0 0 0.5em 0; 
+        margin:0 0 0.5em 0;
         & when (@device-type = 'desktop') {
             .responsive-font(@font-size-h5);
-        }    
+        }
         & when (@device-type = 'mobile') {
             .responsive-font(@font-size-h5 * @mobile-divider-text);
-        }    
+        }
     }
     h6 {
         .responsive-font(@font-size-h6);
-        .font-weight('light', "sans-serif");  
+        .font-weight('light', "sans-serif");
         color: @text-color;
         line-height: 1.15em;
-        margin:0 0 0.5em 0;  
+        margin:0 0 0.5em 0;
         & when (@device-type = 'desktop') {
             .responsive-font(@font-size-h6);
-        }    
+        }
         & when (@device-type = 'mobile') {
             .responsive-font(@font-size-h6 * @mobile-divider-text);
-        }    
+        }
     }
     hr {
         background:#bfbfbf;
@@ -158,7 +158,7 @@ a:hover {
         height:auto !important;
     }
 
-    //    
+    //
     p {
         margin:0 0 1em 0;
         .font-weight('light', 'sans-serif');
@@ -177,7 +177,7 @@ a:hover {
         .font-weight('normal','serif');
         font-style:italic;
         line-height:1.45em;
-        * { 
+        * {
             font-size:inherit;
             font-family:inherit;
             line-height:inherit;
@@ -194,25 +194,25 @@ a:hover {
     @media @print {
         line-height:1.2em;
         blockquote {
-            .print-font(@font-size-base);            
+            .print-font(@font-size-base);
         }
         p {
             .print-font(@font-size-base);
         }
-        h2 {       
-            .print-font(@font-size-h2);     
+        h2 {
+            .print-font(@font-size-h2);
         }
         h3 {
-            .print-font(@font-size-h3); 
+            .print-font(@font-size-h3);
         }
         h4 {
-            .print-font(@font-size-h4); 
+            .print-font(@font-size-h4);
         }
         h5 {
-            .print-font(@font-size-h5);   
+            .print-font(@font-size-h5);
         }
         h6 {
-            .print-font(@font-size-h6);  
+            .print-font(@font-size-h6);
         }
         a {
             text-decoration:underline;

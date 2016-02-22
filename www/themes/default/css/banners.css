@@ -1,0 +1,222 @@
+/* File is actually in /components/spritesheet.less */
+/**
+.sprite {
+    display:inline-block;
+    overflow:hidden;
+    background-repeat:no-repeat;
+    font-size:0;
+    background-image:url(../../images/common/spritesheet.png)
+}
+.[img] {
+    width:[width];
+    height:[height];
+    background-position: -[x] -[y]
+}
+.import-sprite(@name) when(@name = '[img]') {
+    .sprite;
+    width:[width];
+    height:[height];
+    background-position: -[x] -[y]
+}
+.import-sprite-only(@name) when(@name = '[img]') {
+    width:[width];
+    height:[height];
+    background-position: -[x] -[y]
+}
+**/
+/*@import (reference) "custom/spritesheet.less";*/
+/*@import "custom/title-style.less";*/
+.banners {
+  height: 547px;
+  position: relative;
+}
+.banners .banners-content {
+  display: inline-block;
+  font-size: 32px;
+  font-size: 3.2rem;
+  vertical-align: middle;
+  max-width: 100%;
+  white-space: normal;
+  color: #ffffff;
+}
+@media (max-width: 767px) {
+  .banners .banners-content {
+    padding: 20px 68px;
+  }
+}
+.banners .banners-content p {
+  margin: 0;
+  line-height: 0.9em;
+}
+.banners .banners-content .banner-white-circle {
+  margin: 60px 25px 0 25px;
+}
+@media (max-width: 767px) {
+  .banners .banners-content .banner-white-circle {
+    margin: 26px 10px 0 10px;
+  }
+}
+@media (max-width: 767px) {
+  .banners .banners-content .banner-white-circle {
+    margin: 16px 10px 0 10px;
+  }
+}
+.banners .banners-image {
+  position: absolute;
+  left: -9999px;
+  right: -9999px;
+  top: -9999px;
+  bottom: -9999px;
+  margin: auto;
+  min-height: 100%;
+}
+.banners-slide-black .banners-content,
+.banners-slide-black .banners-content .banner-text-large,
+.banners-slide-black .banners-content .banner-text-medium,
+.banners-slide-black .banners-content p {
+  color: #000000;
+}
+.borderradius .banners-slide-black .banners-content .banner-white-circle {
+  background-color: #000000;
+}
+.no-borderradius .banners-slide-black .banners-content .banner-white-circle {
+  /*.import-sprite('banner-circle-fallback-black');*/
+}
+.banners-slide-black .banners-content .banner-white-circle:after {
+  color: #ffffff;
+}
+.banners-slide-black .banners-content .banner-secondary-icon + .banner-secondary-icon:before {
+  color: #000000;
+}
+.banners-slide-grey .banners-content,
+.banners-slide-grey .banners-content .banner-text-large,
+.banners-slide-grey .banners-content .banner-text-medium,
+.banners-slide-grey .banners-content.content p {
+  color: #4b575f;
+}
+.banners-slide-grey .banners-content .banner-white-circle {
+  /*            .no-borderradius & {
+                .import-sprite('banner-circle-fallback-grey');
+            }*/
+}
+.borderradius .banners-slide-grey .banners-content .banner-white-circle {
+  background-color: #4b575f;
+}
+.banners-slide-grey .banners-content .banner-white-circle:after {
+  color: #ffffff;
+}
+.banners-slide-grey .banners-content .banner-secondary-icon + .banner-secondary-icon:before {
+  color: #4b575f;
+}
+.banners-prev,
+.banners-next {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 148px;
+  text-align: center;
+  font-size: 0;
+  color: #ffffff;
+  white-space: nowrap;
+  z-index: 200;
+}
+.banners-prev:before,
+.banners-next:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.banners-slide-black .banners-prev,
+.banners-slide-black .banners-next {
+  color: #000000;
+}
+.banners-slide-grey .banners-prev,
+.banners-slide-grey .banners-next {
+  color: #4b575f;
+}
+.banners-prev:after,
+.banners-next:after {
+  font-size: 48px;
+  font-size: 4.8rem;
+  /*.import-icon-direct(@icon-banner-previous);*/
+  vertical-align: middle;
+}
+@media (max-width: 767px) {
+  .banners-prev,
+  .banners-next {
+    width: 68px;
+  }
+  .banners-prev:after,
+  .banners-next:after {
+    font-size: 32px;
+    font-size: 3.2rem;
+  }
+}
+.banners-next {
+  left: auto;
+  right: 0;
+}
+.banners-next:after {
+  /*        .import-icon-content(@icon-banner-next);*/
+}
+.banners-nav {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  line-height: 42px;
+  text-align: center;
+  z-index: 300;
+}
+.banners-nav span {
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  border-radius: 7px;
+  behavior: url(/pie.php);
+  -pie-poll: true;
+  background: #ffffff;
+  font-size: 0;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: background 0.4s;
+  -webkit-transition: background 0.4s;
+  -moz-transition: background 0.4s;
+  -ms-transition: background 0.4s;
+}
+.banners-nav span:hover,
+.banners-nav span.cycle-pager-active {
+  background-color: #4b575f;
+}
+.banners-slide {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  height: 547px;
+  background: url('../images/backgrounds/site-banner-banners-background.jpg') repeat-x;
+}
+.banners-container {
+  position: relative;
+  z-index: 200;
+  text-align: center;
+  height: 100%;
+  white-space: nowrap;
+}
+.banners-container:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.banners-link {
+  display: block;
+  height: 100%;
+}
+.banners-nolink {
+  display: block;
+  height: 100%;
+}
+/*# sourceMappingURL=data:application/json,%7B%22version%22%3A3%2C%22sources%22%3A%5B%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fbanners.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fresponsive-font.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fabsolute-center.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fvertical-aligner.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fcircle.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fborder-radius.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fbehavior-pie.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fprefixed.less%22%5D%2C%22names%22%3A%5B%5D%2C%22mappings%22%3A%22%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3B%3BAAKA%3BEACI%2CaAAA%3BEACA%3B%3BAAFJ%2CQAGI%3BEACI%3BECNJ%2CeAAA%3BEACA%2CiBAAA%3BEDOI%3BEACA%3BEACA%3BEACA%2CcAAA%3B%3BAAIA%3BEAAA%2CQAVJ%3BIAQQ%2CkBAAA%3B%3B%3BAAXZ%2CQAGI%2CiBAUI%3BEACI%3BEACA%3B%3BAAfZ%2CQAGI%2CiBAcI%3BEACI%2CwBAAA%3B%3BAAIA%3BEAAA%2CQAnBR%2CiBAcI%3BIAGQ%2CwBAAA%3B%3B%3BAAKR%3BEAAA%2CQAtBJ%2CiBAcI%3BIAMQ%2CwBAAA%3B%3B%3BAAvBhB%2CQA2BI%3BEEhBA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEFaI%3B%3BAAKA%2CoBADiB%3BAAArB%2CoBAAqB%2CiBACd%3BAADP%2CoBAAqB%2CiBACM%3BAAD3B%2CoBAAqB%2CiBAC2B%3BEACxC%2CcAAA%3B%3BAAGA%2CaAAc%2CqBALD%2CiBAIjB%3BEAEQ%2CyBAAA%3B%3BAAEJ%2CgBAAiB%2CqBARJ%2CiBAIjB%3B%3B%3BAAOI%2CoBAXa%2CiBAIjB%2CqBAOK%3BEACG%2CcAAA%3B%3BAAKA%2CoBAjBS%2CiBAejB%2CuBACQ%2CyBACC%3BEACG%2CcAAA%3B%3BAAMZ%2CmBADgB%3BAAApB%2CmBAAoB%2CiBACb%3BAADP%2CmBAAoB%2CiBACO%3BAAAqB%2CmBAD5B%2CiBAC6B%2CQAAS%3BEAClD%2CcAAA%3B%3BAAFR%2CmBAAoB%2CiBAIhB%3B%3B%3B%3B%3BAACI%2CaAAc%2CoBALF%2CiBAIhB%3BEAEQ%2CyBAAA%3B%3BAAKJ%2CmBAXY%2CiBAIhB%2CqBAOK%3BEACG%2CcAAA%3B%3BAAKA%2CmBAjBQ%2CiBAehB%2CuBACQ%2CyBACC%3BEACG%2CcAAA%3B%3BAAMpB%3BAAAe%3BEACX%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%2CcAAA%3BEG5FA%3BEH8FA%3B%3BAG7FA%2CaAAC%3BAAAD%2CaAAC%3BEACG%2CSAAQ%2CEAAR%3BEACA%3BEACA%3BEACA%3B%3BAH0FJ%2CoBAAqB%3BAAArB%2CoBAAqB%3BEACjB%2CcAAA%3B%3BAAEJ%2CmBAAoB%3BAAApB%2CmBAAoB%3BEAChB%2CcAAA%3B%3BAAEJ%2CaAAC%3BAAAD%2CaAAC%3BECpGD%2CeAAA%3BEACA%2CiBAAA%3B%3BEDsGI%3B%3BAAQR%3BEAAA%3BEAAA%3BIALQ%3B%3BEACA%2CaAAC%3BEAAD%2CaAAC%3BIC3GL%2CeAAA%3BIACA%2CiBAAA%3B%3B%3BAD%2BGJ%3BEACI%3BEACA%3B%3BAACA%2CaAAC%3B%3B%3BAAIL%3BEACI%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3B%3BAAPJ%2CYAQI%3BEI9HA%3BEACA%2CYAAA%3BEACA%2CWAAA%3BECHA%2CkBAAA%3BECFA%2CuBAAA%3BEDIA%3BEDGA%2CmBAAA%3BEACA%3BEJ2HI%2CaAAA%3BEACA%3BEOnIJ%2C2BAAA%3BEACA%2CmCAAA%3BEACA%2CgCAAA%3BEACA%2C%2BBAAA%3B%3BAPkII%2CYALJ%2CKAKK%3BAAAQ%2CYALb%2CKAKc%3BEACN%2CyBAAA%3B%3BAAIZ%3BEACI%3BEACA%3BEACA%3BEACA%2CaAAA%3BEACA%2CgBAAe%2CoEAAf%3B%3BAAGJ%3BEACI%3BEACA%3BEACA%3BEACA%3BEGtJA%3B%3BAACA%2CkBAAC%3BEACG%2CSAAQ%2CEAAR%3BEACA%3BEACA%3BEACA%3B%3BAHoJR%3BEACI%3BEACA%3B%3BAAEJ%3BEACI%3BEACA%22%7D */

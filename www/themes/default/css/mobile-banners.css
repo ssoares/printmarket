@@ -1,0 +1,93 @@
+.banners.index {
+  height: 223.5px;
+  width: 100%;
+  position: relative;
+}
+.cycle-pager {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  z-index: 200;
+  text-align: center;
+}
+.cycle-pager span {
+  color: #ffffff;
+  font-size: 0;
+  cursor: pointer;
+  margin: 0 1.5px;
+}
+.cycle-pager span:after {
+  font-size: 8px;
+}
+.cycle-pager span:after {
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'edith', Arial, sans-serif;
+  content: "\e005";
+}
+.cycle-pager span.cycle-pager-active:after {
+  content: "\e006";
+}
+.banners-content {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  color: #ffffff;
+  font-weight: normal;
+  font-family: 'ProximaNova-Light', sans-serif;
+  font-size: 58px;
+  font-size: 5.8rem;
+  white-space: normal;
+}
+.banners-content.content p {
+  margin: 0;
+  line-height: 1;
+  font-size: 32px;
+  font-size: 3.2rem;
+}
+.banners-content.content p span {
+  line-height: 1.25em;
+}
+.borderradius .banners-content .banner-white-circle,
+.borderradius .banners-content .banner-secondary-icon,
+.banners-content .banner-white-circle,
+.banners-content .banner-secondary-icon {
+  display: none;
+}
+.banners-container {
+  height: 100%;
+  width: 100%;
+  background: #009cda;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.banners-slide {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  text-align: center;
+}
+.banners-slide:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.banners-slide img {
+  position: absolute;
+  left: -9999px;
+  right: -9999px;
+  top: -9999px;
+  bottom: -9999px;
+  margin: auto;
+  min-width: 0;
+  min-height: 100%;
+}
+.front-end .banners-slide img {
+  max-width: none;
+}
+/*# sourceMappingURL=data:application/json,%7B%22version%22%3A3%2C%22sources%22%3A%5B%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmobile-banners.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fresponsive-font.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fimport-icon.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fvariables%5C%2Fgeneral-variables.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fvariables%5C%2Fcustom-icons.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Ffont-weight.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fvertical-aligner.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fabsolute-center.less%22%5D%2C%22names%22%3A%5B%5D%2C%22mappings%22%3A%22AAUA%2CQAAQ%3BEACJ%2CeAAA%3BEACA%3BEACA%3B%3BAAGJ%3BEACI%3BEACA%2CYAAA%3BEACA%3BEACA%3BEACA%3BEACA%3B%3BAANJ%2CYAOI%3BEACI%2CcAAA%3BECPJ%3BEDSI%3BEACA%2CeAAA%3B%3BAEzBJ%2CYFqBA%2CKErBC%3BEACG%2CcAAA%3B%3BAAKJ%2CYFeA%2CKEfC%3BEAMD%3BEACA%2CaCQe%2C0BDRf%3BEAIA%2CSEduB%2COFcvB%3B%3BAFWQ%2CYAPR%2CKAMK%2CmBACI%3BEACG%2CSIzBY%2COJyBZ%3B%3BAAKhB%3BEACI%3BEACA%3BEACA%3BEACA%2CcAAA%3BEKtCA%3BEAEA%2CaFS4B%2C%2BBET5B%3BEJDA%2CeAAA%3BEACA%2CiBAAA%3BEDuCA%3B%3BAACA%2CgBAAC%2CQACG%3BEACI%3BEACA%3BEC5CR%2CeAAA%3BEACA%2CiBAAA%3B%3BADwCA%2CgBAAC%2CQACG%2CEAII%3BEACI%3B%3BAAKR%2CaAAc%2CiBADlB%3BAACI%2CaAAc%2CiBADI%3BAACD%2CgBADrB%3BAACqB%2CgBADC%3BEAEd%3B%3BAAIZ%3BEACI%3BEACA%3BEACA%2CmBAAA%3BEACA%3BEACA%3BEACA%3B%3BAAEJ%3BEACI%3BEACA%3BEACA%3BEACA%3BEACA%3BEMvEA%3BENyEA%3B%3BAMxEA%2CcAAC%3BEACG%2CSAAQ%2CEAAR%3BEACA%3BEACA%3BEACA%3B%3BAN6DR%2CcAQI%3BEO5DA%3BEACA%3BEACA%3BEACA%3BEACA%3BEACA%3BEPyDI%3BEAIA%3B%3BAAHA%2CUAAW%2CeAHf%3BEAIQ%22%7D */

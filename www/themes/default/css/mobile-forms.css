@@ -1,0 +1,73 @@
+.forms-contact {
+  position: relative;
+  padding-bottom: 60px;
+}
+.form-label-captcha {
+  font-size: 12px;
+  font-size: 1.2rem;
+  line-height: 1.2em;
+  display: block;
+  margin: 20px 0;
+}
+.form-captcha-div {
+  float: left;
+  width: 33%;
+  margin-right: 33%;
+  position: relative;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .form-captcha-div {
+    width: 50%;
+    margin-right: 50%;
+  }
+}
+.form-captcha-div img {
+  float: left;
+  border: 1px solid #009cda;
+  border-radius: 3px;
+  behavior: url(/pie.php);
+  -pie-poll: true;
+  height: 53px;
+}
+.form-captcha-div img + br {
+  display: none;
+}
+.form-captcha-div .form-captcha {
+  position: absolute;
+  left: 100%;
+}
+.forms-contact .form-captcha-div .form-captcha {
+  margin: 0 10px;
+  width: 90%;
+  max-height: 100%;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .forms-contact .form-captcha-div .form-captcha {
+    width: 95%;
+  }
+}
+.form-captcha-div .errors {
+  clear: both;
+  width: 200%;
+}
+.captcha-fieldset {
+  position: relative;
+  padding-bottom: 20px;
+}
+.captcha-fieldset .form-div {
+  margin-top: 10px;
+}
+.form-div-refresh {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  line-height: 1;
+}
+.form-refresh-captcha {
+  clear: both;
+  display: block;
+}
+.form-div-submit {
+  float: right;
+}
+/*# sourceMappingURL=data:application/json,%7B%22version%22%3A3%2C%22sources%22%3A%5B%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmobile-forms.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fresponsive-font.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fborder-radius.less%22%2C%22home%5C%2Fssoares%5C%2Fworkspace%5C%2Fprintmarket%5C%2Fwww%5C%2Fthemes%5C%2Fdefault%5C%2Fless%5C%2Fmixins%5C%2Fbehavior-pie.less%22%5D%2C%22names%22%3A%5B%5D%2C%22mappings%22%3A%22AAQA%3BEACI%3BEACA%2CoBAAA%3B%3BAAIJ%3BECXI%2CeAAA%3BEACA%2CiBAAA%3BEDYA%3BEACA%3BEACA%2CcAAA%3B%3BAAEJ%3BEACI%3BEACA%3BEACA%3BEACA%3B%3BAAKA%3BEAAA%3BIAHI%3BIACA%3B%3B%3BAAPR%2CiBASI%3BEACI%3BEACA%2CyBAAA%3BEE5BJ%2CkBAAA%3BECFA%2CuBAAA%3BEDIA%3BEF4BI%2CYAAA%3B%3BAACA%2CiBALJ%2CIAKQ%3BEACA%3B%3BAAfZ%2CiBAkBI%3BEACI%3BEACA%3B%3BAACA%2CcAAe%2CkBAHnB%3BEAIQ%2CcAAA%3BEACA%3BEACA%3B%3BAAIJ%3BEAAA%2CcAPe%2CkBAHnB%3BIAQY%3B%3B%3BAA1BhB%2CiBA8BI%3BEACI%3BEACA%3B%3BAAIR%3BEACI%3BEACA%2CoBAAA%3B%3BAAFJ%2CiBAGI%3BEACI%3B%3BAAGR%3BEACI%3BEACA%3BEACA%3BEACA%3B%3BAAEJ%3BEACI%3BEACA%3B%3BAAEJ%3BEACI%22%7D */

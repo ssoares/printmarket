@@ -579,25 +579,25 @@ abstract class Cible_FunctionsGeneral
             '/<script[^>]*>.*?<\/script>/i', // <script>s -- which strip_tags supposedly has problems with
             '/<style[^>]*>.*?<\/style>/i', // <style>s -- which strip_tags supposedly has problems with
             //'/<!-- .* -->/',                         // Comments -- which strip_tags might have problem a with
-            '/<h[123][^>]*>(.*?)<\/h[123]>/ie', // H1 - H3
-            '/<h[456][^>]*>(.*?)<\/h[456]>/ie', // H4 - H6
+            '/<h[123][^>]*>(.*?)<\/h[123]>/i', // H1 - H3
+            '/<h[456][^>]*>(.*?)<\/h[456]>/i', // H4 - H6
             '/<p[^>]*>/i', // <P>
             '/<br[^>]*>/i', // <br>
-            '/<b[^>]*>(.*?)<\/b>/ie', // <b>
-            '/<strong[^>]*>(.*?)<\/strong>/ie', // <strong>
+            '/<b[^>]*>(.*?)<\/b>/i', // <b>
+            '/<strong[^>]*>(.*?)<\/strong>/i', // <strong>
             '/<i[^>]*>(.*?)<\/i>/i', // <i>
             '/<em[^>]*>(.*?)<\/em>/i', // <em>
             '/(<ul[^>]*>|<\/ul>)/i', // <ul> and </ul>
             '/(<ol[^>]*>|<\/ol>)/i', // <ol> and </ol>
             '/<li[^>]*>(.*?)<\/li>/i', // <li> and </li>
             '/<li[^>]*>/i', // <li>
-            '/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/ie',
+            '/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/i',
             // <a href="">
             '/<hr[^>]*>/i', // <hr>
             '/(<table[^>]*>|<\/table>)/i', // <table> and </table>
             '/(<tr[^>]*>|<\/tr>)/i', // <tr> and </tr>
             '/<td[^>]*>(.*?)<\/td>/i', // <td> and </td>
-            '/<th[^>]*>(.*?)<\/th>/ie', // <th> and </th>
+            '/<th[^>]*>(.*?)<\/th>/i', // <th> and </th>
             '/&(nbsp|#160);/i', // Non-breaking space
             '/&(quot|rdquo|ldquo|#8220|#8221|#147|#148);/i',
             // Double quotes

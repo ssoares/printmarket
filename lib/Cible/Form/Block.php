@@ -8,7 +8,7 @@ class Cible_Form_Block extends Cible_Form_Block_Multilingual
         $add = $options['addAction'];
         if (!$add)
             unset($options['addAction']);
-        
+
         parent::__construct($options);
 
         $this->setAttrib('class', 'form_block');
@@ -46,7 +46,7 @@ class Cible_Form_Block extends Cible_Form_Block_Multilingual
         $blockTitle = new Zend_Form_Element_Text('BI_BlockTitle');
         $blockTitle->setLabel($this->getView()->getCibleText('form_label_title'))
         ->setRequired(true)
-        ->addFilter('StripTags')
+//        ->addFilter('StripTags')
         ->addFilter('StringTrim')
         ->addValidator('NotEmpty', true, array('messages' => array('isEmpty' => $this->getView()->getCibleText('validation_message_empty_field'))))
         ->setAttrib('class','stdTextInput');

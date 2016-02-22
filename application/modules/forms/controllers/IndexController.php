@@ -7,8 +7,7 @@ class Forms_IndexController extends Cible_Controller_Action {
     public function init() {
 //        $this->_isSecured = false;
         parent::init();
-        $this->view->headLink()->offsetSetStylesheet($this->_moduleID, $this->view->locateFile('forms.css'), 'all');
-        $this->view->headLink()->appendStylesheet($this->view->locateFile('forms.css'), 'all');
+        $this->view->headLink()->offsetSetStylesheet($this->_moduleID, $this->view->locateFile('contact-form.css'), 'all');
     }
 
     public function formscontactAction() {
@@ -24,7 +23,8 @@ class Forms_IndexController extends Cible_Controller_Action {
             );
         $form = new FormContact($options);
         $this->view->assign('form', $form);
-        if ($this->_request->isPost()) {
+        if ($this->_request->isPost())
+        {
             $formData = $this->_request->getPost();
 
             if (array_key_exists('submit', $formData)) {
@@ -59,11 +59,11 @@ class Forms_IndexController extends Cible_Controller_Action {
                     }
                     new Cible_Notifications_Email($options);
                     $obj->insert($formData, $this->view->languageId);
+                    $oGP = new GenericProfilesObject();
+                    $oGP->saveFromContact($data);
                     $this->view->assign('inscriptionValidate', true);
                 }
             }
-        }
-        else {
         }
     }
 
